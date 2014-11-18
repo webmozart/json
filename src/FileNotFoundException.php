@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Puli CLI package.
+ * This file is part of the Puli JSON package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *

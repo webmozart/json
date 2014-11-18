@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Puli CLI package.
+ * This file is part of the Puli JSON package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -11,6 +11,8 @@
 
 namespace Puli\Json;
 
+use Exception;
+
 /**
  * Thrown when a JSON file contains invalid JSON.
  *
@@ -19,4 +21,42 @@ namespace Puli\Json;
  */
 class InvalidJsonException extends \Exception
 {
+    private $errors;
+
+    public static function fromErrors(array $errors = array(), $code = 0, Exception $previous = null)
+    {
+        return new static(sprintf(
+            "Validation of the JSON data failed:\n%s",
+            implode("\n", $errors)
+        ), $errors, $code, $previous);
+    }
+
+    private static function errorsToString(array $errors)
+    {
+
+        return ltrim($string);
+    }
+
+    public function __construct($message = '', array $errors = array(), $code = 0, Exception $previous = null)
+    {
+        $this->errors = $errors;
+
+        parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrorsAsString()
+    {
+        return implode("\n", $this->errors);
+    }
 }
