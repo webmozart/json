@@ -1,4 +1,5 @@
 Puli JSON
 =========
 
-A JSON reader/writer with support for schemas and in-place manipulation.
+A JSON decoder/encoder with support for schema validation and in-place 
+manipulation.
