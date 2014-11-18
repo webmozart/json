@@ -1,0 +1,32 @@
+{
+    "name": "puli/json",
+    "description": "A JSON reader/writer with support for schemas and in-place manipulation.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bernhard Schussek",
+            "email": "bschussek@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "justinrainbow/json-schema": "~1.1",
+        "seld/jsonlint": "~1.0"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Puli\\Json\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Puli\\Json\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
