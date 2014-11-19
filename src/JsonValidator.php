@@ -42,7 +42,7 @@ class JsonValidator
      * @param mixed         $data   The decoded JSON data.
      * @param string|object $schema The schema file or object.
      *
-     * @throws InvalidJsonException If the data does not comply with the schema.
+     * @throws ValidationFailedException If the data does not comply with the schema.
      * @throws SchemaException If the schema is invalid.
      */
     public function validate($data, $schema)
@@ -72,7 +72,7 @@ class JsonValidator
                 $errors[$key] = $prefix.$error['message'];
             }
 
-            throw InvalidJsonException::fromErrors($errors);
+            throw ValidationFailedException::fromErrors($errors);
         }
     }
 
@@ -90,7 +90,7 @@ class JsonValidator
 
         try {
             $this->validate($schema, $this->metaSchema);
-        } catch (InvalidJsonException $e) {
+        } catch (ValidationFailedException $e) {
             throw new SchemaException(sprintf(
                 "The schema is invalid:\n%s",
                 $e->getErrorsAsString()

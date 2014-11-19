@@ -55,15 +55,15 @@ class JsonDecoder
     /**
      * @var int
      */
-    private $maxDepth = 512;
+    private $bigIntDecoding = self::FLOAT;
 
     /**
      * @var int
      */
-    private $bigIntDecoding = self::FLOAT;
+    private $maxDepth = 512;
 
     /**
-     * Creates a new decoder;
+     * Creates a new decoder.
      */
     public function __construct()
     {
@@ -88,7 +88,9 @@ class JsonDecoder
      *
      * @return mixed The decoded value.
      *
-     * @throws InvalidJsonException If the JSON string is invalid.
+     * @throws DecodingFailedException If the JSON string could not be decoded.
+     * @throws ValidationFailedException If the decoded string fails schema
+     *                                   validation.
      * @throws SchemaException If the schema is invalid.
      */
     public function decode($json, $schema = null)
@@ -97,9 +99,10 @@ class JsonDecoder
             throw new \InvalidArgumentException(
                 'Schema validation is not supported when objects are decoded '.
                 'as associative arrays. Call '.
-                'JsonDecoder::setDecodeObjectsAs(JsonDecoder::OBJECT) to fix.'
+                'JsonDecoder::setDecodeObjectsAs(JsonDecoder::JSON_OBJECT) to fix.'
             );
         }
+
         $decoded = $this->decodeJson($json);
 
         if (null !== $schema) {
@@ -118,7 +121,9 @@ class JsonDecoder
      * @return mixed The decoded file.
      *
      * @throws FileNotFoundException If the file was not found.
-     * @throws InvalidJsonException If the JSON file is invalid.
+     * @throws DecodingFailedException If the file could not be decoded.
+     * @throws ValidationFailedException If the decoded file fails schema
+     *                                   validation.
      * @throws SchemaException If the schema is invalid.
      *
      * @see decode
@@ -138,6 +143,9 @@ class JsonDecoder
     /**
      * Returns the maximum recursion depth.
      *
+     * A depth of zero means that objects are not allowed. A depth of one means
+     * only one level of objects or arrays is allowed.
+     *
      * @return int The maximum recursion depth.
      */
     public function getMaxDepth()
@@ -148,10 +156,16 @@ class JsonDecoder
     /**
      * Sets the maximum recursion depth.
      *
-     * If the depth is exceeded during decoding, an {@link InvalidJsonException}
+     * If the depth is exceeded during decoding, an {@link DecodingnFailedException}
      * will be thrown.
      *
+     * A depth of zero means that objects are not allowed. A depth of one means
+     * only one level of objects or arrays is allowed.
+     *
      * @param int $maxDepth The maximum recursion depth.
+     *
+     * @throws \InvalidArgumentException If the depth is not an integer greater
+     *                                   than or equal to zero.
      */
     public function setMaxDepth($maxDepth)
     {
@@ -162,13 +176,20 @@ class JsonDecoder
             ));
         }
 
+        if ($maxDepth < 0) {
+            throw new \InvalidArgumentException(sprintf(
+                'The maximum depth should zero or greater. Got: %s',
+                $maxDepth
+            ));
+        }
+
         $this->maxDepth = $maxDepth;
     }
 
     /**
      * Returns the decoding of JSON objects.
      *
-     * @return int One of the constants {@link OBJECT} and {@link ASSOC_ARRAY}.
+     * @return int One of the constants {@link JSON_OBJECT} and {@link ASSOC_ARRAY}.
      */
     public function getObjectDecoding()
     {
@@ -180,7 +201,7 @@ class JsonDecoder
      *
      * By default, JSON objects are decoded as instances of {@link \stdClass}.
      *
-     * @param int $decoding One of the constants {@link OBJECT} and {@link ASSOC_ARRAY}.
+     * @param int $decoding One of the constants {@link JSON_OBJECT} and {@link ASSOC_ARRAY}.
      *
      * @throws \InvalidArgumentException If the passed decoding is invalid.
      */
@@ -188,7 +209,7 @@ class JsonDecoder
     {
         if (self::OBJECT !== $decoding && self::ASSOC_ARRAY !== $decoding) {
             throw new \InvalidArgumentException(sprintf(
-                'Expected JsonDecoder::OBJECT or JsonDecoder::ASSOC_ARRAY. '.
+                'Expected JsonDecoder::JSON_OBJECT or JsonDecoder::ASSOC_ARRAY. '.
                 'Got: %s',
                 $decoding
             ));
@@ -200,7 +221,7 @@ class JsonDecoder
     /**
      * Returns the decoding of big integers.
      *
-     * @return int One of the constants {@link FLOAT} and {@link STRING}.
+     * @return int One of the constants {@link FLOAT} and {@link JSON_STRING}.
      */
     public function getBigIntDecoding()
     {
@@ -212,7 +233,7 @@ class JsonDecoder
      *
      * By default, big integers are decoded as floats.
      *
-     * @param int $decoding One of the constants {@link FLOAT} and {@link STRING}.
+     * @param int $decoding One of the constants {@link FLOAT} and {@link JSON_STRING}.
      *
      * @throws \InvalidArgumentException If the passed decoding is invalid.
      */
@@ -220,7 +241,7 @@ class JsonDecoder
     {
         if (self::FLOAT !== $decoding && self::STRING !== $decoding) {
             throw new \InvalidArgumentException(sprintf(
-                'Expected JsonDecoder::FLOAT or JsonDecoder::STRING. '.
+                'Expected JsonDecoder::FLOAT or JsonDecoder::JSON_STRING. '.
                 'Got: %s',
                 $decoding
             ));
@@ -234,22 +255,29 @@ class JsonDecoder
         $assoc = self::ASSOC_ARRAY === $this->objectDecoding;
         $options = self::STRING === $this->bigIntDecoding ? JSON_BIGINT_AS_STRING : 0;
 
-        $decoded = json_decode($json, $assoc, $this->maxDepth, $options);
+        // We add 1 to the max depth to make JsonDecoder and JsonEncoder
+        // consistent. json_encode() and json_decode() behave differently for
+        // their depth values. See the test cases for examples.
+        $decoded = json_decode($json, $assoc, $this->maxDepth + 1, $options);
 
         // Data could not be decoded
         if (null === $decoded && null !== $json) {
             $parser = new JsonParser();
             $e = $parser->lint($json);
 
-            // Happens for example when the max depth is exceeded
-            if (!$e instanceof ParsingException) {
-                throw new InvalidJsonException(sprintf(
+            if ($e instanceof ParsingException) {
+                throw new DecodingFailedException(sprintf(
                     'The JSON data could not be decoded: %s.',
-                    json_last_error_msg()
-                ));
+                    $e->getMessage()
+                ), 0, $e);
             }
 
-            throw InvalidJsonException::fromErrors(array($e->getMessage()), 0, $e);
+            // $e is null if json_decode() failed, but the linter did not find
+            // any problems. Happens for example when the max depth is exceeded.
+            throw new DecodingFailedException(sprintf(
+                'The JSON data could not be decoded: %s.',
+                json_last_error_msg()
+            ), json_last_error());
         }
 
         return $decoded;

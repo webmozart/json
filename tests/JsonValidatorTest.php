@@ -55,7 +55,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\InvalidJsonException
+     * @expectedException \Puli\Json\ValidationFailedException
      */
     public function testValidateFailsIfValidationFailsWithSchemaFile()
     {
@@ -63,7 +63,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\InvalidJsonException
+     * @expectedException \Puli\Json\ValidationFailedException
      */
     public function testValidateFailsIfValidationFailsWithSchemaObject()
     {
@@ -110,4 +110,14 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator->validate((object) array('name' => 'Bernhard'), (object) array('id' => 12345));
     }
 
+    /**
+     * @expectedException \Puli\Json\SchemaException
+     */
+    public function testValidateFailsIfInvalidSchemaNotRecognized()
+    {
+        // justinrainbow/json-schema cannot validate "anyOf", so the following
+        // will load the schema successfully and fail when the file is validated
+        // against the schema
+        $this->validator->validate((object) array('name' => 'Bernhard'), (object) array('type' => 12345));
+    }
 }

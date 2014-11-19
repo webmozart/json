@@ -66,7 +66,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\InvalidJsonException
+     * @expectedException \Puli\Json\ValidationFailedException
      */
     public function testDecodeFailsIfValidationFailsWithSchemaFile()
     {
@@ -74,7 +74,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\InvalidJsonException
+     * @expectedException \Puli\Json\ValidationFailedException
      */
     public function testDecodeFailsIfValidationFailsWithSchemaObject()
     {
@@ -82,81 +82,16 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\SchemaException
-     */
-    public function testDecodeFailsIfSchemaFileNotFound()
-    {
-        $this->decoder->decode('{ "name": "Bernhard" }', __DIR__.'/bogus.json');
-    }
-
-    /**
-     * @expectedException \Puli\Json\SchemaException
-     */
-    public function testDecodeFailsIfSchemaNeitherStringNorObject()
-    {
-        $this->decoder->decode('{ "name": "Bernhard" }', 12345);
-    }
-
-    /**
-     * @expectedException \Puli\Json\SchemaException
-     */
-    public function testDecodeFailsIfSchemaFileContainsNoObject()
-    {
-        $this->decoder->decode('{ "name": "Bernhard" }', $this->fixturesDir.'/schema-no-object.json');
-    }
-
-    /**
-     * @expectedException \Puli\Json\SchemaException
-     */
-    public function testDecodeFailsIfSchemaFileInvalid()
-    {
-        $this->decoder->decode('{ "name": "Bernhard" }', $this->fixturesDir.'/schema-invalid.json');
-    }
-
-    /**
-     * @expectedException \Puli\Json\SchemaException
-     */
-    public function testDecodeFailsIfSchemaObjectInvalid()
-    {
-        $this->decoder->decode('{ "name": "Bernhard" }', (object) array('id' => 12345));
-    }
-
-    /**
-     * @expectedException \Puli\Json\SchemaException
-     */
-    public function testDecodeFailsIfInvalidSchemaNotRecognized()
-    {
-        // justinrainbow/json-schema cannot validate "anyOf", so the following
-        // will load the schema successfully and fail when the file is validated
-        // against the schema
-        $this->decoder->decode('{ "name": "Bernhard" }', (object) array('type' => 12345));
-    }
-
-    /**
-     * @expectedException \Puli\Json\InvalidJsonException
+     * JSON_ERROR_UTF8
+     *
+     * @expectedException \Puli\Json\DecodingFailedException
+     * @expectedExceptionCode 5
      */
     public function testDecodeFailsIfNotUtf8()
     {
         $win1258 = file_get_contents($this->fixturesDir.'/win-1258.json');
 
         $this->decoder->decode($win1258);
-    }
-
-    public function testDecodeFile()
-    {
-        $data = $this->decoder->decodeFile($this->fixturesDir.'/valid.json', $this->schemaFile);
-
-        $this->assertInstanceOf('\stdClass', $data);
-        $this->assertObjectHasAttribute('name', $data);
-        $this->assertSame('Bernhard', $data->name);
-    }
-
-    /**
-     * @expectedException \Puli\Json\FileNotFoundException
-     */
-    public function testDecodeFileFailsIfNotFound()
-    {
-        $this->decoder->decodeFile(__DIR__.'/bogus.json', $this->schemaFile);
     }
 
     public function testDecodeObjectAsObject()
@@ -206,18 +141,41 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\InvalidJsonException
+     * JSON_ERROR_DEPTH
+     *
+     * @expectedException \Puli\Json\DecodingFailedException
+     * @expectedExceptionCode 1
      */
-    public function testMaxDepthExceeded()
+    public function testMaxDepth0Exceeded()
     {
-        $this->decoder->setMaxDepth(1);
+        $this->decoder->setMaxDepth(0);
 
         $this->decoder->decode('{ "name": "Bernhard" }');
     }
 
-    public function testMaxDepthNotExceeded()
+    public function testMaxDepth0NotExceeded()
     {
-        $this->decoder->setMaxDepth(2);
+        $this->decoder->setMaxDepth(0);
+
+        $this->assertSame('Bernhard', $this->decoder->decode('"Bernhard"'));
+    }
+
+    /**
+     * JSON_ERROR_DEPTH
+     *
+     * @expectedException \Puli\Json\DecodingFailedException
+     * @expectedExceptionCode 1
+     */
+    public function testMaxDepth1Exceeded()
+    {
+        $this->decoder->setMaxDepth(1);
+
+        $this->decoder->decode('{ "key": { "name": "Bernhard" } }');
+    }
+
+    public function testMaxDepth1NotExceeded()
+    {
+        $this->decoder->setMaxDepth(1);
 
         $decoded = $this->decoder->decode('{ "name": "Bernhard" }');
 
@@ -230,6 +188,14 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     public function testMaxDepthMustBeInteger()
     {
         $this->decoder->setMaxDepth('foo');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testMaxDepthMustBeZeroOrGreater()
+    {
+        $this->decoder->setMaxDepth(-1);
     }
 
     public function testDecodeBigIntAsFloat()
@@ -266,5 +232,38 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     public function testFailIfInvalidBigIntDecoding($invalidDecoding)
     {
         $this->decoder->setBigIntDecoding($invalidDecoding);
+    }
+
+    public function testDecodeFile()
+    {
+        $data = $this->decoder->decodeFile($this->fixturesDir.'/valid.json');
+
+        $this->assertInstanceOf('\stdClass', $data);
+        $this->assertObjectHasAttribute('name', $data);
+        $this->assertSame('Bernhard', $data->name);
+    }
+
+    /**
+     * @expectedException \Puli\Json\FileNotFoundException
+     */
+    public function testDecodeFileFailsIfNotFound()
+    {
+        $this->decoder->decodeFile($this->fixturesDir.'/bogus.json');
+    }
+
+    /**
+     * @expectedException \Puli\Json\ValidationFailedException
+     */
+    public function testDecodeFileFailsIfValidationFailsWithSchemaFile()
+    {
+        $this->decoder->decodeFile($this->fixturesDir.'/invalid.json', $this->schemaFile);
+    }
+
+    /**
+     * @expectedException \Puli\Json\ValidationFailedException
+     */
+    public function testDecodeFileFailsIfValidationFailsWithSchemaObject()
+    {
+        $this->decoder->decodeFile($this->fixturesDir.'/invalid.json', $this->schemaObject);
     }
 }

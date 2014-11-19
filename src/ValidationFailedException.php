@@ -11,19 +11,17 @@
 
 namespace Puli\Json;
 
-use Exception;
-
 /**
  * Thrown when a JSON file contains invalid JSON.
  *
  * @since  1.0
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class InvalidJsonException extends \Exception
+class ValidationFailedException extends \Exception
 {
     private $errors;
 
-    public static function fromErrors(array $errors = array(), $code = 0, Exception $previous = null)
+    public static function fromErrors(array $errors = array(), $code = 0, \Exception $previous = null)
     {
         return new static(sprintf(
             "Validation of the JSON data failed:\n%s",
@@ -31,13 +29,7 @@ class InvalidJsonException extends \Exception
         ), $errors, $code, $previous);
     }
 
-    private static function errorsToString(array $errors)
-    {
-
-        return ltrim($string);
-    }
-
-    public function __construct($message = '', array $errors = array(), $code = 0, Exception $previous = null)
+    public function __construct($message = '', array $errors = array(), $code = 0, \Exception $previous = null)
     {
         $this->errors = $errors;
 
