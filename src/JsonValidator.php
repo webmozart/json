@@ -111,7 +111,7 @@ class JsonValidator
     {
         if (!file_exists($file)) {
             throw new SchemaException(sprintf(
-                'The schema file "%s" does not exist.',
+                'The schema file %s does not exist.',
                 $file
             ));
         }
@@ -122,7 +122,7 @@ class JsonValidator
             $this->validateSchema($schema);
         } catch (SchemaException $e) {
             throw new SchemaException(sprintf(
-                'An error occurred while loading the schema "%s": %s',
+                'An error occurred while loading the schema %s: %s',
                 $file,
                 $e->getMessage()
             ), 0, $e);
