@@ -329,6 +329,20 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('{"name":"Bernhard"}', $this->encoder->encode((object) array('name' => 'Bernhard')));
     }
 
+    public function testTerminateWithLineFeed()
+    {
+        $this->encoder->setTerminateWithLineFeed(true);
+
+        $this->assertSame('{"name":"Bernhard"}'."\n", $this->encoder->encode((object) array('name' => 'Bernhard')));
+    }
+
+    public function testDoNotTerminateWithLineFeed()
+    {
+        $this->encoder->setTerminateWithLineFeed(false);
+
+        $this->assertSame('{"name":"Bernhard"}', $this->encoder->encode((object) array('name' => 'Bernhard')));
+    }
+
     public function testEncodeFile()
     {
         $data = (object) array('name' => 'Bernhard');

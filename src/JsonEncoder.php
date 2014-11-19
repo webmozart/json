@@ -90,6 +90,11 @@ class JsonEncoder
     private $prettyPrinting = false;
 
     /**
+     * @var bool
+     */
+    private $terminatedWithLineFeed = false;
+
+    /**
      * @var int
      */
     private $maxDepth = 512;
@@ -171,6 +176,10 @@ class JsonEncoder
                 'The data could not be encoded as JSON: %s',
                 json_last_error_msg()
             ), json_last_error());
+        }
+
+        if ($this->terminatedWithLineFeed) {
+            $encoded .= "\n";
         }
 
         return $encoded;
@@ -461,6 +470,31 @@ class JsonEncoder
     public function setPrettyPrinting($prettyPrinting)
     {
         $this->prettyPrinting = $prettyPrinting;
+    }
+
+    /**
+     * Returns whether JSON strings are terminated with a line feed.
+     *
+     * By default, JSON strings are not terminated with a line feed.
+     *
+     * @return bool Whether JSON strings are terminated with a line feed.
+     */
+    public function isTerminatedWithLineFeed()
+    {
+        return $this->terminatedWithLineFeed;
+    }
+
+    /**
+     * Sets whether JSON strings should be terminated with a line feed.
+     *
+     * By default, JSON strings are not terminated with a line feed.
+     *
+     * @param bool $enabled Whether JSON strings should be terminated with a
+     *                      line feed.
+     */
+    public function setTerminateWithLineFeed($enabled)
+    {
+        $this->terminatedWithLineFeed = $enabled;
     }
 
     /**
