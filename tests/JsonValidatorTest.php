@@ -71,7 +71,10 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that the file name is mentioned in the output.
+     *
      * @expectedException \Puli\Json\SchemaException
+     * @expectedExceptionMessage bogus.json
      */
     public function testValidateFailsIfSchemaFileNotFound()
     {

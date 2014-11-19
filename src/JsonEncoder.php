@@ -200,10 +200,33 @@ class JsonEncoder
      */
     public function encodeFile($file, $data, $schema = null)
     {
-        // Right now, it's sufficient to just write the file. In the future,
-        // this will diff existing files with the given data and only do
-        // in-place modifications where necessary.
-        file_put_contents($file, $this->encode($data, $schema));
+        try {
+            // Right now, it's sufficient to just write the file. In the future,
+            // this will diff existing files with the given data and only do
+            // in-place modifications where necessary.
+            file_put_contents($file, $this->encode($data, $schema));
+        } catch (EncodingFailedException $e) {
+            // Add the file name to the exception
+            throw new EncodingFailedException(sprintf(
+                'An error happened while encoding %s: %s',
+                $file,
+                $e->getMessage()
+            ), $e->getCode(), $e);
+        } catch (ValidationFailedException $e) {
+            // Add the file name to the exception
+            throw new ValidationFailedException(sprintf(
+                "Validation failed while encoding %s:\n%s",
+                $file,
+                $e->getErrorsAsString()
+            ), $e->getErrors(), $e->getCode(), $e);
+        } catch (SchemaException $e) {
+            // Add the file name to the exception
+            throw new SchemaException(sprintf(
+                'An error happened while encoding %s: %s',
+                $file,
+                $e->getMessage()
+            ), $e->getCode(), $e);
+        }
     }
 
     /**

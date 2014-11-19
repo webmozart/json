@@ -354,7 +354,10 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that the file name is present in the output.
+     *
      * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedExceptionMessage JsonEncoderTest
      */
     public function testEncodeFileFailsIfValidationFailsWithSchemaFile()
     {
@@ -362,10 +365,25 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that the file name is present in the output.
+     *
      * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedExceptionMessage JsonEncoderTest
      */
     public function testEncodeFileFailsIfValidationFailsWithSchemaObject()
     {
         $this->encoder->encodeFile($this->tempFile, 'foobar', $this->schemaObject);
+    }
+
+    /**
+     * Test that the file name is present in the output.
+     *
+     * @expectedException \Puli\Json\EncodingFailedException
+     * @expectedExceptionMessage JsonEncoderTest
+     * @expectedExceptionCode 5
+     */
+    public function testEncodeFileFailsIfNonUtf8()
+    {
+        $this->encoder->encodeFile($this->tempFile, file_get_contents($this->fixturesDir.'/win-1258.json'));
     }
 }

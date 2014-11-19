@@ -132,12 +132,35 @@ class JsonDecoder
     {
         if (!file_exists($file)) {
             throw new FileNotFoundException(sprintf(
-                'The file "%s" does not exist.',
+                'The file %s does not exist.',
                 $file
             ));
         }
 
-        return $this->decode(file_get_contents($file), $schema);
+        try {
+            return $this->decode(file_get_contents($file), $schema);
+        } catch (DecodingFailedException $e) {
+            // Add the file name to the exception
+            throw new DecodingFailedException(sprintf(
+                'An error happened while decoding %s: %s',
+                $file,
+                $e->getMessage()
+            ), $e->getCode(), $e);
+        } catch (ValidationFailedException $e) {
+            // Add the file name to the exception
+            throw new ValidationFailedException(sprintf(
+                "Validation of %s failed:\n%s",
+                $file,
+                $e->getErrorsAsString()
+            ), $e->getErrors(), $e->getCode(), $e);
+        } catch (SchemaException $e) {
+            // Add the file name to the exception
+            throw new SchemaException(sprintf(
+                'An error happened while decoding %s: %s',
+                $file,
+                $e->getMessage()
+            ), $e->getCode(), $e);
+        }
     }
 
     /**

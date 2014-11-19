@@ -244,7 +244,10 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that the file name is present in the output.
+     *
      * @expectedException \Puli\Json\FileNotFoundException
+     * @expectedExceptionMessage bogus.json
      */
     public function testDecodeFileFailsIfNotFound()
     {
@@ -252,7 +255,10 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that the file name is present in the output.
+     *
      * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedExceptionMessage invalid.json
      */
     public function testDecodeFileFailsIfValidationFailsWithSchemaFile()
     {
@@ -260,10 +266,36 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that the file name is present in the output.
+     *
      * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedExceptionMessage invalid.json
      */
     public function testDecodeFileFailsIfValidationFailsWithSchemaObject()
     {
         $this->decoder->decodeFile($this->fixturesDir.'/invalid.json', $this->schemaObject);
+    }
+
+    /**
+     * Test that the file name is present in the output.
+     *
+     * @expectedException \Puli\Json\DecodingFailedException
+     * @expectedExceptionMessage win-1258.json
+     * @expectedExceptionCode 5
+     */
+    public function testDecodeFileFailsIfNotUtf8()
+    {
+        $this->decoder->decodeFile($this->fixturesDir.'/win-1258.json');
+    }
+
+    /**
+     * Test that the file name is present in the output.
+     *
+     * @expectedException \Puli\Json\SchemaException
+     * @expectedExceptionMessage valid.json
+     */
+    public function testDecodeFileFailsIfSchemaInvalid()
+    {
+        $this->decoder->decodeFile($this->fixturesDir.'/valid.json', 'bogus.json');
     }
 }
