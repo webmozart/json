@@ -5,3 +5,4 @@ Changelog
 
  * added `JsonValidator`
  * added `JsonDecoder`
+ * moved to `Webmozart` namespace

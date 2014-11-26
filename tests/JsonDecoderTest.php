@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Puli JSON package.
+ * This file is part of the Webmozart JSON package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\Json\Tests;
+namespace Webmozart\Json\Tests;
 
-use Puli\Json\JsonDecoder;
+use Webmozart\Json\JsonDecoder;
 
 /**
  * @since  1.0
@@ -66,7 +66,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedException \Webmozart\Json\ValidationFailedException
      */
     public function testDecodeFailsIfValidationFailsWithSchemaFile()
     {
@@ -74,7 +74,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedException \Webmozart\Json\ValidationFailedException
      */
     public function testDecodeFailsIfValidationFailsWithSchemaObject()
     {
@@ -84,7 +84,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * JSON_ERROR_UTF8
      *
-     * @expectedException \Puli\Json\DecodingFailedException
+     * @expectedException \Webmozart\Json\DecodingFailedException
      * @expectedExceptionCode 5
      */
     public function testDecodeFailsIfNotUtf8()
@@ -143,7 +143,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * JSON_ERROR_DEPTH
      *
-     * @expectedException \Puli\Json\DecodingFailedException
+     * @expectedException \Webmozart\Json\DecodingFailedException
      * @expectedExceptionCode 1
      */
     public function testMaxDepth0Exceeded()
@@ -163,7 +163,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * JSON_ERROR_DEPTH
      *
-     * @expectedException \Puli\Json\DecodingFailedException
+     * @expectedException \Webmozart\Json\DecodingFailedException
      * @expectedExceptionCode 1
      */
     public function testMaxDepth1Exceeded()
@@ -246,7 +246,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the file name is present in the output.
      *
-     * @expectedException \Puli\Json\FileNotFoundException
+     * @expectedException \Webmozart\Json\FileNotFoundException
      * @expectedExceptionMessage bogus.json
      */
     public function testDecodeFileFailsIfNotFound()
@@ -257,7 +257,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the file name is present in the output.
      *
-     * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedException \Webmozart\Json\ValidationFailedException
      * @expectedExceptionMessage invalid.json
      */
     public function testDecodeFileFailsIfValidationFailsWithSchemaFile()
@@ -268,7 +268,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the file name is present in the output.
      *
-     * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedException \Webmozart\Json\ValidationFailedException
      * @expectedExceptionMessage invalid.json
      */
     public function testDecodeFileFailsIfValidationFailsWithSchemaObject()
@@ -279,7 +279,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the file name is present in the output.
      *
-     * @expectedException \Puli\Json\DecodingFailedException
+     * @expectedException \Webmozart\Json\DecodingFailedException
      * @expectedExceptionMessage win-1258.json
      * @expectedExceptionCode 5
      */
@@ -291,7 +291,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the file name is present in the output.
      *
-     * @expectedException \Puli\Json\SchemaException
+     * @expectedException \Webmozart\Json\SchemaException
      * @expectedExceptionMessage valid.json
      */
     public function testDecodeFileFailsIfSchemaInvalid()

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Puli JSON package.
+ * This file is part of the Webmozart JSON package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\Json;
+namespace Webmozart\Json;
 
 /**
  * Thrown when a file was not found.

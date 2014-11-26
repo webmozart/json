@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Puli JSON package.
+ * This file is part of the Webmozart JSON package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Puli\Json\Tests;
+namespace Webmozart\Json\Tests;
 
-use Puli\Json\JsonValidator;
+use Webmozart\Json\JsonValidator;
 
 /**
  * @since  1.0
@@ -55,7 +55,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedException \Webmozart\Json\ValidationFailedException
      */
     public function testValidateFailsIfValidationFailsWithSchemaFile()
     {
@@ -63,7 +63,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\ValidationFailedException
+     * @expectedException \Webmozart\Json\ValidationFailedException
      */
     public function testValidateFailsIfValidationFailsWithSchemaObject()
     {
@@ -73,7 +73,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the file name is mentioned in the output.
      *
-     * @expectedException \Puli\Json\SchemaException
+     * @expectedException \Webmozart\Json\SchemaException
      * @expectedExceptionMessage bogus.json
      */
     public function testValidateFailsIfSchemaFileNotFound()
@@ -82,7 +82,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\SchemaException
+     * @expectedException \Webmozart\Json\SchemaException
      */
     public function testValidateFailsIfSchemaNeitherStringNorObject()
     {
@@ -90,7 +90,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\SchemaException
+     * @expectedException \Webmozart\Json\SchemaException
      */
     public function testValidateFailsIfSchemaFileContainsNoObject()
     {
@@ -98,7 +98,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\SchemaException
+     * @expectedException \Webmozart\Json\SchemaException
      */
     public function testValidateFailsIfSchemaFileInvalid()
     {
@@ -106,7 +106,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\SchemaException
+     * @expectedException \Webmozart\Json\SchemaException
      */
     public function testValidateFailsIfSchemaObjectInvalid()
     {
@@ -114,7 +114,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Puli\Json\SchemaException
+     * @expectedException \Webmozart\Json\SchemaException
      */
     public function testValidateFailsIfInvalidSchemaNotRecognized()
     {
