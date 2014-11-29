@@ -172,7 +172,13 @@ class JsonEncoder
         }
 
         if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $encoded = json_encode($data, $options, $this->maxDepth);
+            // We remove 1 from the max depth to make JsonDecoder and
+            // JsonEncoder consistent. json_encode() and json_decode() behave
+            // differently for their depth values. See the test cases for
+            // examples.
+            $maxDepth = $this->maxDepth - 1;
+
+            $encoded = json_encode($data, $options, $maxDepth);
         } else {
             $encoded = json_encode($data, $options);
         }
@@ -562,9 +568,9 @@ class JsonEncoder
             ));
         }
 
-        if ($maxDepth < 0) {
+        if ($maxDepth < 1) {
             throw new \InvalidArgumentException(sprintf(
-                'The maximum depth should zero or greater. Got: %s',
+                'The maximum depth should 1 or greater. Got: %s',
                 $maxDepth
             ));
         }

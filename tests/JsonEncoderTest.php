@@ -283,32 +283,6 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Webmozart\Json\EncodingFailedException
      * @expectedExceptionCode 1
      */
-    public function testMaxDepth0Exceeded()
-    {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('PHP >= 5.5.0 only');
-
-            return;
-        }
-
-        $this->encoder->setMaxDepth(0);
-
-        $this->encoder->encode((object) array('name' => 'Bernhard'));
-    }
-
-    public function testMaxDepth0NotExceeded()
-    {
-        $this->encoder->setMaxDepth(10);
-
-        $this->assertSame('"Bernhard"', $this->encoder->encode('Bernhard'));
-    }
-
-    /**
-     * JSON_ERROR_DEPTH
-     *
-     * @expectedException \Webmozart\Json\EncodingFailedException
-     * @expectedExceptionCode 1
-     */
     public function testMaxDepth1Exceeded()
     {
         if (version_compare(PHP_VERSION, '5.5.0', '<')) {
@@ -319,12 +293,38 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
         $this->encoder->setMaxDepth(1);
 
-        $this->encoder->encode((object) array('key' => (object) array('name' => 'Bernhard')));
+        $this->encoder->encode((object) array('name' => 'Bernhard'));
     }
 
     public function testMaxDepth1NotExceeded()
     {
         $this->encoder->setMaxDepth(1);
+
+        $this->assertSame('"Bernhard"', $this->encoder->encode('Bernhard'));
+    }
+
+    /**
+     * JSON_ERROR_DEPTH
+     *
+     * @expectedException \Webmozart\Json\EncodingFailedException
+     * @expectedExceptionCode 1
+     */
+    public function testMaxDepth2Exceeded()
+    {
+        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+            $this->markTestSkipped('PHP >= 5.5.0 only');
+
+            return;
+        }
+
+        $this->encoder->setMaxDepth(2);
+
+        $this->encoder->encode((object) array('key' => (object) array('name' => 'Bernhard')));
+    }
+
+    public function testMaxDepth2NotExceeded()
+    {
+        $this->encoder->setMaxDepth(2);
 
         $this->assertSame('{"name":"Bernhard"}', $this->encoder->encode((object) array('name' => 'Bernhard')));
     }
@@ -340,9 +340,9 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testMaxDepthMustBeZeroOrGreater()
+    public function testMaxDepthMustBeOneOrGreater()
     {
-        $this->encoder->setMaxDepth(-1);
+        $this->encoder->setMaxDepth(0);
     }
 
     public function testPrettyPrinting()

@@ -146,16 +146,16 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Webmozart\Json\DecodingFailedException
      * @expectedExceptionCode 1
      */
-    public function testMaxDepth0Exceeded()
+    public function testMaxDepth1Exceeded()
     {
-        $this->decoder->setMaxDepth(0);
+        $this->decoder->setMaxDepth(1);
 
         $this->decoder->decode('{ "name": "Bernhard" }');
     }
 
-    public function testMaxDepth0NotExceeded()
+    public function testMaxDepth1NotExceeded()
     {
-        $this->decoder->setMaxDepth(0);
+        $this->decoder->setMaxDepth(1);
 
         $this->assertSame('Bernhard', $this->decoder->decode('"Bernhard"'));
     }
@@ -166,16 +166,16 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Webmozart\Json\DecodingFailedException
      * @expectedExceptionCode 1
      */
-    public function testMaxDepth1Exceeded()
+    public function testMaxDepth2Exceeded()
     {
-        $this->decoder->setMaxDepth(1);
+        $this->decoder->setMaxDepth(2);
 
         $this->decoder->decode('{ "key": { "name": "Bernhard" } }');
     }
 
-    public function testMaxDepth1NotExceeded()
+    public function testMaxDepth2NotExceeded()
     {
-        $this->decoder->setMaxDepth(1);
+        $this->decoder->setMaxDepth(2);
 
         $decoded = $this->decoder->decode('{ "name": "Bernhard" }');
 
@@ -193,9 +193,9 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testMaxDepthMustBeZeroOrGreater()
+    public function testMaxDepthMustBeOneOrGreater()
     {
-        $this->decoder->setMaxDepth(-1);
+        $this->decoder->setMaxDepth(0);
     }
 
     public function testDecodeBigIntAsFloat()
