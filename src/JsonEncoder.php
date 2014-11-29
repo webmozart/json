@@ -180,7 +180,7 @@ class JsonEncoder
             // examples.
             // HHVM does not have this inconsistency.
             if (!defined('HHVM_VERSION')) {
-                --$this->maxDepth;
+                --$maxDepth;
             }
 
             $encoded = json_encode($data, $options, $maxDepth);
