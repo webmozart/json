@@ -157,24 +157,30 @@ class JsonEncoder
             $options |= JSON_HEX_QUOT;
         }
 
-        if (!$this->slashEscaped) {
-            $options |= JSON_UNESCAPED_SLASHES;
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            if (!$this->slashEscaped) {
+                $options |= JSON_UNESCAPED_SLASHES;
+            }
+
+            if (!$this->unicodeEscaped) {
+                $options |= JSON_UNESCAPED_UNICODE;
+            }
+
+            if ($this->prettyPrinting) {
+                $options |= JSON_PRETTY_PRINT;
+            }
         }
 
-        if (!$this->unicodeEscaped) {
-            $options |= JSON_UNESCAPED_UNICODE;
+        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
+            $encoded = json_encode($data, $options, $this->maxDepth);
+        } else {
+            $encoded = json_encode($data, $options);
         }
-
-        if ($this->prettyPrinting) {
-            $options |= JSON_PRETTY_PRINT;
-        }
-
-        $encoded = json_encode($data, $options, $this->maxDepth);
 
         if (false === $encoded) {
             throw new EncodingFailedException(sprintf(
                 'The data could not be encoded as JSON: %s',
-                json_last_error_msg()
+                JsonError::getLastErrorMessage()
             ), json_last_error());
         }
 

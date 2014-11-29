@@ -91,6 +91,10 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testEncodeFailsIfNonUtf8()
     {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $this->markTestSkipped('PHP >= 5.4.0 only');
+        }
+
         $this->encoder->encode(file_get_contents($this->fixturesDir.'/win-1258.json'));
     }
 
@@ -240,6 +244,10 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     public function testSlashNotEscaped()
     {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $this->markTestSkipped('PHP >= 5.4.0 only');
+        }
+
         $this->encoder->setEscapeSlash(false);
 
         $this->assertSame('"/"', $this->encoder->encode('/'));
@@ -254,6 +262,10 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     public function testUnicodeNotEscaped()
     {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $this->markTestSkipped('PHP >= 5.4.0 only');
+        }
+
         $this->encoder->setEscapeUnicode(false);
 
         $this->assertSame('"ü"', $this->encoder->encode('ü'));
@@ -267,6 +279,10 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testMaxDepth0Exceeded()
     {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $this->markTestSkipped('PHP >= 5.4.0 only');
+        }
+
         $this->encoder->setMaxDepth(0);
 
         $this->encoder->encode((object) array('name' => 'Bernhard'));
@@ -287,6 +303,10 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testMaxDepth1Exceeded()
     {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $this->markTestSkipped('PHP >= 5.4.0 only');
+        }
+
         $this->encoder->setMaxDepth(1);
 
         $this->encoder->encode((object) array('key' => (object) array('name' => 'Bernhard')));
@@ -317,6 +337,10 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     public function testPrettyPrinting()
     {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $this->markTestSkipped('PHP >= 5.4.0 only');
+        }
+
         $this->encoder->setPrettyPrinting(true);
 
         $this->assertSame("{\n    \"name\": \"Bernhard\"\n}", $this->encoder->encode((object) array('name' => 'Bernhard')));
@@ -384,6 +408,10 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testEncodeFileFailsIfNonUtf8()
     {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $this->markTestSkipped('PHP >= 5.4.0 only');
+        }
+
         $this->encoder->encodeFile($this->tempFile, file_get_contents($this->fixturesDir.'/win-1258.json'));
     }
 }

@@ -276,12 +276,19 @@ class JsonDecoder
     private function decodeJson($json)
     {
         $assoc = self::ASSOC_ARRAY === $this->objectDecoding;
-        $options = self::STRING === $this->bigIntDecoding ? JSON_BIGINT_AS_STRING : 0;
 
         // We add 1 to the max depth to make JsonDecoder and JsonEncoder
         // consistent. json_encode() and json_decode() behave differently for
         // their depth values. See the test cases for examples.
-        $decoded = json_decode($json, $assoc, $this->maxDepth + 1, $options);
+        $maxDepth = $this->maxDepth + 1;
+
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            $options = self::STRING === $this->bigIntDecoding ? JSON_BIGINT_AS_STRING : 0;
+
+            $decoded = json_decode($json, $assoc, $maxDepth, $options);
+        } else {
+            $decoded = json_decode($json, $assoc, $maxDepth);
+        }
 
         // Data could not be decoded
         if (null === $decoded && null !== $json) {
@@ -299,7 +306,7 @@ class JsonDecoder
             // any problems. Happens for example when the max depth is exceeded.
             throw new DecodingFailedException(sprintf(
                 'The JSON data could not be decoded: %s.',
-                json_last_error_msg()
+                JsonError::getLastErrorMessage()
             ), json_last_error());
         }
 
