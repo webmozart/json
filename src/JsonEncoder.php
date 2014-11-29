@@ -172,11 +172,16 @@ class JsonEncoder
         }
 
         if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            // We remove 1 from the max depth to make JsonDecoder and
+            $maxDepth = $this->maxDepth;
+
+            // We subtract 1 from the max depth to make JsonDecoder and
             // JsonEncoder consistent. json_encode() and json_decode() behave
             // differently for their depth values. See the test cases for
             // examples.
-            $maxDepth = $this->maxDepth - 1;
+            // HHVM does not have this inconsistency.
+            if (!defined('HHVM_VERSION')) {
+                --$this->maxDepth;
+            }
 
             $encoded = json_encode($data, $options, $maxDepth);
         } else {
