@@ -1,8 +1,6 @@
 Changelog
 =========
 
-* 1.0.0-alpha1 (@release_date@)
+* 1.0.0-alpha1 (2014-12-03)
 
- * added `JsonValidator`
- * added `JsonDecoder`
- * moved to `Webmozart` namespace
+ * first alpha release
