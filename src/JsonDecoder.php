@@ -277,7 +277,7 @@ class JsonDecoder
     {
         $assoc = self::ASSOC_ARRAY === $this->objectDecoding;
 
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+        if (version_compare(PHP_VERSION, '5.4.0', '>=') && false === strpos(PHP_VERSION, 'ubuntu')) {
             $options = self::STRING === $this->bigIntDecoding ? JSON_BIGINT_AS_STRING : 0;
 
             $decoded = json_decode($json, $assoc, $this->maxDepth, $options);

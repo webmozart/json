@@ -89,6 +89,12 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecodeFailsIfNotUtf8()
     {
+        if (false !== strpos(PHP_VERSION, 'ubuntu')) {
+            $this->markTestSkipped('This error is not reported on PHP versions compiled for Ubuntu.');
+
+            return;
+        }
+
         $win1258 = file_get_contents($this->fixturesDir.'/win-1258.json');
 
         $this->decoder->decode($win1258);
@@ -285,6 +291,12 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecodeFileFailsIfNotUtf8()
     {
+        if (false !== strpos(PHP_VERSION, 'ubuntu')) {
+            $this->markTestSkipped('This error is not reported on PHP versions compiled for Ubuntu.');
+
+            return;
+        }
+        
         $this->decoder->decodeFile($this->fixturesDir.'/win-1258.json');
     }
 
