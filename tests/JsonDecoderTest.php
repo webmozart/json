@@ -81,6 +81,13 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
         $this->decoder->decode('"foobar"', $this->schemaObject);
     }
 
+    public function testDecodeUtf8()
+    {
+        $data = $this->decoder->decode('{"name":"B\u00e9rnhard"}');
+
+        $this->assertEquals((object) array('name' => 'Bérnhard'), $data);
+    }
+
     /**
      * JSON_ERROR_UTF8
      *
@@ -296,7 +303,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
 
             return;
         }
-        
+
         $this->decoder->decodeFile($this->fixturesDir.'/win-1258.json');
     }
 

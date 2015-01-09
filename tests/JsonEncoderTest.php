@@ -83,6 +83,13 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
         $this->encoder->encode('foobar', $this->schemaObject);
     }
 
+    public function testEncodeUtf8()
+    {
+        $data = (object) array('name' => 'Bérnhard');
+
+        $this->assertSame('{"name":"B\u00e9rnhard"}', $this->encoder->encode($data));
+    }
+
     /**
      * JSON_ERROR_UTF8
      *
