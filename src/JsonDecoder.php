@@ -106,7 +106,11 @@ class JsonDecoder
         $decoded = $this->decodeJson($json);
 
         if (null !== $schema) {
-            $this->validator->validate($decoded, $schema);
+            $errors = $this->validator->validate($decoded, $schema);
+
+            if (count($errors) > 0) {
+                throw ValidationFailedException::fromErrors($errors);
+            }
         }
 
         return $decoded;

@@ -128,7 +128,11 @@ class JsonEncoder
     public function encode($data, $schema = null)
     {
         if (null !== $schema) {
-            $this->validator->validate($data, $schema);
+            $errors = $this->validator->validate($data, $schema);
+
+            if (count($errors) > 0) {
+                throw ValidationFailedException::fromErrors($errors);
+            }
         }
 
         $options = 0;

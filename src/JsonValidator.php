@@ -29,7 +29,7 @@ class JsonValidator
     /**
      * The schema used for validating schemas.
      *
-     * @var \stdClass|null
+     * @var object|null
      */
     private $metaSchema;
 
@@ -42,7 +42,9 @@ class JsonValidator
      * @param mixed         $data   The decoded JSON data.
      * @param string|object $schema The schema file or object.
      *
-     * @throws ValidationFailedException If the data does not comply with the schema.
+     * @return string[] The errors found during validation. Returns an empty
+     *                  array if no errors were found.
+     *
      * @throws InvalidSchemaException If the schema is invalid.
      */
     public function validate($data, $schema)
@@ -50,7 +52,7 @@ class JsonValidator
         if (is_string($schema)) {
             $schema = $this->loadSchema($schema);
         } else {
-            $this->validateSchema($schema);
+            $this->assertSchemaValid($schema);
         }
 
         $validator = new Validator();
@@ -64,6 +66,8 @@ class JsonValidator
             ), 0, $e);
         }
 
+        $errors = array();
+
         if (!$validator->isValid()) {
             $errors = (array) $validator->getErrors();
 
@@ -71,12 +75,12 @@ class JsonValidator
                 $prefix = $error['property'] ? $error['property'].': ' : '';
                 $errors[$key] = $prefix.$error['message'];
             }
-
-            throw ValidationFailedException::fromErrors($errors);
         }
+
+        return $errors;
     }
 
-    private function validateSchema($schema)
+    private function assertSchemaValid($schema)
     {
         if (null === $this->metaSchema) {
             // The meta schema is obviously not validated. If we
@@ -88,13 +92,13 @@ class JsonValidator
             return;
         }
 
-        try {
-            $this->validate($schema, $this->metaSchema);
-        } catch (ValidationFailedException $e) {
+        $errors = $this->validate($schema, $this->metaSchema);
+
+        if (count($errors) > 0) {
             throw new InvalidSchemaException(sprintf(
                 "The schema is invalid:\n%s",
-                $e->getErrorsAsString()
-            ), 0, $e);
+                implode("\n", $errors)
+            ));
         }
 
         // not caught by justinrainbow/json-schema
@@ -119,7 +123,7 @@ class JsonValidator
         $schema = json_decode(file_get_contents($file));
 
         try {
-            $this->validateSchema($schema);
+            $this->assertSchemaValid($schema);
         } catch (InvalidSchemaException $e) {
             throw new InvalidSchemaException(sprintf(
                 'An error occurred while loading the schema %s: %s',

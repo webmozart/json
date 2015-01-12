@@ -40,34 +40,30 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateWithSchemaFile()
     {
-        $this->validator->validate((object) array('name' => 'Bernhard'), $this->schemaFile);
+        $errors = $this->validator->validate((object) array('name' => 'Bernhard'), $this->schemaFile);
 
-        // no exception thrown
-        $this->assertTrue(true);
+        $this->assertCount(0, $errors);
     }
 
     public function testValidateWithSchemaObject()
     {
-        $this->validator->validate((object) array('name' => 'Bernhard'), $this->schemaObject);
+        $errors = $this->validator->validate((object) array('name' => 'Bernhard'), $this->schemaObject);
 
-        // no exception thrown
-        $this->assertTrue(true);
+        $this->assertCount(0, $errors);
     }
 
-    /**
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     */
     public function testValidateFailsIfValidationFailsWithSchemaFile()
     {
-        $this->validator->validate('foobar', $this->schemaFile);
+        $errors = $this->validator->validate('foobar', $this->schemaFile);
+
+        $this->assertCount(1, $errors);
     }
 
-    /**
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     */
     public function testValidateFailsIfValidationFailsWithSchemaObject()
     {
-        $this->validator->validate('foobar', $this->schemaObject);
+        $errors = $this->validator->validate('foobar', $this->schemaObject);
+
+        $this->assertCount(1, $errors);
     }
 
     /**
