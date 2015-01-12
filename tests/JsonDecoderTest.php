@@ -310,7 +310,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the file name is present in the output.
      *
-     * @expectedException \Webmozart\Json\SchemaException
+     * @expectedException \Webmozart\Json\InvalidSchemaException
      * @expectedExceptionMessage valid.json
      */
     public function testDecodeFileFailsIfSchemaInvalid()

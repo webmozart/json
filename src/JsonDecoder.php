@@ -91,7 +91,7 @@ class JsonDecoder
      * @throws DecodingFailedException If the JSON string could not be decoded.
      * @throws ValidationFailedException If the decoded string fails schema
      *                                   validation.
-     * @throws SchemaException If the schema is invalid.
+     * @throws InvalidSchemaException If the schema is invalid.
      */
     public function decode($json, $schema = null)
     {
@@ -124,7 +124,7 @@ class JsonDecoder
      * @throws DecodingFailedException If the file could not be decoded.
      * @throws ValidationFailedException If the decoded file fails schema
      *                                   validation.
-     * @throws SchemaException If the schema is invalid.
+     * @throws InvalidSchemaException If the schema is invalid.
      *
      * @see decode
      */
@@ -153,9 +153,9 @@ class JsonDecoder
                 $file,
                 $e->getErrorsAsString()
             ), $e->getErrors(), $e->getCode(), $e);
-        } catch (SchemaException $e) {
+        } catch (InvalidSchemaException $e) {
             // Add the file name to the exception
-            throw new SchemaException(sprintf(
+            throw new InvalidSchemaException(sprintf(
                 'An error happened while decoding %s: %s',
                 $file,
                 $e->getMessage()

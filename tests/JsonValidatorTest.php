@@ -73,7 +73,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the file name is mentioned in the output.
      *
-     * @expectedException \Webmozart\Json\SchemaException
+     * @expectedException \Webmozart\Json\InvalidSchemaException
      * @expectedExceptionMessage bogus.json
      */
     public function testValidateFailsIfSchemaFileNotFound()
@@ -82,7 +82,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\SchemaException
+     * @expectedException \Webmozart\Json\InvalidSchemaException
      */
     public function testValidateFailsIfSchemaNeitherStringNorObject()
     {
@@ -90,7 +90,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\SchemaException
+     * @expectedException \Webmozart\Json\InvalidSchemaException
      */
     public function testValidateFailsIfSchemaFileContainsNoObject()
     {
@@ -98,7 +98,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\SchemaException
+     * @expectedException \Webmozart\Json\InvalidSchemaException
      */
     public function testValidateFailsIfSchemaFileInvalid()
     {
@@ -106,7 +106,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\SchemaException
+     * @expectedException \Webmozart\Json\InvalidSchemaException
      */
     public function testValidateFailsIfSchemaObjectInvalid()
     {
@@ -114,7 +114,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\SchemaException
+     * @expectedException \Webmozart\Json\InvalidSchemaException
      */
     public function testValidateFailsIfInvalidSchemaNotRecognized()
     {

@@ -43,7 +43,7 @@ class JsonValidator
      * @param string|object $schema The schema file or object.
      *
      * @throws ValidationFailedException If the data does not comply with the schema.
-     * @throws SchemaException If the schema is invalid.
+     * @throws InvalidSchemaException If the schema is invalid.
      */
     public function validate($data, $schema)
     {
@@ -58,7 +58,7 @@ class JsonValidator
         try {
             $validator->check($data, $schema);
         } catch (InvalidArgumentException $e) {
-            throw new SchemaException(sprintf(
+            throw new InvalidSchemaException(sprintf(
                 'The schema is invalid: %s',
                 $e->getMessage()
             ), 0, $e);
@@ -91,7 +91,7 @@ class JsonValidator
         try {
             $this->validate($schema, $this->metaSchema);
         } catch (ValidationFailedException $e) {
-            throw new SchemaException(sprintf(
+            throw new InvalidSchemaException(sprintf(
                 "The schema is invalid:\n%s",
                 $e->getErrorsAsString()
             ), 0, $e);
@@ -99,7 +99,7 @@ class JsonValidator
 
         // not caught by justinrainbow/json-schema
         if (!is_object($schema)) {
-            throw new SchemaException(sprintf(
+            throw new InvalidSchemaException(sprintf(
                 'The schema must be an object. Got: %s',
                 $schema,
                 gettype($schema)
@@ -110,7 +110,7 @@ class JsonValidator
     private function loadSchema($file)
     {
         if (!file_exists($file)) {
-            throw new SchemaException(sprintf(
+            throw new InvalidSchemaException(sprintf(
                 'The schema file %s does not exist.',
                 $file
             ));
@@ -120,8 +120,8 @@ class JsonValidator
 
         try {
             $this->validateSchema($schema);
-        } catch (SchemaException $e) {
-            throw new SchemaException(sprintf(
+        } catch (InvalidSchemaException $e) {
+            throw new InvalidSchemaException(sprintf(
                 'An error occurred while loading the schema %s: %s',
                 $file,
                 $e->getMessage()

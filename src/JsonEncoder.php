@@ -123,7 +123,7 @@ class JsonEncoder
      *
      * @throws EncodingFailedException If the data could not be encoded.
      * @throws ValidationFailedException If the data fails schema validation.
-     * @throws SchemaException If the schema is invalid.
+     * @throws InvalidSchemaException If the schema is invalid.
      */
     public function encode($data, $schema = null)
     {
@@ -211,7 +211,7 @@ class JsonEncoder
      *
      * @throws EncodingFailedException If the data could not be encoded.
      * @throws ValidationFailedException If the data fails schema validation.
-     * @throws SchemaException If the schema is invalid.
+     * @throws InvalidSchemaException If the schema is invalid.
      *
      * @see encode
      */
@@ -236,9 +236,9 @@ class JsonEncoder
                 $file,
                 $e->getErrorsAsString()
             ), $e->getErrors(), $e->getCode(), $e);
-        } catch (SchemaException $e) {
+        } catch (InvalidSchemaException $e) {
             // Add the file name to the exception
-            throw new SchemaException(sprintf(
+            throw new InvalidSchemaException(sprintf(
                 'An error happened while encoding %s: %s',
                 $file,
                 $e->getMessage()
