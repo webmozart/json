@@ -1,6 +1,6 @@
 {
     "name": "webmozart/json",
-    "description": "A JSON decoder/encoder with support for schema validation and in-place manipulation.",
+    "description": "A robust JSON decoder/encoder with support for schema validation.",
     "license": "MIT",
     "authors": [
         {
