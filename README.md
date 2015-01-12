@@ -1,4 +1,4 @@
-Webmozart Glob
+Webmozart JSON
 ==============
 
 [![Build Status](https://travis-ci.org/webmozart/json.svg?branch=master)](https://travis-ci.org/webmozart/json)
