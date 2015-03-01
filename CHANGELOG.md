@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* 1.0.0-next (@release_date@)
+
+ * flipped `$data` and `$file` arguments of `JsonEncoder::encodeFile()`
+
 * 1.0.0-beta (2015-01-12)
 
  * renamed `SchemaException` to `InvalidSchemaException`
