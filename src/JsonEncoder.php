@@ -209,8 +209,8 @@ class JsonEncoder
     /**
      * Encodes data into a JSON file.
      *
-     * @param string        $file   The path to the JSON file.
      * @param mixed         $data   The data to encode.
+     * @param string        $file   The path where the JSON file will be stored.
      * @param string|object $schema The schema file or object.
      *
      * @throws EncodingFailedException If the data could not be encoded.
@@ -219,7 +219,7 @@ class JsonEncoder
      *
      * @see encode
      */
-    public function encodeFile($file, $data, $schema = null)
+    public function encodeFile($data, $file, $schema = null)
     {
         try {
             // Right now, it's sufficient to just write the file. In the future,

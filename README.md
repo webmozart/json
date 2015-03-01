@@ -28,7 +28,7 @@ $encoder = new JsonEncoder();
 $string = $encoder->encode($data);
 
 // Store JSON in file
-$encoder->encodeFile('/path/to/file.json', $data);
+$encoder->encodeFile($data, '/path/to/file.json');
 ```
 
 You can pass the path to a [JSON schema] in the last optional argument of

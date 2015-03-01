@@ -390,7 +390,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     {
         $data = (object) array('name' => 'Bernhard');
 
-        $this->encoder->encodeFile($this->tempFile, $data);
+        $this->encoder->encodeFile($data, $this->tempFile);
 
         $this->assertFileExists($this->tempFile);
         $this->assertSame('{"name":"Bernhard"}', file_get_contents($this->tempFile));
@@ -404,7 +404,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testEncodeFileFailsIfValidationFailsWithSchemaFile()
     {
-        $this->encoder->encodeFile($this->tempFile, 'foobar', $this->schemaFile);
+        $this->encoder->encodeFile('foobar', $this->tempFile, $this->schemaFile);
     }
 
     /**
@@ -415,7 +415,8 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
      */
     public function testEncodeFileFailsIfValidationFailsWithSchemaObject()
     {
-        $this->encoder->encodeFile($this->tempFile, 'foobar', $this->schemaObject);
+        $this->encoder->encodeFile('foobar', $this->tempFile,
+            $this->schemaObject);
     }
 
     /**
@@ -433,6 +434,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->encoder->encodeFile($this->tempFile, file_get_contents($this->fixturesDir.'/win-1258.json'));
+        $this->encoder->encodeFile(file_get_contents($this->fixturesDir.'/win-1258.json'),
+            $this->tempFile);
     }
 }
