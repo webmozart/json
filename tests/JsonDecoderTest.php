@@ -47,6 +47,23 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Bernhard', $data->name);
     }
 
+    public function testDecodeEmptyObject()
+    {
+        $data = $this->decoder->decode('{}');
+
+        $this->assertEquals((object) array(), $data);
+        $this->assertInstanceOf('\stdClass', $data);
+    }
+
+    public function testDecodeNestedEmptyObject()
+    {
+        $data = $this->decoder->decode('{ "empty": {} }');
+
+        $this->assertEquals((object) array('empty' => (object) array()), $data);
+        $this->assertInstanceOf('\stdClass', $data);
+        $this->assertInstanceOf('\stdClass', $data->empty);
+    }
+
     public function testDecodeWithSchemaFile()
     {
         $data = $this->decoder->decode('{ "name": "Bernhard" }', $this->schemaFile);
