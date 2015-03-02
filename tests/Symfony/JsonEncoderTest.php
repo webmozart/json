@@ -58,14 +58,14 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     {
         $data = (object) array('name' => 'Kévin');
 
-        $this->assertSame('{"name":"K\u00e9vin"}', $this->encoder->encode($data, 'json', array('schema' => $this->schemaFile)));
+        $this->assertSame('{"name":"K\u00e9vin"}', $this->encoder->encode($data, 'json', array('json_schema' => $this->schemaFile)));
     }
 
     public function testEncodeWithSchemaObject()
     {
         $data = (object) array('name' => 'Kévin');
 
-        $this->assertSame('{"name":"K\u00e9vin"}', $this->encoder->encode($data, 'json', array('schema' => $this->schemaObject)));
+        $this->assertSame('{"name":"K\u00e9vin"}', $this->encoder->encode($data, 'json', array('json_schema' => $this->schemaObject)));
     }
 
     public function testDecode()
@@ -79,7 +79,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     public function testDecodeWithSchemaFile()
     {
-        $data = $this->encoder->decode('{ "name": "K\u00e9vin" }', 'json', array('schema' => $this->schemaFile));
+        $data = $this->encoder->decode('{ "name": "K\u00e9vin" }', 'json', array('json_schema' => $this->schemaFile));
 
         $this->assertInstanceOf('\stdClass', $data);
         $this->assertObjectHasAttribute('name', $data);
@@ -88,7 +88,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     public function testDecodeWithSchemaObject()
     {
-        $data = $this->encoder->decode('{ "name": "K\u00e9vin" }', 'json', array('schema' => $this->schemaObject));
+        $data = $this->encoder->decode('{ "name": "K\u00e9vin" }', 'json', array('json_schema' => $this->schemaObject));
 
         $this->assertInstanceOf('\stdClass', $data);
         $this->assertObjectHasAttribute('name', $data);

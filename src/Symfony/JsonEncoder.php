@@ -51,7 +51,7 @@ class JsonEncoder implements EncoderInterface, DecoderInterface
      */
     public function encode($data, $format, array $context = array())
     {
-        $schema = isset($context['schema']) ? $context['schema'] : null;
+        $schema = isset($context['json_schema']) ? $context['json_schema'] : null;
 
         return $this->encoder->encode($data, $schema);
     }
@@ -61,7 +61,7 @@ class JsonEncoder implements EncoderInterface, DecoderInterface
      */
     public function decode($data, $format, array $context = array())
     {
-        $schema = isset($context['schema']) ? $context['schema'] : null;
+        $schema = isset($context['json_schema']) ? $context['json_schema'] : null;
 
         return $this->decoder->decode($data, $schema);
     }
