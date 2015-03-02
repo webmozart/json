@@ -14,7 +14,7 @@
         "seld/jsonlint": "~1.0"
     },
     "require-dev": {
-      "symfony/serializer": "~2.0|~3.0.0"
+      "symfony/serializer": "~2.2|~3.0.0"
     },
     "suggest": {
       "symfony/serializer": "To integrate with the Symfony Serializer."
