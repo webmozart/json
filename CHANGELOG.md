@@ -1,7 +1,7 @@
 Changelog
 =========
 
-* 1.0.0-next (@release_date@)
+* 1.0.0 (2015-03-19)
 
  * flipped `$data` and `$file` arguments of `JsonEncoder::encodeFile()`
 
