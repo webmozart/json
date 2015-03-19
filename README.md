@@ -14,6 +14,15 @@ A robust wrapper for `json_encode()`/`json_decode()` that normalizes their
 behavior across PHP versions, throws meaningful exceptions and supports schema
 validation by default.
 
+Installation
+------------
+
+Use [Composer] to install the package:
+
+```
+$ composer require webmozart/json@beta
+```
+
 Encoding
 --------
 
@@ -106,15 +115,6 @@ Authors
 
 * [Bernhard Schussek] a.k.a. [@webmozart]
 * [The Community Contributors]
-
-Installation
-------------
-
-Use [Composer] to install the package:
-
-```
-$ composer require webmozart/json@dev
-```
 
 Contribute
 ----------
