@@ -8,7 +8,7 @@ Webmozart JSON
 [![Total Downloads](https://poser.pugx.org/webmozart/json/downloads.svg)](https://packagist.org/packages/webmozart/json)
 [![Dependency Status](https://www.versioneye.com/php/webmozart:json/1.0.0/badge.svg)](https://www.versioneye.com/php/webmozart:json/1.0.0)
 
-Latest release: [1.0.0-beta](https://packagist.org/packages/webmozart/json#1.0.0-beta)
+Latest release: [1.0.0](https://packagist.org/packages/webmozart/json#1.0.0)
 
 A robust wrapper for `json_encode()`/`json_decode()` that normalizes their
 behavior across PHP versions, throws meaningful exceptions and supports schema
@@ -20,7 +20,7 @@ Installation
 Use [Composer] to install the package:
 
 ```
-$ composer require webmozart/json@beta
+$ composer require webmozart/json
 ```
 
 Encoding
