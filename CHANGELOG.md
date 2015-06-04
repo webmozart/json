@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* 1.0.1 (2015-06-04)
+
+ * fixed detection of the JSONC library in `JsonDecoder::decodeJson()`
+
 * 1.0.0 (2015-03-19)
 
  * flipped `$data` and `$file` arguments of `JsonEncoder::encodeFile()`
