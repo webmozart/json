@@ -290,7 +290,7 @@ class JsonDecoder
         }
 
         // Data could not be decoded
-        if (null === $decoded && null !== $json) {
+        if (null === $decoded && 'null' !== $json) {
             $parser = new JsonParser();
             $e = $parser->lint($json);
 

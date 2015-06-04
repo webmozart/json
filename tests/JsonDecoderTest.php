@@ -55,6 +55,13 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $data);
     }
 
+    public function testDecodeNull()
+    {
+        $data = $this->decoder->decode('null');
+
+        $this->assertNull($data);
+    }
+
     public function testDecodeNestedEmptyObject()
     {
         $data = $this->decoder->decode('{ "empty": {} }');
