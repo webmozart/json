@@ -15,6 +15,7 @@ namespace Webmozart\Json;
  * Thrown when data cannot be encoded as JSON.
  *
  * @since  1.0
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class EncodingFailedException extends \RuntimeException

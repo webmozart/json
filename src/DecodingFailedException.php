@@ -15,6 +15,7 @@ namespace Webmozart\Json;
  * Thrown when a JSON string cannot be decoded.
  *
  * @since  1.0
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class DecodingFailedException extends \RuntimeException

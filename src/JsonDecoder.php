@@ -18,6 +18,7 @@ use Seld\JsonLint\ParsingException;
  * Decodes JSON strings/files and validates against a JSON schema.
  *
  * @since  1.0
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class JsonDecoder
@@ -88,10 +89,10 @@ class JsonDecoder
      *
      * @return mixed The decoded value.
      *
-     * @throws DecodingFailedException If the JSON string could not be decoded.
+     * @throws DecodingFailedException   If the JSON string could not be decoded.
      * @throws ValidationFailedException If the decoded string fails schema
      *                                   validation.
-     * @throws InvalidSchemaException If the schema is invalid.
+     * @throws InvalidSchemaException    If the schema is invalid.
      */
     public function decode($json, $schema = null)
     {
@@ -124,11 +125,11 @@ class JsonDecoder
      *
      * @return mixed The decoded file.
      *
-     * @throws FileNotFoundException If the file was not found.
-     * @throws DecodingFailedException If the file could not be decoded.
+     * @throws FileNotFoundException     If the file was not found.
+     * @throws DecodingFailedException   If the file could not be decoded.
      * @throws ValidationFailedException If the decoded file fails schema
      *                                   validation.
-     * @throws InvalidSchemaException If the schema is invalid.
+     * @throws InvalidSchemaException    If the schema is invalid.
      *
      * @see decode
      */

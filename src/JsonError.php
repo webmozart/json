@@ -13,6 +13,7 @@ namespace Webmozart\Json;
 
 /**
  * @since  1.0
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class JsonError
@@ -65,5 +66,7 @@ class JsonError
         return 'JSON_ERROR_UNKNOWN';
     }
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 }

@@ -15,6 +15,7 @@ namespace Webmozart\Json;
  * Encodes data as JSON.
  *
  * @since  1.0
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class JsonEncoder
@@ -121,9 +122,9 @@ class JsonEncoder
      *
      * @return string The JSON string.
      *
-     * @throws EncodingFailedException If the data could not be encoded.
+     * @throws EncodingFailedException   If the data could not be encoded.
      * @throws ValidationFailedException If the data fails schema validation.
-     * @throws InvalidSchemaException If the schema is invalid.
+     * @throws InvalidSchemaException    If the schema is invalid.
      */
     public function encode($data, $schema = null)
     {
@@ -213,9 +214,9 @@ class JsonEncoder
      * @param string        $file   The path where the JSON file will be stored.
      * @param string|object $schema The schema file or object.
      *
-     * @throws EncodingFailedException If the data could not be encoded.
+     * @throws EncodingFailedException   If the data could not be encoded.
      * @throws ValidationFailedException If the data fails schema validation.
-     * @throws InvalidSchemaException If the schema is invalid.
+     * @throws InvalidSchemaException    If the schema is invalid.
      *
      * @see encode
      */

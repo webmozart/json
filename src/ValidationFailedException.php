@@ -15,6 +15,7 @@ namespace Webmozart\Json;
  * Thrown when a JSON file contains invalid JSON.
  *
  * @since  1.0
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class ValidationFailedException extends \Exception

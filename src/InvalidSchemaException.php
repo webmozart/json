@@ -15,6 +15,7 @@ namespace Webmozart\Json;
  * Thrown a JSON schema cannot be loaded.
  *
  * @since  1.0
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class InvalidSchemaException extends \Exception

@@ -15,6 +15,7 @@ use Webmozart\Json\JsonDecoder;
 
 /**
  * @since  1.0
+ *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
 class JsonDecoderTest extends \PHPUnit_Framework_TestCase
@@ -113,7 +114,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * JSON_ERROR_UTF8
+     * JSON_ERROR_UTF8.
      *
      * @expectedException \Webmozart\Json\DecodingFailedException
      * @expectedExceptionCode 5
@@ -176,7 +177,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * JSON_ERROR_DEPTH
+     * JSON_ERROR_DEPTH.
      *
      * @expectedException \Webmozart\Json\DecodingFailedException
      * @expectedExceptionCode 1
@@ -196,7 +197,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * JSON_ERROR_DEPTH
+     * JSON_ERROR_DEPTH.
      *
      * @expectedException \Webmozart\Json\DecodingFailedException
      * @expectedExceptionCode 1
