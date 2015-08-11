@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* 1.0.2 (2015-08-11)
+
+ * fixed decoding of 'null'
+
 * 1.0.1 (2015-06-04)
 
  * fixed detection of the JSONC library in `JsonDecoder::decodeJson()`
