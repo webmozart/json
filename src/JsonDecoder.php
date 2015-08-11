@@ -100,7 +100,7 @@ class JsonDecoder
             throw new \InvalidArgumentException(
                 'Schema validation is not supported when objects are decoded '.
                 'as associative arrays. Call '.
-                'JsonDecoder::setDecodeObjectsAs(JsonDecoder::JSON_OBJECT) to fix.'
+                'JsonDecoder::setObjectDecoding(JsonDecoder::JSON_OBJECT) to fix.'
             );
         }
 
