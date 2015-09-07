@@ -162,7 +162,7 @@ class JsonEncoder
             $options |= JSON_HEX_QUOT;
         }
 
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+        if (PHP_VERSION_ID >= 50400) {
             if (!$this->slashEscaped) {
                 $options |= JSON_UNESCAPED_SLASHES;
             }
@@ -176,7 +176,7 @@ class JsonEncoder
             }
         }
 
-        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
+        if (PHP_VERSION_ID >= 50500) {
             $maxDepth = $this->maxDepth;
 
             // We subtract 1 from the max depth to make JsonDecoder and
