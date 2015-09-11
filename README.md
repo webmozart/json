@@ -1,8 +1,8 @@
-The Webmozart Key-Value Store API Documentation
-===============================================
+The Webmozart JSON API Documentation
+====================================
 
-This repository contains the API documentation of the [Webmozart Key-Value Store]. 
-The documentation is rendered at https://webmozart.github.io/key-value-store/api 
+This repository contains the API documentation of the [Webmozart JSON]. 
+The documentation is rendered at https://webmozart.github.io/json/api 
 thanks to [GitHub Pages].
 
 Updating the Documentation
@@ -31,8 +31,8 @@ License
 
 The documentation is licensed under the [MIT license].
 
-[Webmozart Key-Value Store]: https://github.com/webmozart/key-value-store
+[Webmozart JSON]: https://github.com/webmozart/json
 [GitHub Pages]: https://pages.github.com
-[issue tracker]: https://github.com/webmozart/key-value-store/issues
+[issue tracker]: https://github.com/webmozart/json/issues
 [@webmozart]: https://twitter.com/webmozart
 [MIT license]: LICENSE
