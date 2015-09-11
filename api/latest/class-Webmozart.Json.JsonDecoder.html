@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Webmozart\Json\JsonDecoder | Webmozart JSON API</title>
+
+	<link rel="stylesheet" href="resources/style.css?95ada9fb523b6ab4fd1c47bb375f713f2cc65542">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li class="active">
+					<a href="namespace-Webmozart.html">
+						Webmozart<span></span>
+					</a>
+
+						<ul>
+				<li class="active">
+					<a href="namespace-Webmozart.Json.html">
+						Json					</a>
+
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Webmozart.Json.JsonDecoder.html">JsonDecoder</a></li>
+				<li><a href="class-Webmozart.Json.JsonEncoder.html">JsonEncoder</a></li>
+				<li><a href="class-Webmozart.Json.JsonError.html">JsonError</a></li>
+				<li><a href="class-Webmozart.Json.JsonValidator.html">JsonValidator</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Webmozart.Json.DecodingFailedException.html">DecodingFailedException</a></li>
+				<li><a href="class-Webmozart.Json.EncodingFailedException.html">EncodingFailedException</a></li>
+				<li><a href="class-Webmozart.Json.FileNotFoundException.html">FileNotFoundException</a></li>
+				<li><a href="class-Webmozart.Json.InvalidSchemaException.html">InvalidSchemaException</a></li>
+				<li><a href="class-Webmozart.Json.ValidationFailedException.html">ValidationFailedException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Webmozart.Json.html" title="Summary of Webmozart\Json"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class JsonDecoder</h1>
+
+
+	<div class="description">
+	<p>Decodes JSON strings/files and validates against a JSON schema.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Webmozart.html">Webmozart</a>\<a href="namespace-Webmozart.Json.html">Json</a><br>
+		
+
+				<b>Author:</b>
+				Bernhard Schussek <a href="&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#x3a;&#x62;&#115;&#99;h&#x75;&#x73;&#115;&#101;&#107;&#x40;&#x67;&#x6d;&#97;&#105;l&#x2e;&#x63;&#111;&#109;">&#x62;&#115;&#99;h&#x75;&#x73;&#115;&#101;&#107;&#x40;&#x67;&#x6d;&#97;&#105;l&#x2e;&#x63;&#111;&#109;</a><br>
+				<b>Since:</b>
+				1.0<br>
+			<b>Located at</b> <a href="source-class-Webmozart.Json.JsonDecoder.html#17-315" title="Go to source code">JsonDecoder.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonDecoder.html#66-72" title="Go to source code">__construct</a>( )</code>
+
+		<div class="description short">
+			<p>Creates a new decoder.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Creates a new decoder.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decode" id="_decode">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decode">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonDecoder.html#74-118" title="Go to source code">decode</a>( <span>string <var>$json</var></span>, <span>string|object <var>$schema</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Decodes and validates a JSON string.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Decodes and validates a JSON string.</p>
+
+<p>If a schema is passed, the decoded object is validated against that
+schema. The schema may be passed as file path or as object returned from
+<code>JsonDecoder::decodeFile($schemaFile)</code>.</p>
+
+<p>You can adjust the decoding with <code><a href="class-Webmozart.Json.JsonDecoder.html#_setObjectDecoding">Webmozart\Json\JsonDecoder::setObjectDecoding()</a></code>,
+<code><a href="class-Webmozart.Json.JsonDecoder.html#_setBigIntDecoding">Webmozart\Json\JsonDecoder::setBigIntDecoding()</a></code> and <code><a href="class-Webmozart.Json.JsonDecoder.html#_setMaxDepth">Webmozart\Json\JsonDecoder::setMaxDepth()</a></code>.</p>
+
+<p>Schema validation is not supported when objects are decoded as
+associative arrays.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$json</var></dt>
+					<dd>The JSON string.</dd>
+					<dt><var>$schema</var></dt>
+					<dd>The schema file or object.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed<br>The decoded value.
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-Webmozart.Json.DecodingFailedException.html">Webmozart\Json\DecodingFailedException</a></code><br>If the JSON string could not be decoded.<br>
+					<code><a href="class-Webmozart.Json.ValidationFailedException.html">Webmozart\Json\ValidationFailedException</a></code><br><p>If the decoded string fails schema
+                                  validation.</p><br>
+					<code><a href="class-Webmozart.Json.InvalidSchemaException.html">Webmozart\Json\InvalidSchemaException</a></code><br>If the schema is invalid.
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="decodeFile" id="_decodeFile">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_decodeFile">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonDecoder.html#120-169" title="Go to source code">decodeFile</a>( <span>string <var>$file</var></span>, <span>string|object <var>$schema</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Decodes and validates a JSON file.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Decodes and validates a JSON file.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$file</var></dt>
+					<dd>The path to the JSON file.</dd>
+					<dt><var>$schema</var></dt>
+					<dd>The schema file or object.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed<br>The decoded file.
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-Webmozart.Json.FileNotFoundException.html">Webmozart\Json\FileNotFoundException</a></code><br>If the file was not found.<br>
+					<code><a href="class-Webmozart.Json.DecodingFailedException.html">Webmozart\Json\DecodingFailedException</a></code><br>If the file could not be decoded.<br>
+					<code><a href="class-Webmozart.Json.ValidationFailedException.html">Webmozart\Json\ValidationFailedException</a></code><br><p>If the decoded file fails schema
+                                  validation.</p><br>
+					<code><a href="class-Webmozart.Json.InvalidSchemaException.html">Webmozart\Json\InvalidSchemaException</a></code><br>If the schema is invalid.
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						<code><a href="class-Webmozart.Json.JsonDecoder.html#_decode">Webmozart\Json\JsonDecoder::decode()</a></code><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMaxDepth" id="_getMaxDepth">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMaxDepth">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonDecoder.html#171-182" title="Go to source code">getMaxDepth</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the maximum recursion depth.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the maximum recursion depth.</p>
+
+<p>A depth of zero means that objects are not allowed. A depth of one means
+only one level of objects or arrays is allowed.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>The maximum recursion depth.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setMaxDepth" id="_setMaxDepth">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setMaxDepth">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonDecoder.html#184-215" title="Go to source code">setMaxDepth</a>( <span>integer <var>$maxDepth</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets the maximum recursion depth.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets the maximum recursion depth.</p>
+
+<p>If the depth is exceeded during decoding, an DecodingnFailedException
+will be thrown.</p>
+
+<p>A depth of zero means that objects are not allowed. A depth of one means
+only one level of objects or arrays is allowed.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$maxDepth</var></dt>
+					<dd>The maximum recursion depth.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br><p>If the depth is not an integer greater
+                                  than or equal to zero.</p>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getObjectDecoding" id="_getObjectDecoding">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getObjectDecoding">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonDecoder.html#217-225" title="Go to source code">getObjectDecoding</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the decoding of JSON objects.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the decoding of JSON objects.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>One of the constants JSON_OBJECT and <code><a href="class-Webmozart.Json.JsonDecoder.html#ASSOC_ARRAY">Webmozart\Json\JsonDecoder::<b>ASSOC_ARRAY</b></a></code>.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setObjectDecoding" id="_setObjectDecoding">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setObjectDecoding">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonDecoder.html#227-247" title="Go to source code">setObjectDecoding</a>( <span>integer <var>$decoding</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets the decoding of JSON objects.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets the decoding of JSON objects.</p>
+
+<p>By default, JSON objects are decoded as instances of \stdClass.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$decoding</var></dt>
+					<dd>One of the constants JSON_OBJECT and <code><a href="class-Webmozart.Json.JsonDecoder.html#ASSOC_ARRAY">Webmozart\Json\JsonDecoder::<b>ASSOC_ARRAY</b></a></code>.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br>If the passed decoding is invalid.
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getBigIntDecoding" id="_getBigIntDecoding">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getBigIntDecoding">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonDecoder.html#249-257" title="Go to source code">getBigIntDecoding</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the decoding of big integers.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the decoding of big integers.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>One of the constants <code><a href="class-Webmozart.Json.JsonDecoder.html#FLOAT">Webmozart\Json\JsonDecoder::<b>FLOAT</b></a></code> and JSON_STRING.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setBigIntDecoding" id="_setBigIntDecoding">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setBigIntDecoding">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonDecoder.html#259-279" title="Go to source code">setBigIntDecoding</a>( <span>integer <var>$decoding</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets the decoding of big integers.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets the decoding of big integers.</p>
+
+<p>By default, big integers are decoded as floats.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$decoding</var></dt>
+					<dd>One of the constants <code><a href="class-Webmozart.Json.JsonDecoder.html#FLOAT">Webmozart\Json\JsonDecoder::<b>FLOAT</b></a></code> and JSON_STRING.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br>If the passed decoding is invalid.
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+	<table class="summary constants" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="OBJECT" id="OBJECT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Webmozart.Json.JsonDecoder.html#26-29" title="Go to source code"><b>OBJECT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Decode a JSON value as PHP object.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Decode a JSON value as PHP object.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#OBJECT" class="anchor">#</a>
+				<code><span class="php-num">0</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="ASSOC_ARRAY" id="ASSOC_ARRAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Webmozart.Json.JsonDecoder.html#31-34" title="Go to source code"><b>ASSOC_ARRAY</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Decode a JSON value as associative array.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Decode a JSON value as associative array.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#ASSOC_ARRAY" class="anchor">#</a>
+				<code><span class="php-num">1</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="FLOAT" id="FLOAT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Webmozart.Json.JsonDecoder.html#36-39" title="Go to source code"><b>FLOAT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Decode a JSON value as float.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Decode a JSON value as float.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#FLOAT" class="anchor">#</a>
+				<code><span class="php-num">2</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="STRING" id="STRING">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Webmozart.Json.JsonDecoder.html#41-44" title="Go to source code"><b>STRING</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Decode a JSON value as string.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Decode a JSON value as string.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#STRING" class="anchor">#</a>
+				<code><span class="php-num">3</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Webmozart JSON API API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

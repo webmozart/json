@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/index.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/namespace-Webmozart.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/namespace-Webmozart.Json.html</loc>
+</url>
+
+
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/class-Webmozart.Json.JsonDecoder.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/class-Webmozart.Json.JsonEncoder.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/class-Webmozart.Json.JsonError.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/class-Webmozart.Json.JsonValidator.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/class-Webmozart.Json.DecodingFailedException.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/class-Webmozart.Json.EncodingFailedException.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/class-Webmozart.Json.FileNotFoundException.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/class-Webmozart.Json.InvalidSchemaException.html</loc>
+</url>
+<url>
+	<loc>https://webmozart.github.io/json/api/latest/class-Webmozart.Json.ValidationFailedException.html</loc>
+</url>
+</urlset>

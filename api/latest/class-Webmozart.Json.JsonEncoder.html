@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Webmozart\Json\JsonEncoder | Webmozart JSON API</title>
+
+	<link rel="stylesheet" href="resources/style.css?95ada9fb523b6ab4fd1c47bb375f713f2cc65542">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li class="active">
+					<a href="namespace-Webmozart.html">
+						Webmozart<span></span>
+					</a>
+
+						<ul>
+				<li class="active">
+					<a href="namespace-Webmozart.Json.html">
+						Json					</a>
+
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Webmozart.Json.JsonDecoder.html">JsonDecoder</a></li>
+				<li class="active"><a href="class-Webmozart.Json.JsonEncoder.html">JsonEncoder</a></li>
+				<li><a href="class-Webmozart.Json.JsonError.html">JsonError</a></li>
+				<li><a href="class-Webmozart.Json.JsonValidator.html">JsonValidator</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Webmozart.Json.DecodingFailedException.html">DecodingFailedException</a></li>
+				<li><a href="class-Webmozart.Json.EncodingFailedException.html">EncodingFailedException</a></li>
+				<li><a href="class-Webmozart.Json.FileNotFoundException.html">FileNotFoundException</a></li>
+				<li><a href="class-Webmozart.Json.InvalidSchemaException.html">InvalidSchemaException</a></li>
+				<li><a href="class-Webmozart.Json.ValidationFailedException.html">ValidationFailedException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Webmozart.Json.html" title="Summary of Webmozart\Json"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class JsonEncoder</h1>
+
+
+	<div class="description">
+	<p>Encodes data as JSON.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Webmozart.html">Webmozart</a>\<a href="namespace-Webmozart.Json.html">Json</a><br>
+		
+
+				<b>Author:</b>
+				Bernhard Schussek <a href="&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#x3a;&#x62;&#115;&#99;h&#x75;&#x73;&#115;&#101;&#107;&#x40;&#x67;&#x6d;&#97;&#105;l&#x2e;&#x63;&#111;&#109;">&#x62;&#115;&#99;h&#x75;&#x73;&#115;&#101;&#107;&#x40;&#x67;&#x6d;&#97;&#105;l&#x2e;&#x63;&#111;&#109;</a><br>
+				<b>Since:</b>
+				1.0<br>
+			<b>Located at</b> <a href="source-class-Webmozart.Json.JsonEncoder.html#14-590" title="Go to source code">JsonEncoder.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#103-109" title="Go to source code">__construct</a>( )</code>
+
+		<div class="description short">
+			<p>Creates a new encoder.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Creates a new encoder.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encode" id="_encode">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encode">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#111-208" title="Go to source code">encode</a>( <span>mixed <var>$data</var></span>, <span>string|object <var>$schema</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Encodes data as JSON.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Encodes data as JSON.</p>
+
+<p>If a schema is passed, the value is validated against that schema before
+encoding. The schema may be passed as file path or as object returned
+from <code>JsonDecoder::decodeFile($schemaFile)</code>.</p>
+
+<p>You can adjust the decoding with the various setters in this class.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>The data to encode.</dd>
+					<dt><var>$schema</var></dt>
+					<dd>The schema file or object.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>The JSON string.
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-Webmozart.Json.EncodingFailedException.html">Webmozart\Json\EncodingFailedException</a></code><br>If the data could not be encoded.<br>
+					<code><a href="class-Webmozart.Json.ValidationFailedException.html">Webmozart\Json\ValidationFailedException</a></code><br>If the data fails schema validation.<br>
+					<code><a href="class-Webmozart.Json.InvalidSchemaException.html">Webmozart\Json\InvalidSchemaException</a></code><br>If the schema is invalid.
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="encodeFile" id="_encodeFile">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_encodeFile">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#210-252" title="Go to source code">encodeFile</a>( <span>mixed <var>$data</var></span>, <span>string <var>$file</var></span>, <span>string|object <var>$schema</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Encodes data into a JSON file.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Encodes data into a JSON file.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd>The data to encode.</dd>
+					<dt><var>$file</var></dt>
+					<dd>The path where the JSON file will be stored.</dd>
+					<dt><var>$schema</var></dt>
+					<dd>The schema file or object.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-Webmozart.Json.EncodingFailedException.html">Webmozart\Json\EncodingFailedException</a></code><br>If the data could not be encoded.<br>
+					<code><a href="class-Webmozart.Json.ValidationFailedException.html">Webmozart\Json\ValidationFailedException</a></code><br>If the data fails schema validation.<br>
+					<code><a href="class-Webmozart.Json.InvalidSchemaException.html">Webmozart\Json\InvalidSchemaException</a></code><br>If the schema is invalid.
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						<code><a href="class-Webmozart.Json.JsonEncoder.html#_encode">Webmozart\Json\JsonEncoder::encode()</a></code><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getArrayEncoding" id="_getArrayEncoding">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getArrayEncoding">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#254-262" title="Go to source code">getArrayEncoding</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the encoding of non-associative arrays.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the encoding of non-associative arrays.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>One of the constants <code><a href="class-Webmozart.Json.JsonEncoder.html#JSON_OBJECT">Webmozart\Json\JsonEncoder::<b>JSON_OBJECT</b></a></code> and <code><a href="class-Webmozart.Json.JsonEncoder.html#JSON_ARRAY">Webmozart\Json\JsonEncoder::<b>JSON_ARRAY</b></a></code>.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setArrayEncoding" id="_setArrayEncoding">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setArrayEncoding">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#264-284" title="Go to source code">setArrayEncoding</a>( <span>integer <var>$encoding</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets the encoding of non-associative arrays.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets the encoding of non-associative arrays.</p>
+
+<p>By default, non-associative arrays are decoded as JSON arrays.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$encoding</var></dt>
+					<dd>One of the constants <code><a href="class-Webmozart.Json.JsonEncoder.html#JSON_OBJECT">Webmozart\Json\JsonEncoder::<b>JSON_OBJECT</b></a></code> and <code><a href="class-Webmozart.Json.JsonEncoder.html#JSON_ARRAY">Webmozart\Json\JsonEncoder::<b>JSON_ARRAY</b></a></code>.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br>If the passed encoding is invalid.
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getNumericEncoding" id="_getNumericEncoding">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getNumericEncoding">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#286-294" title="Go to source code">getNumericEncoding</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the encoding of numeric strings.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the encoding of numeric strings.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>One of the constants <code><a href="class-Webmozart.Json.JsonEncoder.html#JSON_STRING">Webmozart\Json\JsonEncoder::<b>JSON_STRING</b></a></code> and <code><a href="class-Webmozart.Json.JsonEncoder.html#JSON_NUMBER">Webmozart\Json\JsonEncoder::<b>JSON_NUMBER</b></a></code>.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setNumericEncoding" id="_setNumericEncoding">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setNumericEncoding">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#296-316" title="Go to source code">setNumericEncoding</a>( <span>integer <var>$encoding</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets the encoding of numeric strings.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets the encoding of numeric strings.</p>
+
+<p>By default, non-associative arrays are decoded as JSON strings.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$encoding</var></dt>
+					<dd>One of the constants <code><a href="class-Webmozart.Json.JsonEncoder.html#JSON_STRING">Webmozart\Json\JsonEncoder::<b>JSON_STRING</b></a></code> and <code><a href="class-Webmozart.Json.JsonEncoder.html#JSON_NUMBER">Webmozart\Json\JsonEncoder::<b>JSON_NUMBER</b></a></code>.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br>If the passed encoding is invalid.
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isAmpersandEscaped" id="_isAmpersandEscaped">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isAmpersandEscaped">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#318-330" title="Go to source code">isAmpersandEscaped</a>( )</code>
+
+		<div class="description short">
+			<p>Returns whether ampersands (&amp;) are escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns whether ampersands (&amp;) are escaped.</p>
+
+<p>If <code>true</code>, ampersands will be escaped as "\u0026".</p>
+
+<p>By default, ampersands are not escaped.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Whether ampersands are escaped.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setEscapeAmpersand" id="_setEscapeAmpersand">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setEscapeAmpersand">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#332-344" title="Go to source code">setEscapeAmpersand</a>( <span>boolean <var>$enabled</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets whether ampersands (&amp;) should be escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets whether ampersands (&amp;) should be escaped.</p>
+
+<p>If <code>true</code>, ampersands will be escaped as "\u0026".</p>
+
+<p>By default, ampersands are not escaped.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$enabled</var></dt>
+					<dd>Whether ampersands should be escaped.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isDoubleQuoteEscaped" id="_isDoubleQuoteEscaped">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isDoubleQuoteEscaped">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#346-358" title="Go to source code">isDoubleQuoteEscaped</a>( )</code>
+
+		<div class="description short">
+			<p>Returns whether double quotes (") are escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns whether double quotes (") are escaped.</p>
+
+<p>If <code>true</code>, double quotes will be escaped as "\u0022".</p>
+
+<p>By default, double quotes are not escaped.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Whether double quotes are escaped.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setEscapeDoubleQuote" id="_setEscapeDoubleQuote">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setEscapeDoubleQuote">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#360-372" title="Go to source code">setEscapeDoubleQuote</a>( <span>boolean <var>$enabled</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets whether double quotes (") should be escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets whether double quotes (") should be escaped.</p>
+
+<p>If <code>true</code>, double quotes will be escaped as "\u0022".</p>
+
+<p>By default, double quotes are not escaped.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$enabled</var></dt>
+					<dd>Whether double quotes should be escaped.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isSingleQuoteEscaped" id="_isSingleQuoteEscaped">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isSingleQuoteEscaped">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#374-386" title="Go to source code">isSingleQuoteEscaped</a>( )</code>
+
+		<div class="description short">
+			<p>Returns whether single quotes (') are escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns whether single quotes (') are escaped.</p>
+
+<p>If <code>true</code>, single quotes will be escaped as "\u0027".</p>
+
+<p>By default, single quotes are not escaped.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Whether single quotes are escaped.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setEscapeSingleQuote" id="_setEscapeSingleQuote">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setEscapeSingleQuote">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#388-400" title="Go to source code">setEscapeSingleQuote</a>( <span>boolean <var>$enabled</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets whether single quotes (") should be escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets whether single quotes (") should be escaped.</p>
+
+<p>If <code>true</code>, single quotes will be escaped as "\u0027".</p>
+
+<p>By default, single quotes are not escaped.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$enabled</var></dt>
+					<dd>Whether single quotes should be escaped.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isSlashEscaped" id="_isSlashEscaped">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isSlashEscaped">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#402-414" title="Go to source code">isSlashEscaped</a>( )</code>
+
+		<div class="description short">
+			<p>Returns whether forward slashes (/) are escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns whether forward slashes (/) are escaped.</p>
+
+<p>If <code>true</code>, forward slashes will be escaped as "\/".</p>
+
+<p>By default, forward slashes are not escaped.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Whether forward slashes are escaped.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setEscapeSlash" id="_setEscapeSlash">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setEscapeSlash">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#416-428" title="Go to source code">setEscapeSlash</a>( <span>boolean <var>$enabled</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets whether forward slashes (") should be escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets whether forward slashes (") should be escaped.</p>
+
+<p>If <code>true</code>, forward slashes will be escaped as "\/".</p>
+
+<p>By default, forward slashes are not escaped.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$enabled</var></dt>
+					<dd>Whether forward slashes should be escaped.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isGtLtEscaped" id="_isGtLtEscaped">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isGtLtEscaped">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#430-443" title="Go to source code">isGtLtEscaped</a>( )</code>
+
+		<div class="description short">
+			<p>Returns whether greater than/less than symbols (>, &lt;) are escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns whether greater than/less than symbols (>, &lt;) are escaped.</p>
+
+<p>If <code>true</code>, greater than will be escaped as "\u003E" and less than as
+"\u003C".</p>
+
+<p>By default, greater than/less than symbols are not escaped.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Whether greater than/less than symbols are escaped.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setEscapeGtLt" id="_setEscapeGtLt">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setEscapeGtLt">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#445-458" title="Go to source code">setEscapeGtLt</a>( <span>boolean <var>$enabled</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets whether greater than/less than symbols (>, &lt;) should be escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets whether greater than/less than symbols (>, &lt;) should be escaped.</p>
+
+<p>If <code>true</code>, greater than will be escaped as "\u003E" and less than as
+"\u003C".</p>
+
+<p>By default, greater than/less than symbols are not escaped.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$enabled</var></dt>
+					<dd>Whether greater than/less than should be escaped.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isUnicodeEscaped" id="_isUnicodeEscaped">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isUnicodeEscaped">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#460-473" title="Go to source code">isUnicodeEscaped</a>( )</code>
+
+		<div class="description short">
+			<p>Returns whether unicode characters are escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns whether unicode characters are escaped.</p>
+
+<p>If <code>true</code>, unicode characters will be escaped as hexadecimals strings.
+For example, "ü" will be escaped as "\u00fc".</p>
+
+<p>By default, unicode characters are escaped.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Whether unicode characters are escaped.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setEscapeUnicode" id="_setEscapeUnicode">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setEscapeUnicode">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#475-488" title="Go to source code">setEscapeUnicode</a>( <span>boolean <var>$enabled</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets whether unicode characters should be escaped.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets whether unicode characters should be escaped.</p>
+
+<p>If <code>true</code>, unicode characters will be escaped as hexadecimals strings.
+For example, "ü" will be escaped as "\u00fc".</p>
+
+<p>By default, unicode characters are escaped.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$enabled</var></dt>
+					<dd>Whether unicode characters should be escaped.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isPrettyPrinting" id="_isPrettyPrinting">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isPrettyPrinting">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#490-503" title="Go to source code">isPrettyPrinting</a>( )</code>
+
+		<div class="description short">
+			<p>Returns whether JSON strings are formatted for better readability.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns whether JSON strings are formatted for better readability.</p>
+
+<p>If <code>true</code>, line breaks will be added after object properties and array
+entries. Each new nesting level will be indented by four spaces.</p>
+
+<p>By default, pretty printing is not enabled.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Whether JSON strings are formatted.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setPrettyPrinting" id="_setPrettyPrinting">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setPrettyPrinting">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#505-518" title="Go to source code">setPrettyPrinting</a>( <span>boolean <var>$prettyPrinting</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets whether JSON strings should be formatted for better readability.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets whether JSON strings should be formatted for better readability.</p>
+
+<p>If <code>true</code>, line breaks will be added after object properties and array
+entries. Each new nesting level will be indented by four spaces.</p>
+
+<p>By default, pretty printing is not enabled.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$prettyPrinting</var></dt>
+					<dd>Whether JSON strings should be formatted.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isTerminatedWithLineFeed" id="_isTerminatedWithLineFeed">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isTerminatedWithLineFeed">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#520-530" title="Go to source code">isTerminatedWithLineFeed</a>( )</code>
+
+		<div class="description short">
+			<p>Returns whether JSON strings are terminated with a line feed.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns whether JSON strings are terminated with a line feed.</p>
+
+<p>By default, JSON strings are not terminated with a line feed.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Whether JSON strings are terminated with a line feed.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setTerminateWithLineFeed" id="_setTerminateWithLineFeed">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setTerminateWithLineFeed">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#532-543" title="Go to source code">setTerminateWithLineFeed</a>( <span>boolean <var>$enabled</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets whether JSON strings should be terminated with a line feed.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets whether JSON strings should be terminated with a line feed.</p>
+
+<p>By default, JSON strings are not terminated with a line feed.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$enabled</var></dt>
+					<dd><p>Whether JSON strings should be terminated with a
+                     line feed.</p></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMaxDepth" id="_getMaxDepth">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMaxDepth">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#545-556" title="Go to source code">getMaxDepth</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the maximum recursion depth.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the maximum recursion depth.</p>
+
+<p>A depth of zero means that objects are not allowed. A depth of one means
+only one level of objects or arrays is allowed.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>The maximum recursion depth.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setMaxDepth" id="_setMaxDepth">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setMaxDepth">#</a>
+		<code><a href="source-class-Webmozart.Json.JsonEncoder.html#558-589" title="Go to source code">setMaxDepth</a>( <span>integer <var>$maxDepth</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets the maximum recursion depth.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets the maximum recursion depth.</p>
+
+<p>If the depth is exceeded during encoding, an <code><a href="class-Webmozart.Json.EncodingFailedException.html">Webmozart\Json\EncodingFailedException</a></code>
+will be thrown.</p>
+
+<p>A depth of zero means that objects are not allowed. A depth of one means
+only one level of objects or arrays is allowed.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$maxDepth</var></dt>
+					<dd>The maximum recursion depth.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					InvalidArgumentException<br><p>If the depth is not an integer greater
+                                  than or equal to zero.</p>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+	<table class="summary constants" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="JSON_ARRAY" id="JSON_ARRAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Webmozart.Json.JsonEncoder.html#23-26" title="Go to source code"><b>JSON_ARRAY</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Encode a value as JSON array.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Encode a value as JSON array.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#JSON_ARRAY" class="anchor">#</a>
+				<code><span class="php-num">1</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="JSON_OBJECT" id="JSON_OBJECT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Webmozart.Json.JsonEncoder.html#28-31" title="Go to source code"><b>JSON_OBJECT</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Encode a value as JSON object.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Encode a value as JSON object.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#JSON_OBJECT" class="anchor">#</a>
+				<code><span class="php-num">2</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="JSON_STRING" id="JSON_STRING">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Webmozart.Json.JsonEncoder.html#33-36" title="Go to source code"><b>JSON_STRING</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Encode a value as JSON string.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Encode a value as JSON string.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#JSON_STRING" class="anchor">#</a>
+				<code><span class="php-num">3</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="JSON_NUMBER" id="JSON_NUMBER">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Webmozart.Json.JsonEncoder.html#38-41" title="Go to source code"><b>JSON_NUMBER</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Encode a value as JSON integer or float.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Encode a value as JSON integer or float.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#JSON_NUMBER" class="anchor">#</a>
+				<code><span class="php-num">4</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Webmozart JSON API API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

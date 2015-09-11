@@ -1,0 +1,6 @@
+source:
+    - vendor/webmozart/json/src
+
+title: Webmozart JSON API
+
+baseUrl: https://webmozart.github.io/json/api/latest

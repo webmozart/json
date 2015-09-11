@@ -1,0 +1,18 @@
+{
+    "license": "MIT",
+    "description": "The Webmozart JSON API documentation",
+    "homepage": "https://webmozart.github.io/json/api",
+    "authors": [
+        {
+            "name": "Bernhard Schussek",
+            "email": "bschussek@gmail.com"
+        }
+    ],
+    "require": {
+        "webmozart/json": "~1.0@dev",
+        "apigen/apigen": "~4.1@dev"
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
