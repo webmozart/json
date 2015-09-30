@@ -2,8 +2,8 @@ Webmozart JSON
 ==============
 
 [![Build Status](https://travis-ci.org/webmozart/json.svg?branch=master)](https://travis-ci.org/webmozart/json)
+[![Build status](https://ci.appveyor.com/api/projects/status/icccqc0aq1molo96/branch/master?svg=true)](https://ci.appveyor.com/project/webmozart/json/branch/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/webmozart/json/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/webmozart/json/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/8ec9e50d-c94c-4d5c-8ad1-517eef16f440/mini.png)](https://insight.sensiolabs.com/projects/8ec9e50d-c94c-4d5c-8ad1-517eef16f440)
 [![Latest Stable Version](https://poser.pugx.org/webmozart/json/v/stable.svg)](https://packagist.org/packages/webmozart/json)
 [![Total Downloads](https://poser.pugx.org/webmozart/json/downloads.svg)](https://packagist.org/packages/webmozart/json)
 [![Dependency Status](https://www.versioneye.com/php/webmozart:json/1.0.2/badge.svg)](https://www.versioneye.com/php/webmozart:json/1.0.2)
