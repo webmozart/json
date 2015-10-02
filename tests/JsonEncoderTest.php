@@ -397,36 +397,28 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('{"name":"Bernhard"}', file_get_contents($this->tempFile));
     }
 
-    /**
-     * Test that the file name is present in the output.
-     *
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     * @expectedExceptionMessage JsonEncoderTest
-     */
     public function testEncodeFileFailsIfValidationFailsWithSchemaFile()
     {
+        // Test that the file name is present in the output.
+        $this->setExpectedException(
+            '\Webmozart\Json\ValidationFailedException',
+            $this->tempFile
+        );
+
         $this->encoder->encodeFile('foobar', $this->tempFile, $this->schemaFile);
     }
 
-    /**
-     * Test that the file name is present in the output.
-     *
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     * @expectedExceptionMessage JsonEncoderTest
-     */
     public function testEncodeFileFailsIfValidationFailsWithSchemaObject()
     {
-        $this->encoder->encodeFile('foobar', $this->tempFile,
-            $this->schemaObject);
+        // Test that the file name is present in the output.
+        $this->setExpectedException(
+            '\Webmozart\Json\ValidationFailedException',
+            $this->tempFile
+        );
+
+        $this->encoder->encodeFile('foobar', $this->tempFile, $this->schemaObject);
     }
 
-    /**
-     * Test that the file name is present in the output.
-     *
-     * @expectedException \Webmozart\Json\EncodingFailedException
-     * @expectedExceptionMessage JsonEncoderTest
-     * @expectedExceptionCode 5
-     */
     public function testEncodeFileFailsIfNonUtf8()
     {
         if (version_compare(PHP_VERSION, '5.5.0', '<')) {
@@ -434,6 +426,13 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
             return;
         }
+
+        // Test that the file name is present in the output.
+        $this->setExpectedException(
+            '\Webmozart\Json\EncodingFailedException',
+            $this->tempFile,
+            5
+        );
 
         $this->encoder->encodeFile(file_get_contents($this->fixturesDir.'/win-1258.json'),
             $this->tempFile);
