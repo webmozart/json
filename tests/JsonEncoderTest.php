@@ -51,6 +51,9 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         $filesystem = new Filesystem();
+
+        // Ensure all files in the directory are writable before removing
+        $filesystem->chmod($this->tempDir, 0755, 0000, true);
         $filesystem->remove($this->tempDir);
     }
 

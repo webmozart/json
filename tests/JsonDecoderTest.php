@@ -281,6 +281,10 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
 
     public function testDecodeFileFailsIfNotReadable()
     {
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('Cannot deny read access on Windows.');
+        }
+
         $tempFile = tempnam(sys_get_temp_dir(), 'JsonDecoderTest');
         file_put_contents($tempFile, file_get_contents($this->fixturesDir.'/valid.json'));
 
