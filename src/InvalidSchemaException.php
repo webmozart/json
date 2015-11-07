@@ -11,6 +11,8 @@
 
 namespace Webmozart\Json;
 
+use RuntimeException;
+
 /**
  * Thrown a JSON schema cannot be loaded.
  *
@@ -18,6 +20,6 @@ namespace Webmozart\Json;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class InvalidSchemaException extends \Exception
+class InvalidSchemaException extends RuntimeException
 {
 }

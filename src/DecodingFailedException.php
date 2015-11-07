@@ -11,6 +11,8 @@
 
 namespace Webmozart\Json;
 
+use RuntimeException;
+
 /**
  * Thrown when a JSON string cannot be decoded.
  *
@@ -18,6 +20,6 @@ namespace Webmozart\Json;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class DecodingFailedException extends \RuntimeException
+class DecodingFailedException extends RuntimeException
 {
 }

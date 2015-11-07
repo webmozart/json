@@ -279,6 +279,22 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('Bernhard', $data->name);
     }
 
+    public function testDecodeFileFailsIfNotReadable()
+    {
+        $tempFile = tempnam(sys_get_temp_dir(), 'JsonDecoderTest');
+        file_put_contents($tempFile, file_get_contents($this->fixturesDir.'/valid.json'));
+
+        chmod($tempFile, 0000);
+
+        // Test that the file name is present in the output.
+        $this->setExpectedException(
+            '\Webmozart\Json\IOException',
+            $tempFile
+        );
+
+        $this->decoder->decodeFile($tempFile);
+    }
+
     /**
      * Test that the file name is present in the output.
      *

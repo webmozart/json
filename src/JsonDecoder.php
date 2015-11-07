@@ -120,7 +120,7 @@ class JsonDecoder
     /**
      * Decodes and validates a JSON file.
      *
-     * @param string        $file   The path to the JSON file.
+     * @param string        $path   The path to the JSON file.
      * @param string|object $schema The schema file or object.
      *
      * @return mixed The decoded file.
@@ -133,36 +133,62 @@ class JsonDecoder
      *
      * @see decode
      */
-    public function decodeFile($file, $schema = null)
+    public function decodeFile($path, $schema = null)
     {
-        if (!file_exists($file)) {
+        if (!file_exists($path)) {
             throw new FileNotFoundException(sprintf(
                 'The file %s does not exist.',
-                $file
+                $path
             ));
         }
 
+        $errorMessage = null;
+        $errorCode = 0;
+
+        set_error_handler(function ($errno, $errstr) use (&$errorMessage, &$errorCode) {
+            $errorMessage = $errstr;
+            $errorCode = $errno;
+        });
+
+        $content = file_get_contents($path);
+
+        restore_error_handler();
+
+        if (null !== $errorMessage) {
+            if (false !== $pos = strpos($errorMessage, '): ')) {
+                // cut "file_get_contents(%path%):" to make message more readable
+                $errorMessage = substr($errorMessage, $pos + 3);
+            }
+
+            throw new IOException(sprintf(
+                'Could not read %s: %s (%s)',
+                $path,
+                $errorMessage,
+                $errorCode
+            ), $errorCode);
+        }
+
         try {
-            return $this->decode(file_get_contents($file), $schema);
+            return $this->decode($content, $schema);
         } catch (DecodingFailedException $e) {
             // Add the file name to the exception
             throw new DecodingFailedException(sprintf(
                 'An error happened while decoding %s: %s',
-                $file,
+                $path,
                 $e->getMessage()
             ), $e->getCode(), $e);
         } catch (ValidationFailedException $e) {
             // Add the file name to the exception
             throw new ValidationFailedException(sprintf(
                 "Validation of %s failed:\n%s",
-                $file,
+                $path,
                 $e->getErrorsAsString()
             ), $e->getErrors(), $e->getCode(), $e);
         } catch (InvalidSchemaException $e) {
             // Add the file name to the exception
             throw new InvalidSchemaException(sprintf(
                 'An error happened while decoding %s: %s',
-                $file,
+                $path,
                 $e->getMessage()
             ), $e->getCode(), $e);
         }

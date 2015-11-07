@@ -1,9 +1,15 @@
 Changelog
 =========
 
+* 1.1.0 (@release_date@)
+
+ * added `IOException` and better error handling in `JsonEncoder::encodeFile()`
+   and `JsonDecoder::decodeFile()`
+ * `JsonEncoder::encodeFile()` now creates missing directories on demand
+
 * 1.0.2 (2015-08-11)
 
- * fixed decoding of 'null'
+ * fixed decoding of `null`
 
 * 1.0.1 (2015-06-04)
 
