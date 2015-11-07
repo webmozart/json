@@ -211,7 +211,7 @@ class JsonEncoder
      * Encodes data into a JSON file.
      *
      * @param mixed         $data   The data to encode.
-     * @param string        $file   The path where the JSON file will be stored.
+     * @param string        $path   The path where the JSON file will be stored.
      * @param string|object $schema The schema file or object.
      *
      * @throws EncodingFailedException   If the data could not be encoded.
@@ -220,34 +220,64 @@ class JsonEncoder
      *
      * @see encode
      */
-    public function encodeFile($data, $file, $schema = null)
+    public function encodeFile($data, $path, $schema = null)
     {
+        if (!file_exists($dir = dirname($path))) {
+            mkdir($dir, 0777, true);
+        }
+
         try {
             // Right now, it's sufficient to just write the file. In the future,
             // this will diff existing files with the given data and only do
             // in-place modifications where necessary.
-            file_put_contents($file, $this->encode($data, $schema));
+            $content = $this->encode($data, $schema);
         } catch (EncodingFailedException $e) {
             // Add the file name to the exception
             throw new EncodingFailedException(sprintf(
                 'An error happened while encoding %s: %s',
-                $file,
+                $path,
                 $e->getMessage()
             ), $e->getCode(), $e);
         } catch (ValidationFailedException $e) {
             // Add the file name to the exception
             throw new ValidationFailedException(sprintf(
                 "Validation failed while encoding %s:\n%s",
-                $file,
+                $path,
                 $e->getErrorsAsString()
             ), $e->getErrors(), $e->getCode(), $e);
         } catch (InvalidSchemaException $e) {
             // Add the file name to the exception
             throw new InvalidSchemaException(sprintf(
                 'An error happened while encoding %s: %s',
-                $file,
+                $path,
                 $e->getMessage()
             ), $e->getCode(), $e);
+        }
+
+        $errorMessage = null;
+        $errorCode = 0;
+
+        set_error_handler(function ($errno, $errstr) use (&$errorMessage, &$errorCode) {
+            $errorMessage = $errstr;
+            $errorCode = $errno;
+        });
+
+        file_put_contents($path, $content);
+
+        restore_error_handler();
+
+        if (null !== $errorMessage) {
+            if (false !== $pos = strpos($errorMessage, '): ')) {
+                // cut "file_put_contents(%path%):" to make message more readable
+                $errorMessage = substr($errorMessage, $pos + 3);
+            }
+
+            throw new IOException(sprintf(
+                'Could not write %s: %s (%s)',
+                $path,
+                $errorMessage,
+                $errorCode
+            ), $errorCode);
         }
     }
 

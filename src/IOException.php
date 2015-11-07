@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Webmozart JSON package.
+ * This file is part of the webmozart/json package.
  *
  * (c) Bernhard Schussek <bschussek@gmail.com>
  *
@@ -14,12 +14,12 @@ namespace Webmozart\Json;
 use RuntimeException;
 
 /**
- * Thrown when data cannot be encoded as JSON.
+ * Thrown when read/write errors on the filesystem occur.
  *
- * @since  1.0
+ * @since  1.1
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class EncodingFailedException extends RuntimeException
+class IOException extends RuntimeException
 {
 }

@@ -11,6 +11,7 @@
 
 namespace Webmozart\Json\Tests;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Json\JsonEncoder;
 
 /**
@@ -31,20 +32,26 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     private $schemaObject;
 
+    private $tempDir;
+
     private $tempFile;
 
     protected function setUp()
     {
+        while (false === @mkdir($this->tempDir = sys_get_temp_dir().'/webmozart-JsonEncoderTest'.rand(10000, 99999), 0777, true)) {
+        }
+
         $this->encoder = new JsonEncoder();
         $this->fixturesDir = __DIR__.'/Fixtures';
         $this->schemaFile = $this->fixturesDir.'/schema.json';
         $this->schemaObject = json_decode(file_get_contents($this->schemaFile));
-        $this->tempFile = tempnam(sys_get_temp_dir(), 'JsonEncoderTest');
+        $this->tempFile = $this->tempDir.'/data.json';
     }
 
     protected function tearDown()
     {
-        unlink($this->tempFile);
+        $filesystem = new Filesystem();
+        $filesystem->remove($this->tempDir);
     }
 
     public function testEncode()
@@ -395,6 +402,32 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFileExists($this->tempFile);
         $this->assertSame('{"name":"Bernhard"}', file_get_contents($this->tempFile));
+    }
+
+    public function testEncodeFileCreatesMissingDirectories()
+    {
+        $data = (object) array('name' => 'Bernhard');
+
+        $this->encoder->encodeFile($data, $this->tempDir.'/sub/data.json');
+
+        $this->assertFileExists($this->tempDir.'/sub/data.json');
+        $this->assertSame('{"name":"Bernhard"}', file_get_contents($this->tempDir.'/sub/data.json'));
+    }
+
+    public function testEncodeFileFailsIfNotWritable()
+    {
+        $data = (object) array('name' => 'Bernhard');
+
+        touch($this->tempFile);
+        chmod($this->tempFile, 0400);
+
+        // Test that the file name is present in the output.
+        $this->setExpectedException(
+            '\Webmozart\Json\IOException',
+            $this->tempFile
+        );
+
+        $this->encoder->encodeFile($data, $this->tempFile);
     }
 
     public function testEncodeFileFailsIfValidationFailsWithSchemaFile()
