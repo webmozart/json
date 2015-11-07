@@ -13,6 +13,7 @@ namespace Webmozart\Json\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Json\JsonEncoder;
+use Webmozart\Json\Tests\Fixtures\PrivateProperties;
 
 /**
  * @since  1.0
@@ -21,6 +22,8 @@ use Webmozart\Json\JsonEncoder;
  */
 class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 {
+    const BINARY_INPUT = "\xff\xf0";
+
     /**
      * @var JsonEncoder
      */
@@ -35,6 +38,28 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     private $tempDir;
 
     private $tempFile;
+
+    public function provideValues()
+    {
+        return array(
+            array(0, '0'),
+            array(1, '1'),
+            array(1234, '1234'),
+            array('a', '"a"'),
+            array('b', '"b"'),
+            array('a/b', '"a\/b"'),
+            array(12.34, '12.34'),
+            array(true, 'true'),
+            array(false, 'false'),
+            array(null, 'null'),
+            array(PHP_INT_MAX, '9223372036854775807'),
+            // large float > PHP_INT_MAX
+            array(((float) PHP_INT_MAX) + 1, '9.2233720368548e+18'),
+            array(array(1, 2, 3, 4), '[1,2,3,4]'),
+            array(array('foo' => 'bar', 'baz' => 'bam'), '{"foo":"bar","baz":"bam"}'),
+            array((object) array('foo' => 'bar', 'baz' => 'bam'), '{"foo":"bar","baz":"bam"}'),
+        );
+    }
 
     protected function setUp()
     {
@@ -57,11 +82,12 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
         $filesystem->remove($this->tempDir);
     }
 
-    public function testEncode()
+    /**
+     * @dataProvider provideValues
+     */
+    public function testEncode($value, $json)
     {
-        $data = (object) array('name' => 'Bernhard');
-
-        $this->assertSame('{"name":"Bernhard"}', $this->encoder->encode($data));
+        $this->assertSame($json, $this->encoder->encode($value));
     }
 
     public function testEncodeWithSchemaFile()
@@ -102,7 +128,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * JSON_ERROR_UTF8.
+     * JSON_ERROR_UTF8
      *
      * @expectedException \Webmozart\Json\EncodingFailedException
      * @expectedExceptionCode 5
@@ -116,6 +142,17 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->encoder->encode(file_get_contents($this->fixturesDir.'/win-1258.json'));
+    }
+
+    /**
+     * JSON_ERROR_UTF8
+     *
+     * @expectedException \Webmozart\Json\EncodingFailedException
+     * @expectedExceptionCode 5
+     */
+    public function testEncodeFailsForBinaryValue()
+    {
+        $this->encoder->encode(self::BINARY_INPUT);
     }
 
     public function testEncodeArrayAsArray()

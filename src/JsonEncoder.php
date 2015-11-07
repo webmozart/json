@@ -193,7 +193,7 @@ class JsonEncoder
             $encoded = json_encode($data, $options);
         }
 
-        if (false === $encoded) {
+        if (JSON_ERROR_NONE !== json_last_error()) {
             throw new EncodingFailedException(sprintf(
                 'The data could not be encoded as JSON: %s',
                 JsonError::getLastErrorMessage()
