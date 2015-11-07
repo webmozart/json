@@ -193,6 +193,12 @@ class JsonEncoder
             $encoded = json_encode($data, $options);
         }
 
+        if (PHP_VERSION_ID < 50400 && !$this->slashEscaped) {
+            // PHP below 5.4 does not allow to turn off slash escaping. Let's
+            // unescape slashes manually.
+            $encoded = str_replace('\\/', '/', $encoded);
+        }
+
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new EncodingFailedException(sprintf(
                 'The data could not be encoded as JSON: %s',

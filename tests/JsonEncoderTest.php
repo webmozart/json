@@ -297,12 +297,6 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     public function testSlashNotEscaped()
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
-            $this->markTestSkipped('PHP >= 5.4.0 only');
-
-            return;
-        }
-
         $this->encoder->setEscapeSlash(false);
 
         $this->assertSame('"/"', $this->encoder->encode('/'));

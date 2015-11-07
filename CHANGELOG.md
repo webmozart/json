@@ -8,6 +8,7 @@ Changelog
  * `JsonEncoder::encodeFile()` now creates missing directories on demand
  * `JsonEncoder` now throws an exception on all PHP versions when binary values 
    are passed
+ * added support for disabled slash escaping on PHP below 5.4
 
 * 1.0.2 (2015-08-11)
 
