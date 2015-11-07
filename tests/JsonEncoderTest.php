@@ -51,9 +51,6 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
             array(true, 'true'),
             array(false, 'false'),
             array(null, 'null'),
-            array(PHP_INT_MAX, '9223372036854775807'),
-            // large float > PHP_INT_MAX
-            array(((float) PHP_INT_MAX) + 1, '9.2233720368548e+18'),
             array(array(1, 2, 3, 4), '[1,2,3,4]'),
             array(array('foo' => 'bar', 'baz' => 'bam'), '{"foo":"bar","baz":"bam"}'),
             array((object) array('foo' => 'bar', 'baz' => 'bam'), '{"foo":"bar","baz":"bam"}'),
