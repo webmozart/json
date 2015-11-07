@@ -13,7 +13,6 @@ namespace Webmozart\Json\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Json\JsonEncoder;
-use Webmozart\Json\Tests\Fixtures\PrivateProperties;
 
 /**
  * @since  1.0
@@ -128,7 +127,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * JSON_ERROR_UTF8
+     * JSON_ERROR_UTF8.
      *
      * @expectedException \Webmozart\Json\EncodingFailedException
      * @expectedExceptionCode 5
@@ -145,7 +144,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * JSON_ERROR_UTF8
+     * JSON_ERROR_UTF8.
      *
      * @expectedException \Webmozart\Json\EncodingFailedException
      * @expectedExceptionCode 5
