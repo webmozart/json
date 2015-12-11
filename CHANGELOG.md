@@ -1,7 +1,7 @@
 Changelog
 =========
 
-* 1.1.0 (@release_date@)
+* 1.1.0 (2015-12-11)
 
  * added `IOException` and better error handling in `JsonEncoder::encodeFile()`
    and `JsonDecoder::decodeFile()`
