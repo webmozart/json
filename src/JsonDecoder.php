@@ -66,9 +66,9 @@ class JsonDecoder
     /**
      * Creates a new decoder.
      */
-    public function __construct()
+    public function __construct(JsonValidator $jsonValidator = null)
     {
-        $this->validator = new JsonValidator();
+        $this->validator = $jsonValidator ?: new JsonValidator();
     }
 
     /**
