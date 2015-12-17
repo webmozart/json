@@ -102,10 +102,12 @@ class JsonEncoder
 
     /**
      * Creates a new encoder.
+     *
+     * @param null|JsonValidator $validator
      */
-    public function __construct()
+    public function __construct(JsonValidator $validator = null)
     {
-        $this->validator = new JsonValidator();
+        $this->validator = $validator ?: new JsonValidator();
     }
 
     /**
