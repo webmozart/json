@@ -35,6 +35,23 @@ class JsonValidator
     private $metaSchema;
 
     /**
+     * Validator instance used for validation.
+     *
+     * @var Validator
+     */
+    private $validator;
+
+    /**
+     * JsonValidator constructor.
+     *
+     * @param Validator|null $validator JsonSchema\Validator instance to use.
+     */
+    public function __construct(Validator $validator = null)
+    {
+        $this->validator = $validator ?: new Validator();
+    }
+
+    /**
      * Validates JSON data against a schema.
      *
      * The schema may be passed as file path or as object returned from
@@ -56,10 +73,10 @@ class JsonValidator
             $this->assertSchemaValid($schema);
         }
 
-        $validator = new Validator();
+        $this->validator->reset();
 
         try {
-            $validator->check($data, $schema);
+            $this->validator->check($data, $schema);
         } catch (InvalidArgumentException $e) {
             throw new InvalidSchemaException(sprintf(
                 'The schema is invalid: %s',
@@ -69,8 +86,8 @@ class JsonValidator
 
         $errors = array();
 
-        if (!$validator->isValid()) {
-            $errors = (array) $validator->getErrors();
+        if (!$this->validator->isValid()) {
+            $errors = (array) $this->validator->getErrors();
 
             foreach ($errors as $key => $error) {
                 $prefix = $error['property'] ? $error['property'].': ' : '';
