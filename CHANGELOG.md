@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* 1.1.1 (2015-12-28)
+
+ * fixed PHP 7 compatibility
+
 * 1.1.0 (2015-12-11)
 
  * added `IOException` and better error handling in `JsonEncoder::encodeFile()`
