@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "definitions": {
+        "stringDefinition": {
+            "type": "string"
+        },
+        "booleanDefinition": {
+            "type": "boolean"
+        }
+    },
+    "patternProperties": {
+        "^[a-zA-Z]": {
+            "oneOf": [
+                { "$ref": "#/definitions/stringDefinition" },
+                { "$ref": "#/definitions/booleanDefinition" }
+            ]
+        }
+    },
+    "additionalProperties": false
+}

@@ -41,14 +41,30 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateWithSchemaFile()
     {
-        $errors = $this->validator->validate((object) array('name' => 'Bernhard'), $this->schemaFile);
+        $errors = $this->validator->validate(
+            (object) array('name' => 'Bernhard'),
+            $this->schemaFile
+        );
 
         $this->assertCount(0, $errors);
     }
 
     public function testValidateWithSchemaObject()
     {
-        $errors = $this->validator->validate((object) array('name' => 'Bernhard'), $this->schemaObject);
+        $errors = $this->validator->validate(
+            (object) array('name' => 'Bernhard'),
+            $this->schemaObject
+        );
+
+        $this->assertCount(0, $errors);
+    }
+
+    public function testValidateWithReferences()
+    {
+        $errors = $this->validator->validate(
+            (object) array('name' => 'Bernhard', 'has-coffee' => true),
+            $this->fixturesDir.'/schema-refs.json'
+        );
 
         $this->assertCount(0, $errors);
     }
@@ -65,6 +81,16 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
         $errors = $this->validator->validate('foobar', $this->schemaObject);
 
         $this->assertCount(1, $errors);
+    }
+
+    public function testValidateFailsIfValidationFailsWithReferences()
+    {
+        $errors = $this->validator->validate(
+            (object) array('name' => 'Bernhard', 'has-coffee' => null),
+            $this->fixturesDir.'/schema-refs.json'
+        );
+
+        $this->assertGreaterThan(1, count($errors));
     }
 
     /**
@@ -91,7 +117,10 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateFailsIfSchemaFileContainsNoObject()
     {
-        $this->validator->validate((object) array('name' => 'Bernhard'), $this->fixturesDir.'/schema-no-object.json');
+        $this->validator->validate(
+            (object) array('name' => 'Bernhard'),
+            $this->fixturesDir.'/schema-no-object.json'
+        );
     }
 
     /**
@@ -99,7 +128,10 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateFailsIfSchemaFileInvalid()
     {
-        $this->validator->validate((object) array('name' => 'Bernhard'), $this->fixturesDir.'/schema-invalid.json');
+        $this->validator->validate(
+            (object) array('name' => 'Bernhard'),
+            $this->fixturesDir.'/schema-invalid.json'
+        );
     }
 
     /**
@@ -107,7 +139,10 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateFailsIfSchemaObjectInvalid()
     {
-        $this->validator->validate((object) array('name' => 'Bernhard'), (object) array('id' => 12345));
+        $this->validator->validate(
+            (object) array('name' => 'Bernhard'),
+            (object) array('id' => 12345)
+        );
     }
 
     /**
@@ -118,6 +153,9 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
         // justinrainbow/json-schema cannot validate "anyOf", so the following
         // will load the schema successfully and fail when the file is validated
         // against the schema
-        $this->validator->validate((object) array('name' => 'Bernhard'), (object) array('type' => 12345));
+        $this->validator->validate(
+            (object) array('name' => 'Bernhard'),
+            (object) array('type' => 12345)
+        );
     }
 }

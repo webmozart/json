@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": "^5.3.3|^7.0",
-        "justinrainbow/json-schema": "^1.4.2",
+        "justinrainbow/json-schema": "^1.5",
         "seld/jsonlint": "^1.0"
     },
     "require-dev": {

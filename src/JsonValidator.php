@@ -12,6 +12,8 @@
 namespace Webmozart\Json;
 
 use JsonSchema\Exception\InvalidArgumentException;
+use JsonSchema\RefResolver;
+use JsonSchema\Uri\UriRetriever;
 use JsonSchema\Validator;
 
 /**
@@ -138,7 +140,14 @@ class JsonValidator
             ));
         }
 
-        $schema = json_decode(file_get_contents($file));
+        // Retrieve schema and cache in UriRetriever
+        $file = realpath($file);
+        $retriever = new UriRetriever();
+        $schema = $retriever->retrieve('file://'.$file);
+
+        // Resolve references to other schemas
+        $resolver = new RefResolver($retriever);
+        $resolver->resolve($schema, 'file://'.dirname($file));
 
         try {
             $this->assertSchemaValid($schema);

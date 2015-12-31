@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* 1.2.0 (2015-12-31)
+
+ * added support for `$ref` in schemas
+
 * 1.1.1 (2015-12-28)
 
  * fixed PHP 7 compatibility
