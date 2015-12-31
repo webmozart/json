@@ -141,7 +141,8 @@ class JsonValidator
         }
 
         // Retrieve schema and cache in UriRetriever
-        $file = realpath($file);
+        $file = strtr(realpath($file), '\\', '/');
+
         $retriever = new UriRetriever();
         $schema = $retriever->retrieve('file://'.$file);
 
