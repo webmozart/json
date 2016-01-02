@@ -1,7 +1,7 @@
 Changelog
 =========
 
-* 1.2.0 (2015-12-31)
+* 1.2.0 (2015-01-02)
 
  * added support for `$ref` in schemas
 
