@@ -3,7 +3,7 @@ Changelog
 
 * 1.2.2 (2016-01-14)
 
- * fixed validation of schemas in PHARs
+ * fixed loading of schemas from PHARs
 
 * 1.2.1 (2016-01-14)
 
