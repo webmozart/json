@@ -1,6 +1,11 @@
 Changelog
 =========
 
+* 1.2.1 (2016-01-14)
+
+ * bumped justinrainbow/json-schema to 1.6 to fix "pattern-properties" with 
+   slashes
+
 * 1.2.0 (2015-01-02)
 
  * added support for `$ref` in schemas
