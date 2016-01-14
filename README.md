@@ -6,9 +6,9 @@ Webmozart JSON
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/webmozart/json/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/webmozart/json/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/webmozart/json/v/stable.svg)](https://packagist.org/packages/webmozart/json)
 [![Total Downloads](https://poser.pugx.org/webmozart/json/downloads.svg)](https://packagist.org/packages/webmozart/json)
-[![Dependency Status](https://www.versioneye.com/php/webmozart:json/1.2.0/badge.svg)](https://www.versioneye.com/php/webmozart:json/1.2.0)
+[![Dependency Status](https://www.versioneye.com/php/webmozart:json/1.2.1/badge.svg)](https://www.versioneye.com/php/webmozart:json/1.2.1)
 
-Latest release: [1.2.0](https://packagist.org/packages/webmozart/json#1.2.0)
+Latest release: [1.2.1](https://packagist.org/packages/webmozart/json#1.2.1)
 
 A robust wrapper for `json_encode()`/`json_decode()` that normalizes their
 behavior across PHP versions, throws meaningful exceptions and supports schema
