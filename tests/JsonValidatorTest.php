@@ -49,21 +49,21 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $errors);
     }
 
-    public function testValidateWithSchemaObject()
+    public function testValidateWithSchemaFileInPhar()
     {
+        // Work-around for https://bugs.php.net/bug.php?id=71368:
+        // "format": "uri" validation removed for "id" field in meta-schema.json
+
         $errors = $this->validator->validate(
             (object) array('name' => 'Bernhard'),
-            $this->schemaObject
+            'phar://'.$this->fixturesDir.'/schema.phar/schema.json'
         );
 
         $this->assertCount(0, $errors);
     }
 
-    public function testValidateWithSchemaObjectInPhar()
+    public function testValidateWithSchemaObject()
     {
-        // Caused by https://bugs.php.net/bug.php?id=71368
-        $this->schemaObject->id = 'phar:///path/to/schema.json';
-
         $errors = $this->validator->validate(
             (object) array('name' => 'Bernhard'),
             $this->schemaObject

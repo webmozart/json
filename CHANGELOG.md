@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* 1.2.2 (2016-01-14)
+
+ * fixed validation of schemas in PHARs
+
 * 1.2.1 (2016-01-14)
 
  * bumped justinrainbow/json-schema to 1.6 to fix "pattern-properties" with 

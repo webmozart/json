@@ -15,6 +15,7 @@ use JsonSchema\Exception\InvalidArgumentException;
 use JsonSchema\RefResolver;
 use JsonSchema\Uri\UriRetriever;
 use JsonSchema\Validator;
+use Webmozart\PathUtil\Path;
 
 /**
  * Validates decoded JSON values against a JSON schema.
@@ -141,14 +142,19 @@ class JsonValidator
         }
 
         // Retrieve schema and cache in UriRetriever
-        $file = strtr(realpath($file), '\\', '/');
+        $file = Path::canonicalize($file);
+
+        // Add file:// scheme if necessary
+        if (false === strpos($file, '://')) {
+            $file = 'file://'.$file;
+        }
 
         $retriever = new UriRetriever();
-        $schema = $retriever->retrieve('file://'.$file);
+        $schema = $retriever->retrieve($file);
 
         // Resolve references to other schemas
         $resolver = new RefResolver($retriever);
-        $resolver->resolve($schema, 'file://'.dirname($file));
+        $resolver->resolve($schema, Path::getDirectory($file));
 
         try {
             $this->assertSchemaValid($schema);

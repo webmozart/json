@@ -1,0 +1,13 @@
+{
+    "files": [
+        "schema.json"
+    ],
+    "compactors": [
+        "Herrera\\Box\\Compactor\\Json",
+        "Herrera\\Box\\Compactor\\Php"
+    ],
+    "compression": "GZ",
+    "output": "schema.phar",
+    "chmod": "0755",
+    "stub": true
+}
