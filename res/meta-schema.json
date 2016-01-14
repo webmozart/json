@@ -28,8 +28,7 @@
     "type": "object",
     "properties": {
         "id": {
-            "type": "string",
-            "format": "uri"
+            "type": "string"
         },
         "$schema": {
             "type": "string",

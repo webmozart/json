@@ -59,6 +59,19 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $errors);
     }
 
+    public function testValidateWithSchemaObjectInPhar()
+    {
+        // Caused by https://bugs.php.net/bug.php?id=71368
+        $this->schemaObject->id = 'phar:///path/to/schema.json';
+
+        $errors = $this->validator->validate(
+            (object) array('name' => 'Bernhard'),
+            $this->schemaObject
+        );
+
+        $this->assertCount(0, $errors);
+    }
+
     public function testValidateWithReferences()
     {
         $errors = $this->validator->validate(
