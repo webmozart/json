@@ -1,6 +1,12 @@
 Changelog
 =========
 
+* 1.3.0 (@release_date@)
+
+ * added `JsonConverter` and `ConversionException`
+ * added `MigratingConverter` to migrate JSON objects between different versions
+ * added `ValidatingConverter` to validate converted JSON against schemas
+
 * 1.2.2 (2016-01-14)
 
  * fixed loading of schemas from PHARs
