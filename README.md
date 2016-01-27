@@ -150,7 +150,7 @@ class ConfigFileJsonConverter implements JsonConverter
 }
 ~~~
 
-Loading and dumping `ConfigFile` objects has become very simple now:
+Loading and dumping `ConfigFile` objects is very simple now:
 
 ~~~php
 $converter = new ConfigFileJsonConverter();
@@ -192,6 +192,7 @@ config.json (version `1.0`)
 
 ~~~json
 {
+    "version": "1.0",
     "application": "Hello world!"
 }
 ~~~
@@ -200,6 +201,7 @@ config.json (version `2.0`)
 
 ~~~json
 {
+    "version": "2.0",
     "application.name": "Hello world!"
 }
 ~~~
@@ -208,6 +210,7 @@ config.json (version `3.0`)
 
 ~~~json
 {
+    "version": "2.0",
     "application": {
         "name": "Hello world!"
     }
@@ -258,13 +261,16 @@ class ConfigFileJsonConverter implements JsonConverter
 }
 ~~~
 
-This converter can be used like it described in the previous section. However,
+This converter can be used as described in the previous section. However,
 it can only be used with `config.json` files in version `3.0`.
 
 We can add support for older files by implementing the [`JsonMigration`]
-interface. This interface has methods that return the versions that the
-migration migrates from and to and methods for actually performing the
-migration in both directions.
+interface. This interface contains four methods:
+ 
+* `getSourceVersion()`: returns the source version of the migration
+* `getTargetVersion()`: returns the target version of the migration
+* `up(stdClass $jsonData)`: migrates from the source to the target version
+* `down(stdClass $jsonData)`: migrates from the target to the source version
 
 ~~~php
 use Webmozart\Json\Migration\JsonMigration;
@@ -318,7 +324,7 @@ $migrationManager = new MigrationManager(array(
     new ConfigFileJson20To30Migration(),
 ));
 
-// Decorate our converter
+// Decorate the converter
 $converter = new MigratingConverter($converter, $migrationManager);
 ~~~
 
