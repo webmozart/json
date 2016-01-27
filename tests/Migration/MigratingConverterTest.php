@@ -134,31 +134,6 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException \Webmozart\Json\Migration\UnsupportedVersionException
      */
-    public function testToJsonFailsIfSourceVersionTooHigh()
-    {
-        $options = array(
-            'inner_option' => 'value',
-            'target_version' => '1.0',
-        );
-
-        $jsonData = (object) array(
-            'version' => '1.1',
-        );
-
-        $this->innerConverter->expects($this->once())
-            ->method('toJson')
-            ->with('DATA', $options)
-            ->willReturn($jsonData);
-
-        $this->migrationManager->expects($this->never())
-            ->method('migrate');
-
-        $this->converter->toJson('DATA', $options);
-    }
-
-    /**
-     * @expectedException \Webmozart\Json\Migration\UnsupportedVersionException
-     */
     public function testToJsonFailsIfTargetVersionTooHigh()
     {
         $this->converter->toJson('DATA', array('target_version' => '1.1'));
@@ -178,27 +153,6 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
             ->method('toJson')
             ->with('DATA', $options)
             ->willReturn('foobar');
-
-        $this->migrationManager->expects($this->never())
-            ->method('migrate');
-
-        $this->converter->toJson('DATA', $options);
-    }
-
-    /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionException
-     */
-    public function testToJsonFailsIfVersionIsMissing()
-    {
-        $options = array(
-            'inner_option' => 'value',
-            'target_version' => '1.0',
-        );
-
-        $this->innerConverter->expects($this->once())
-            ->method('toJson')
-            ->with('DATA', $options)
-            ->willReturn((object) array());
 
         $this->migrationManager->expects($this->never())
             ->method('migrate');

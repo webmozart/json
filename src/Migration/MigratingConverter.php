@@ -12,6 +12,7 @@
 namespace Webmozart\Json\Migration;
 
 use stdClass;
+use Webmozart\Assert\Assert;
 use Webmozart\Json\Conversion\ConversionException;
 use Webmozart\Json\Conversion\JsonConverter;
 
@@ -133,8 +134,9 @@ class MigratingConverter implements JsonConverter
 
         $jsonData = $this->innerConverter->toJson($data, $options);
 
-        $this->assertVersionIsset($jsonData);
-        $this->assertVersionSupported($jsonData->version);
+        $this->assertObject($jsonData);
+
+        $jsonData->version = $this->currentVersion;
 
         if ($jsonData->version !== $targetVersion) {
             $this->migrate($jsonData, $targetVersion);
@@ -155,6 +157,7 @@ class MigratingConverter implements JsonConverter
      */
     public function fromJson($jsonData, array $options = array())
     {
+        $this->assertObject($jsonData);
         $this->assertVersionIsset($jsonData);
         $this->assertVersionSupported($jsonData->version);
 
@@ -181,10 +184,20 @@ class MigratingConverter implements JsonConverter
         }
     }
 
-    private function assertVersionIsset($jsonData)
+    private function assertObject($jsonData)
     {
-        if (!$jsonData instanceof stdClass || !isset($jsonData->version)) {
-            throw new ConversionException('Expected an object with a "version" property.');
+        if (!$jsonData instanceof stdClass) {
+            throw new ConversionException(sprintf(
+                'Expected an instance of stdClass, got: %s',
+                is_object($jsonData) ? get_class($jsonData) : gettype($jsonData)
+            ));
+        }
+    }
+
+    private function assertVersionIsset(stdClass $jsonData)
+    {
+        if (!isset($jsonData->version)) {
+            throw new ConversionException('Could not find a "version" property.');
         }
     }
 }
