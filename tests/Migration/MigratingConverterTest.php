@@ -57,7 +57,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
     {
         $options = array(
             'inner_option' => 'value',
-            'target_version' => '0.9',
+            'targetVersion' => '0.9',
         );
 
         $beforeMigration = (object) array(
@@ -92,7 +92,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
     {
         $options = array(
             'inner_option' => 'value',
-            'target_version' => '1.0',
+            'targetVersion' => '1.0',
         );
 
         $jsonData = (object) array(
@@ -136,7 +136,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
      */
     public function testToJsonFailsIfTargetVersionTooHigh()
     {
-        $this->converter->toJson('DATA', array('target_version' => '1.1'));
+        $this->converter->toJson('DATA', array('targetVersion' => '1.1'));
     }
 
     /**
@@ -146,7 +146,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
     {
         $options = array(
             'inner_option' => 'value',
-            'target_version' => '1.0',
+            'targetVersion' => '1.0',
         );
 
         $this->innerConverter->expects($this->once())

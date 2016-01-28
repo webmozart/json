@@ -343,7 +343,7 @@ $encoder->encodeFile($jsonData, '/path/to/config.json');
 
 // Writes the file in a specific version
 $jsonData = $converter->toJson($configFile, array(
-    'target_version' => '2.0',
+    'targetVersion' => '2.0',
 ));
 $encoder->encodeFile($jsonData, '/path/to/config.json');
 ~~~

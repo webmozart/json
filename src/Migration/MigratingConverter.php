@@ -59,11 +59,11 @@ use Webmozart\Json\Conversion\JsonConverter;
  * ~~~
  *
  * By default, data is dumped in the current version. If you want to dump the
- * data in a specific version, pass the "target_version" option:
+ * data in a specific version, pass the "targetVersion" option:
  *
  * ~~~php
  * $jsonEncoder->encode($converter->toJson($configFile, array(
- *     'target_version' => '2.0',
+ *     'targetVersion' => '2.0',
  * )));
  * ~~~
  *
@@ -119,8 +119,8 @@ class MigratingConverter implements JsonConverter
      */
     public function toJson($data, array $options = array())
     {
-        $targetVersion = isset($options['target_version'])
-            ? $options['target_version']
+        $targetVersion = isset($options['targetVersion'])
+            ? $options['targetVersion']
             : $this->currentVersion;
 
         $this->assertVersionSupported($targetVersion);
