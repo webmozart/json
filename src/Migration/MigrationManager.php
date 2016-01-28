@@ -69,7 +69,6 @@ class MigrationManager
      *
      * @param stdClass $data          The JSON object.
      * @param string   $targetVersion The version string.
-     *
      */
     public function migrate(stdClass $data, $targetVersion)
     {

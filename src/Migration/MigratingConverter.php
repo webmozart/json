@@ -12,7 +12,6 @@
 namespace Webmozart\Json\Migration;
 
 use stdClass;
-use Webmozart\Assert\Assert;
 use Webmozart\Json\Conversion\ConversionException;
 use Webmozart\Json\Conversion\JsonConverter;
 
@@ -116,13 +115,7 @@ class MigratingConverter implements JsonConverter
     }
 
     /**
-     * @param mixed $data
-     * @param array     $options
-     *
-     * @return stdClass
-     *
-     * @throws ConversionException
-     * @throws UnsupportedVersionException
+     * {@inheritdoc}
      */
     public function toJson($data, array $options = array())
     {
@@ -147,13 +140,7 @@ class MigratingConverter implements JsonConverter
     }
 
     /**
-     * @param stdClass $jsonData
-     * @param array $options
-     *
-     * @return mixed
-     *
-     * @throws ConversionException
-     * @throws UnsupportedVersionException
+     * {@inheritdoc}
      */
     public function fromJson($jsonData, array $options = array())
     {
