@@ -38,7 +38,7 @@ class MigrationManager
     /**
      * @var string[]
      */
-    private $knownVersions;
+    private $knownVersions = array();
 
     /**
      * Creates a new migration manager.

@@ -282,6 +282,13 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
         $this->assertSame(array('0.8', '0.10', '1.0', '2.0'), $this->manager->getKnownVersions());
     }
 
+    public function testGetKnownVersionsWithoutMigrations()
+    {
+        $this->manager = new MigrationManager(array());
+
+        $this->assertSame(array(), $this->manager->getKnownVersions());
+    }
+
     /**
      * @param string $sourceVersion
      * @param string $targetVersion
