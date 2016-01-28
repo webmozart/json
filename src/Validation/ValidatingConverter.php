@@ -11,7 +11,7 @@
 
 namespace Webmozart\Json\Validation;
 
-use Webmozart\Json\Conversion\ConversionException;
+use Webmozart\Json\Conversion\ConversionFailedException;
 use Webmozart\Json\Conversion\JsonConverter;
 use Webmozart\Json\InvalidSchemaException;
 use Webmozart\Json\JsonValidator;
@@ -125,7 +125,7 @@ class ValidatingConverter implements JsonConverter
         try {
             $errors = $this->jsonValidator->validate($jsonData, $schema);
         } catch (InvalidSchemaException $e) {
-            throw new ConversionException(sprintf(
+            throw new ConversionFailedException(sprintf(
                 'An error occurred while loading the JSON schema (%s): %s',
                 is_string($schema) ? '"'.$schema.'"' : gettype($schema),
                 $e->getMessage()
@@ -133,7 +133,7 @@ class ValidatingConverter implements JsonConverter
         }
 
         if (count($errors) > 0) {
-            throw new ConversionException(sprintf(
+            throw new ConversionFailedException(sprintf(
                 "The passed JSON did not match the schema:\n%s",
                 implode("\n", $errors)
             ));

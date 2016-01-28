@@ -20,6 +20,6 @@ use RuntimeException;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class ConversionException extends RuntimeException
+class ConversionFailedException extends RuntimeException
 {
 }

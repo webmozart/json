@@ -116,7 +116,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\MigrationException
+     * @expectedException \Webmozart\Json\Migration\MigrationFailedException
      * @expectedExceptionMessage 0.5
      */
     public function testMigrateUpFailsIfNoMigrationForOriginVersion()
@@ -134,7 +134,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\MigrationException
+     * @expectedException \Webmozart\Json\Migration\MigrationFailedException
      * @expectedExceptionMessage 1.2
      */
     public function testMigrateUpFailsIfNoMigrationForTargetVersion()
@@ -215,7 +215,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\MigrationException
+     * @expectedException \Webmozart\Json\Migration\MigrationFailedException
      * @expectedExceptionMessage 1.2
      */
     public function testMigrateDownFailsIfNoMigrationForOriginVersion()
@@ -233,7 +233,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\MigrationException
+     * @expectedException \Webmozart\Json\Migration\MigrationFailedException
      * @expectedExceptionMessage 0.9
      */
     public function testMigrateDownFailsIfNoMigrationForTargetVersion()

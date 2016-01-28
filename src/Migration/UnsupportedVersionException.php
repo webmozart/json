@@ -12,7 +12,7 @@
 namespace Webmozart\Json\Migration;
 
 use Exception;
-use Webmozart\Json\Conversion\ConversionException;
+use Webmozart\Json\Conversion\ConversionFailedException;
 
 /**
  * Thrown when a version is not supported.
@@ -21,7 +21,7 @@ use Webmozart\Json\Conversion\ConversionException;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class UnsupportedVersionException extends ConversionException
+class UnsupportedVersionException extends ConversionFailedException
 {
     /**
      * Creates an exception for an unknown version.

@@ -93,7 +93,7 @@ class MigrationManager
     {
         while (version_compare($data->version, $targetVersion, '<')) {
             if (!isset($this->migrationsBySourceVersion[$data->version])) {
-                throw new MigrationException(sprintf(
+                throw new MigrationFailedException(sprintf(
                     'No migration found to upgrade from version %s to %s.',
                     $data->version,
                     $targetVersion
@@ -104,7 +104,7 @@ class MigrationManager
 
             // Final version too high
             if (version_compare($migration->getTargetVersion(), $targetVersion, '>')) {
-                throw new MigrationException(sprintf(
+                throw new MigrationFailedException(sprintf(
                     'No migration found to upgrade from version %s to %s.',
                     $data->version,
                     $targetVersion
@@ -121,7 +121,7 @@ class MigrationManager
     {
         while (version_compare($data->version, $targetVersion, '>')) {
             if (!isset($this->migrationsByTargetVersion[$data->version])) {
-                throw new MigrationException(sprintf(
+                throw new MigrationFailedException(sprintf(
                     'No migration found to downgrade from version %s to %s.',
                     $data->version,
                     $targetVersion
@@ -132,7 +132,7 @@ class MigrationManager
 
             // Final version too low
             if (version_compare($migration->getSourceVersion(), $targetVersion, '<')) {
-                throw new MigrationException(sprintf(
+                throw new MigrationFailedException(sprintf(
                     'No migration found to downgrade from version %s to %s.',
                     $data->version,
                     $targetVersion

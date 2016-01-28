@@ -12,7 +12,7 @@
 namespace Webmozart\Json\Migration;
 
 use stdClass;
-use Webmozart\Json\Conversion\ConversionException;
+use Webmozart\Json\Conversion\ConversionFailedException;
 use Webmozart\Json\Conversion\JsonConverter;
 
 /**
@@ -159,8 +159,11 @@ class MigratingConverter implements JsonConverter
     {
         try {
             $this->migrationManager->migrate($jsonData, $targetVersion);
-        } catch (MigrationException $e) {
-            throw new ConversionException();
+        } catch (MigrationFailedException $e) {
+            throw new ConversionFailedException(sprintf(
+                'Could not migrate the JSON data: %s',
+                $e->getMessage()
+            ), 0, $e);
         }
     }
 
@@ -174,7 +177,7 @@ class MigratingConverter implements JsonConverter
     private function assertObject($jsonData)
     {
         if (!$jsonData instanceof stdClass) {
-            throw new ConversionException(sprintf(
+            throw new ConversionFailedException(sprintf(
                 'Expected an instance of stdClass, got: %s',
                 is_object($jsonData) ? get_class($jsonData) : gettype($jsonData)
             ));
@@ -184,7 +187,7 @@ class MigratingConverter implements JsonConverter
     private function assertVersionIsset(stdClass $jsonData)
     {
         if (!isset($jsonData->version)) {
-            throw new ConversionException('Could not find a "version" property.');
+            throw new ConversionFailedException('Could not find a "version" property.');
         }
     }
 }

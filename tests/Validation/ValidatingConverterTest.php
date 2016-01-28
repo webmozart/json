@@ -155,7 +155,7 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionException
+     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
      */
     public function testConvertSchemaExceptionToConversionException()
     {
@@ -178,7 +178,7 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionException
+     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
      */
     public function testConvertValidationErrorsToConversionException()
     {

@@ -140,7 +140,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionException
+     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
      */
     public function testToJsonFailsIfNotAnObject()
     {
@@ -230,7 +230,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionException
+     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
      */
     public function testFromJsonFailsIfNotAnObject()
     {
@@ -244,7 +244,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionException
+     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
      */
     public function testFromJsonFailsIfVersionIsMissing()
     {

@@ -20,6 +20,6 @@ use RuntimeException;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class MigrationException extends RuntimeException
+class MigrationFailedException extends RuntimeException
 {
 }

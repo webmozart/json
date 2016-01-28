@@ -29,7 +29,7 @@ interface JsonConverter
      * @return mixed The JSON data. Pass this data to a {@link JsonEncoder} to
      *               generate a JSON string.
      *
-     * @throws ConversionException If the conversion fails.
+     * @throws ConversionFailedException If the conversion fails.
      */
     public function toJson($data, array $options = array());
 
@@ -42,7 +42,7 @@ interface JsonConverter
      *
      * @return mixed The converted data.
      *
-     * @throws ConversionException If the conversion fails.
+     * @throws ConversionFailedException If the conversion fails.
      */
     public function fromJson($jsonData, array $options = array());
 }
