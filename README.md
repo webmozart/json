@@ -180,15 +180,16 @@ Versioning and Migration
 ------------------------
 
 When you continuously develop an application, you will enter the situation that
-you will need to change your JSON schemas. Updating JSON files to match the
-changed schema can be challenging and time consuming. This package supports a
-versioning mechanism to automate the migration.
+you need to change your JSON schemas. Updating JSON files to match their
+changed schemas can be challenging and time consuming. This package supports a
+versioning mechanism to automate this migration.
 
-Imagine `config.json` files in three different versions: `1.0`, `2.0` and `3.0`.
-The name of a key changed between those versions. The JSON file must contain
-a key "version" that stores the version of the file:
+Imagine `config.json` files in three different versions: 1.0, 2.0 and 3.0.
+The name of a key changed between those versions.
 
-config.json (version `1.0`)
+The JSON file must contain a key "version" that stores the version of the file:
+
+config.json (version 1.0)
 
 ~~~json
 {
@@ -197,7 +198,7 @@ config.json (version `1.0`)
 }
 ~~~
 
-config.json (version `2.0`)
+config.json (version 2.0)
 
 ~~~json
 {
@@ -206,25 +207,25 @@ config.json (version `2.0`)
 }
 ~~~
 
-config.json (version `3.0`)
+config.json (version 3.0)
 
 ~~~json
 {
-    "version": "2.0",
+    "version": "3.0",
     "application": {
         "name": "Hello world!"
     }
 }
 ~~~
 
-You can support files in all of these versions by implementing:
+You can support files in any of these versions by implementing:
 
-1. A converter compatible with the latest version (e.g. `3.0`)
+1. A converter compatible with the latest version (e.g. 3.0)
 
-2. Migrations that migrate older versions to newer versions (e.g. `1.0`  to
-   `2.0` and `2.0` to `3.0`.
+2. Migrations that migrate older versions to newer versions (e.g. 1.0  to
+   2.0 and 2.0 to 3.0.
    
-Let's look at an example of a `ConfigFileJsonConverter` for version `3.0`:
+Let's look at an example of a `ConfigFileJsonConverter` for version 3.0:
 
 ~~~php
 use stdClass;
@@ -262,7 +263,7 @@ class ConfigFileJsonConverter implements JsonConverter
 ~~~
 
 This converter can be used as described in the previous section. However,
-it can only be used with `config.json` files in version `3.0`.
+it can only be used with `config.json` files in version 3.0.
 
 We can add support for older files by implementing the [`JsonMigration`]
 interface. This interface contains four methods:
@@ -328,8 +329,8 @@ $migrationManager = new MigrationManager(array(
 $converter = new MigratingConverter($converter, $migrationManager);
 ~~~
 
-The resulting converter is able to load and dump JSON files at any of the 
-versions `1.0`, `2.0` and `3.0`.
+The resulting converter is able to load and dump JSON files in any of the 
+versions 1.0, 2.0 and 3.0.
  
 ~~~php
 // Loads a file in version 1.0, 2.0 or 3.0
@@ -348,9 +349,9 @@ $encoder->encodeFile($jsonData, '/path/to/config.json');
 ~~~
 
 If you want to add schema validation, wrap your encoder into a
-`ValidatingConverter`. Ideally you wrap both the inner and the outer converter
-to make sure that both the JSON before and after running the migrations is
-valid:
+`ValidatingConverter`. You can wrap both the inner and the outer converter
+to make sure that both the JSON before and after running the migrations complies
+to the corresponding schemas.
 
 ~~~php
 // Written for version 3.0
