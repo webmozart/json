@@ -45,13 +45,21 @@ class JsonValidator
     private $validator;
 
     /**
+     * URI retriever for fetching JSON schemas.
+     *
+     * @var UriRetriever
+     */
+    private $uriRetriever;
+
+    /**
      * JsonValidator constructor.
      *
      * @param Validator|null $validator JsonSchema\Validator instance to use.
      */
-    public function __construct(Validator $validator = null)
+    public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null)
     {
         $this->validator = $validator ?: new Validator();
+        $this->uriRetriever = $uriRetriever ?: new UriRetriever();
     }
 
     /**
@@ -149,12 +157,11 @@ class JsonValidator
             $file = 'file://'.$file;
         }
 
-        $retriever = new UriRetriever();
-        $schema = $retriever->retrieve($file);
+        $schema = $this->uriRetriever->retrieve($file);
 
         // Resolve references to other schemas
-        $resolver = new RefResolver($retriever);
-        $resolver->resolve($schema, Path::getDirectory($file));
+        $resolver = new RefResolver($this->uriRetriever);
+        $resolver->resolve($schema, $file);
 
         try {
             $this->assertSchemaValid($schema);

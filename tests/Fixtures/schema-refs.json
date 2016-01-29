@@ -1,4 +1,5 @@
 {
+    "id": "http://webmozart.io/fixtures/schema-refs#",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "definitions": {

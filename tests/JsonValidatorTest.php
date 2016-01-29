@@ -11,6 +11,9 @@
 
 namespace Webmozart\Json\Tests;
 
+use JsonSchema\Uri\Retrievers\FileGetContents;
+use JsonSchema\Uri\Retrievers\PredefinedArray;
+use JsonSchema\Uri\UriRetriever;
 use Webmozart\Json\JsonValidator;
 
 /**
@@ -82,6 +85,24 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $errors);
     }
 
+    public function testValidateWithExternalReferences()
+    {
+        $uriRetriever = new UriRetriever();
+        $uriRetriever->setUriRetriever(new PredefinedArray(array(
+            'http://webmozart.io/fixtures/schema-refs' => file_get_contents(__DIR__.'/Fixtures/schema-refs.json'),
+            'file://'.$this->fixturesDir.'/schema-external-refs.json' => file_get_contents(__DIR__.'/Fixtures/schema-external-refs.json'),
+        )));
+
+        $this->validator = new JsonValidator(null, $uriRetriever);
+
+        $errors = $this->validator->validate(
+            (object) array('name' => 'Bernhard', 'has-coffee' => true),
+            $this->fixturesDir.'/schema-external-refs.json'
+        );
+
+        $this->assertCount(0, $errors);
+    }
+
     public function testValidateFailsIfValidationFailsWithSchemaFile()
     {
         $errors = $this->validator->validate('foobar', $this->schemaFile);
@@ -101,6 +122,24 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
         $errors = $this->validator->validate(
             (object) array('name' => 'Bernhard', 'has-coffee' => null),
             $this->fixturesDir.'/schema-refs.json'
+        );
+
+        $this->assertGreaterThan(1, count($errors));
+    }
+
+    public function testValidateFailsIfValidationFailsWithExternalReferences()
+    {
+        $uriRetriever = new UriRetriever();
+        $uriRetriever->setUriRetriever(new PredefinedArray(array(
+            'http://webmozart.io/fixtures/schema-refs' => file_get_contents(__DIR__.'/Fixtures/schema-refs.json'),
+            'file://'.$this->fixturesDir.'/schema-external-refs.json' => file_get_contents(__DIR__.'/Fixtures/schema-external-refs.json'),
+        )));
+
+        $this->validator = new JsonValidator(null, $uriRetriever);
+
+        $errors = $this->validator->validate(
+            (object) array('name' => 'Bernhard', 'has-coffee' => null),
+            $this->fixturesDir.'/schema-external-refs.json'
         );
 
         $this->assertGreaterThan(1, count($errors));

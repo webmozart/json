@@ -6,6 +6,7 @@ Changelog
  * added `JsonConverter` and `ConversionException`
  * added `MigratingConverter` to migrate JSON objects between different versions
  * added `ValidatingConverter` to validate converted JSON against schemas
+ * added support for `$ref` to external schema
 
 * 1.2.2 (2016-01-14)
 

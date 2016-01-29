@@ -1,0 +1,14 @@
+{
+    "id": "http://webmozart.io/fixtures/schema-external-refs#",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "patternProperties": {
+        "^[a-zA-Z]": {
+            "oneOf": [
+                { "$ref": "http://webmozart.io/fixtures/schema-refs#/definitions/stringDefinition" },
+                { "$ref": "http://webmozart.io/fixtures/schema-refs#/definitions/booleanDefinition" }
+            ]
+        }
+    },
+    "additionalProperties": false
+}
