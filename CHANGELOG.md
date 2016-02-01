@@ -9,6 +9,7 @@ Changelog
  * added `JsonVersioner` and implementations `VersionFieldVersioner` and
    `SchemaUriVersioner`
  * added support for `$ref` to external schema
+ * added support for validation against `$schema` property
 
 * 1.2.2 (2016-01-14)
 

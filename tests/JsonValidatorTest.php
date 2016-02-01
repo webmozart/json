@@ -74,6 +74,23 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $errors);
     }
 
+    public function testValidateWithSchemaField()
+    {
+        $uriRetriever = new UriRetriever();
+        $uriRetriever->setUriRetriever(new PredefinedArray(array(
+            'http://webmozart.io/fixtures/schema' => file_get_contents(__DIR__.'/Fixtures/schema.json'),
+        )));
+
+        $this->validator = new JsonValidator(null, $uriRetriever);
+
+        $errors = $this->validator->validate((object) array(
+            '$schema' => 'http://webmozart.io/fixtures/schema',
+            'name' => 'Bernhard',
+        ));
+
+        $this->assertCount(0, $errors);
+    }
+
     public function testValidateWithReferences()
     {
         $errors = $this->validator->validate(
@@ -207,6 +224,27 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator->validate(
             (object) array('name' => 'Bernhard'),
             (object) array('type' => 12345)
+        );
+    }
+
+    /**
+     * @expectedException \Webmozart\Json\InvalidSchemaException
+     */
+    public function testValidateFailsIfMissingSchema()
+    {
+        $this->validator->validate(
+            (object) array('name' => 'Bernhard')
+        );
+    }
+
+    /**
+     * @expectedException \Webmozart\Json\InvalidSchemaException
+     */
+    public function testValidateFailsIfInvalidSchemaType()
+    {
+        $this->validator->validate(
+            (object) array('name' => 'Bernhard'),
+            1234
         );
     }
 }

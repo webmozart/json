@@ -12,6 +12,7 @@
 namespace Webmozart\Json;
 
 use JsonSchema\Exception\InvalidArgumentException;
+use JsonSchema\Exception\ResourceNotFoundException;
 use JsonSchema\RefResolver;
 use JsonSchema\Uri\UriRetriever;
 use JsonSchema\Validator;
@@ -68,20 +69,32 @@ class JsonValidator
      * The schema may be passed as file path or as object returned from
      * `json_decode($schemaFile)`.
      *
-     * @param mixed         $data   The decoded JSON data.
-     * @param string|object $schema The schema file or object.
+     * @param mixed              $data   The decoded JSON data.
+     * @param string|object|null $schema The schema file or object. If `null`,
+     *                                   the validator will look for a `$schema`
+     *                                   property.
      *
      * @return string[] The errors found during validation. Returns an empty
      *                  array if no errors were found.
      *
      * @throws InvalidSchemaException If the schema is invalid.
      */
-    public function validate($data, $schema)
+    public function validate($data, $schema = null)
     {
+        if (null === $schema && isset($data->{'$schema'})) {
+            $schema = $data->{'$schema'};
+        }
+
         if (is_string($schema)) {
             $schema = $this->loadSchema($schema);
-        } else {
+        } elseif (is_object($schema)) {
             $this->assertSchemaValid($schema);
+        } else {
+            throw new InvalidSchemaException(sprintf(
+                'The schema must be given as string, object or in the "$schema" '.
+                'property of the JSON data. Got: %s',
+                is_object($schema) ? get_class($schema) : gettype($schema)
+            ));
         }
 
         $this->validator->reset();
@@ -129,26 +142,10 @@ class JsonValidator
                 implode("\n", $errors)
             ));
         }
-
-        // not caught by justinrainbow/json-schema
-        if (!is_object($schema)) {
-            throw new InvalidSchemaException(sprintf(
-                'The schema must be an object. Got: %s',
-                $schema,
-                gettype($schema)
-            ));
-        }
     }
 
     private function loadSchema($file)
     {
-        if (!file_exists($file)) {
-            throw new InvalidSchemaException(sprintf(
-                'The schema file %s does not exist.',
-                $file
-            ));
-        }
-
         // Retrieve schema and cache in UriRetriever
         $file = Path::canonicalize($file);
 
@@ -157,7 +154,14 @@ class JsonValidator
             $file = 'file://'.$file;
         }
 
-        $schema = $this->uriRetriever->retrieve($file);
+        try {
+            $schema = $this->uriRetriever->retrieve($file);
+        } catch (ResourceNotFoundException $e) {
+            throw new InvalidSchemaException(sprintf(
+                'The schema %s does not exist.',
+                $file
+            ), 0, $e);
+        }
 
         // Resolve references to other schemas
         $resolver = new RefResolver($this->uriRetriever);
