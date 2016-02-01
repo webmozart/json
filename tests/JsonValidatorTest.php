@@ -11,7 +11,6 @@
 
 namespace Webmozart\Json\Tests;
 
-use JsonSchema\Uri\Retrievers\FileGetContents;
 use JsonSchema\Uri\Retrievers\PredefinedArray;
 use JsonSchema\Uri\UriRetriever;
 use Webmozart\Json\JsonValidator;

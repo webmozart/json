@@ -13,7 +13,8 @@ namespace Webmozart\Json\Migration;
 
 use stdClass;
 use Webmozart\Assert\Assert;
-use Webmozart\Json\Migration\Versioner\JsonVersioner;
+use Webmozart\Json\Versioning\JsonVersioner;
+use Webmozart\Json\Versioning\SchemaUriVersioner;
 
 /**
  * Migrates a JSON object between different versions.
@@ -49,14 +50,15 @@ class MigrationManager
     /**
      * Creates a new migration manager.
      *
-     * @param JsonMigration[] $migrations The migrations migrating a JSON object
-     *                                    between individual versions.
+     * @param JsonMigration[]    $migrations The migrations migrating a JSON
+     *                                       object between individual versions.
+     * @param JsonVersioner|null $versioner  The versioner that should be used.
      */
-    public function __construct(JsonVersioner $versioner, array $migrations)
+    public function __construct(array $migrations, JsonVersioner $versioner = null)
     {
         Assert::allIsInstanceOf($migrations, __NAMESPACE__.'\JsonMigration');
 
-        $this->versioner = $versioner;
+        $this->versioner = $versioner ?: new SchemaUriVersioner();
 
         foreach ($migrations as $migration) {
             $this->migrationsBySourceVersion[$migration->getSourceVersion()] = $migration;

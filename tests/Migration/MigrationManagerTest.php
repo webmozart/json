@@ -17,7 +17,7 @@ use PHPUnit_Framework_TestCase;
 use stdClass;
 use Webmozart\Json\Migration\JsonMigration;
 use Webmozart\Json\Migration\MigrationManager;
-use Webmozart\Json\Migration\Versioner\JsonVersioner;
+use Webmozart\Json\Versioning\JsonVersioner;
 
 /**
  * @since  1.3
@@ -56,12 +56,12 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
         $this->migration1 = $this->createMigrationMock('0.8', '0.10');
         $this->migration2 = $this->createMigrationMock('0.10', '1.0');
         $this->migration3 = $this->createMigrationMock('1.0', '2.0');
-        $this->versioner = $this->getMock('Webmozart\Json\Migration\Versioner\JsonVersioner');
-        $this->manager = new MigrationManager($this->versioner, array(
+        $this->versioner = $this->getMock('Webmozart\Json\Versioning\JsonVersioner');
+        $this->manager = new MigrationManager(array(
             $this->migration1,
             $this->migration2,
             $this->migration3,
-        ));
+        ), $this->versioner);
     }
 
     public function testMigrateUp()
@@ -361,7 +361,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
 
     public function testGetKnownVersionsWithoutMigrations()
     {
-        $this->manager = new MigrationManager($this->versioner, array());
+        $this->manager = new MigrationManager(array(), $this->versioner);
 
         $this->assertSame(array(), $this->manager->getKnownVersions());
     }

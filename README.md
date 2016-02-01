@@ -185,15 +185,13 @@ changed schemas can be challenging and time consuming. This package supports a
 versioning mechanism to automate this migration.
 
 Imagine `config.json` files in three different versions: 1.0, 2.0 and 3.0.
-The name of a key changed between those versions.
-
-The JSON file must contain a key "version" that stores the version of the file:
+The name of a key changed between those versions:
 
 config.json (version 1.0)
 
 ~~~json
 {
-    "version": "1.0",
+    "$schema": "http://example.org/schemas/1.0/schema",
     "application": "Hello world!"
 }
 ~~~
@@ -202,7 +200,7 @@ config.json (version 2.0)
 
 ~~~json
 {
-    "version": "2.0",
+    "$schema": "http://example.org/schemas/2.0/schema",
     "application.name": "Hello world!"
 }
 ~~~
@@ -211,7 +209,7 @@ config.json (version 3.0)
 
 ~~~json
 {
-    "version": "3.0",
+    "$schema": "http://example.org/schemas/3.0/schema",
     "application": {
         "name": "Hello world!"
     }
@@ -348,6 +346,8 @@ $jsonData = $converter->toJson($configFile, array(
 $encoder->encodeFile($jsonData, '/path/to/config.json');
 ~~~
 
+### Validation of Different Versions
+
 If you want to add schema validation, wrap your encoder into a
 `ValidatingConverter`. You can wrap both the inner and the outer converter
 to make sure that both the JSON before and after running the migrations complies
@@ -368,6 +368,66 @@ $converter = new ValidatingConverter($converter, function ($jsonData) {
     return __DIR__.'/../res/schema/config-schema-'.$jsonData->version.'.json'
 });
 ~~~
+
+### Storing the Version
+
+By default, the version is stored in the `$schema` field of the JSON object:
+
+~~~json
+{
+    "$schema": "http://example.com/schemas/1.0/my-schema"
+}
+~~~
+
+By default, the version must be enclosed by slashes. Appending the version to
+the schema, for example, won't work:
+
+~~~json
+{
+    "$schema": "http://example.com/schemas/my-schema-1.0"
+}
+~~~
+
+To support such a format, create a `SchemaUriVersioner` with a custom regular
+expression for matching the version and pass it to the `MigrationManager`:
+
+~~~php
+use Webmozart\Json\Versioning\SchemaUriVersioner;
+
+$versioner = new SchemaUriVersioner('~(?<=-)\d+\.\d+(?=$)~');
+
+$migrationManager = new MigrationManager(array(
+    // migrations...
+), $versioner);
+
+// ...
+~~~
+
+Instead of storing the version in the schema URI, you could also store it in
+a separate field. For example, the field "version":
+
+~~~json
+{
+    "version": "1.0"
+}
+~~~
+
+This use case is supported by the `VersionFieldVersioner` class:
+
+~~~php
+use Webmozart\Json\Versioning\VersionFieldVersioner;
+
+$versioner = new VersionFieldVersioner();
+
+$migrationManager = new MigrationManager(array(
+    // migrations...
+), $versioner);
+
+// ...
+~~~
+
+The constructor of `VersionFieldVersioner` optionally accepts a custom field
+name used to store the version. The default field name is "version".
 
 Authors
 -------

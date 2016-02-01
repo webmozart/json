@@ -9,26 +9,26 @@
  * file that was distributed with this source code.
  */
 
-namespace Webmozart\Json\Tests\Migration\Versioner;
+namespace Webmozart\Json\Tests\Versioning;
 
 use PHPUnit_Framework_TestCase;
-use Webmozart\Json\Migration\Versioner\SchemaFieldPatternVersioner;
+use Webmozart\Json\Versioning\SchemaUriVersioner;
 
 /**
  * @since  1.3
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class SchemaFieldPatternVersionerTest extends PHPUnit_Framework_TestCase
+class SchemaUriVersionerTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var SchemaFieldPatternVersioner
+     * @var SchemaUriVersioner
      */
     private $versioner;
 
     protected function setUp()
     {
-        $this->versioner = new SchemaFieldPatternVersioner();
+        $this->versioner = new SchemaUriVersioner();
     }
 
     public function testParseVersion()
@@ -39,7 +39,7 @@ class SchemaFieldPatternVersionerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\Versioner\CannotParseVersionException
+     * @expectedException \Webmozart\Json\Versioning\CannotParseVersionException
      */
     public function testParseVersionFailsIfNotFound()
     {
@@ -50,7 +50,7 @@ class SchemaFieldPatternVersionerTest extends PHPUnit_Framework_TestCase
 
     public function testParseVersionWithCustomPattern()
     {
-        $this->versioner = new SchemaFieldPatternVersioner('~(?<=/)\d+\.\d+(?=-)~');
+        $this->versioner = new SchemaUriVersioner('~(?<=/)\d+\.\d+(?=-)~');
 
         $data = (object) array('$schema' => 'http://example.com/schemas/1.0-schema');
 
@@ -58,7 +58,7 @@ class SchemaFieldPatternVersionerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\Versioner\CannotParseVersionException
+     * @expectedException \Webmozart\Json\Versioning\CannotParseVersionException
      */
     public function testParseVersionFailsIfNoSchemaField()
     {
@@ -86,7 +86,7 @@ class SchemaFieldPatternVersionerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\Versioner\CannotUpdateVersionException
+     * @expectedException \Webmozart\Json\Versioning\CannotUpdateVersionException
      */
     public function testUpdateVersionFailsIfNotFound()
     {
@@ -96,7 +96,7 @@ class SchemaFieldPatternVersionerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\Versioner\CannotUpdateVersionException
+     * @expectedException \Webmozart\Json\Versioning\CannotUpdateVersionException
      */
     public function testUpdateVersionFailsIfFoundMultipleTimes()
     {
@@ -107,7 +107,7 @@ class SchemaFieldPatternVersionerTest extends PHPUnit_Framework_TestCase
 
     public function testUpdateVersionCustomPattern()
     {
-        $this->versioner = new SchemaFieldPatternVersioner('~(?<=/)\d+\.\d+(?=-)~');
+        $this->versioner = new SchemaUriVersioner('~(?<=/)\d+\.\d+(?=-)~');
 
         $data = (object) array('$schema' => 'http://example.com/schemas/1.0-schema');
 
@@ -117,7 +117,7 @@ class SchemaFieldPatternVersionerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\Versioner\CannotUpdateVersionException
+     * @expectedException \Webmozart\Json\Versioning\CannotUpdateVersionException
      */
     public function testUpdateVersionFailsIfNoSchemaField()
     {

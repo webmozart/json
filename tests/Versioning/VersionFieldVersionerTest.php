@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Webmozart\Json\Tests\Migration\Versioner;
+namespace Webmozart\Json\Tests\Versioning;
 
 use PHPUnit_Framework_TestCase;
-use Webmozart\Json\Migration\Versioner\VersionFieldVersioner;
+use Webmozart\Json\Versioning\VersionFieldVersioner;
 
 /**
  * @since  1.3
@@ -48,7 +48,7 @@ class VersionFieldVersionerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Webmozart\Json\Migration\Versioner\CannotParseVersionException
+     * @expectedException \Webmozart\Json\Versioning\CannotParseVersionException
      */
     public function testParseVersionFailsIfNotFound()
     {

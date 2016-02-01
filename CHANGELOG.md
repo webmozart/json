@@ -7,7 +7,7 @@ Changelog
  * added `MigratingConverter` to migrate JSON objects between different versions
  * added `ValidatingConverter` to validate converted JSON against schemas
  * added `JsonVersioner` and implementations `VersionFieldVersioner` and
-   `SchemaFieldPatternVersioner`
+   `SchemaUriVersioner`
  * added support for `$ref` to external schema
 
 * 1.2.2 (2016-01-14)

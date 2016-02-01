@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Webmozart\Json\Migration\Versioner;
+namespace Webmozart\Json\Versioning;
 
 use stdClass;
 
@@ -20,7 +20,7 @@ use stdClass;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class SchemaFieldPatternVersioner implements JsonVersioner
+class SchemaUriVersioner implements JsonVersioner
 {
     /**
      * The default pattern used to extract the version of a schema ID.
