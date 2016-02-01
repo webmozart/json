@@ -23,15 +23,33 @@ use stdClass;
 class VersionFieldVersioner implements JsonVersioner
 {
     /**
+     * @var string
+     */
+    private $fieldName;
+
+    /**
+     * Creates a new versioner.
+     *
+     * @param string $fieldName The name of the version field.
+     */
+    public function __construct($fieldName = 'version')
+    {
+        $this->fieldName = (string) $fieldName;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function parseVersion(stdClass $jsonData)
     {
-        if (!isset($jsonData->version)) {
-            throw new CannotParseVersionException('Cannot find "version" property in JSON object.');
+        if (!isset($jsonData->{$this->fieldName})) {
+            throw new CannotParseVersionException(sprintf(
+                'Cannot find "%s" property in JSON object.',
+                $this->fieldName
+            ));
         }
 
-        return $jsonData->version;
+        return $jsonData->{$this->fieldName};
     }
 
     /**
@@ -39,6 +57,6 @@ class VersionFieldVersioner implements JsonVersioner
      */
     public function updateVersion(stdClass $jsonData, $version)
     {
-        $jsonData->version = $version;
+        $jsonData->{$this->fieldName} = $version;
     }
 }

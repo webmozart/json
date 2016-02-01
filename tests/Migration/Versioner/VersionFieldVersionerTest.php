@@ -38,6 +38,15 @@ class VersionFieldVersionerTest extends PHPUnit_Framework_TestCase
         $this->assertSame('1.0', $this->versioner->parseVersion($data));
     }
 
+    public function testParseVersionCustomFieldName()
+    {
+        $this->versioner = new VersionFieldVersioner('foo');
+
+        $data = (object) array('foo' => '1.0');
+
+        $this->assertSame('1.0', $this->versioner->parseVersion($data));
+    }
+
     /**
      * @expectedException \Webmozart\Json\Migration\Versioner\CannotParseVersionException
      */
@@ -55,6 +64,17 @@ class VersionFieldVersionerTest extends PHPUnit_Framework_TestCase
         $this->versioner->updateVersion($data, '2.0');
 
         $this->assertSame('2.0', $data->version);
+    }
+
+    public function testUpdateVersionCustomFieldName()
+    {
+        $this->versioner = new VersionFieldVersioner('foo');
+
+        $data = (object) array('foo' => '1.0');
+
+        $this->versioner->updateVersion($data, '2.0');
+
+        $this->assertSame('2.0', $data->foo);
     }
 
     public function testUpdateVersionCreatesFieldIfNotFound()
