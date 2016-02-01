@@ -13,6 +13,7 @@ namespace Webmozart\Json\Migration;
 
 use stdClass;
 use Webmozart\Assert\Assert;
+use Webmozart\Json\Migration\Versioner\JsonVersioner;
 
 /**
  * Migrates a JSON object between different versions.
@@ -25,6 +26,11 @@ use Webmozart\Assert\Assert;
  */
 class MigrationManager
 {
+    /**
+     * @var JsonVersioner
+     */
+    private $versioner;
+
     /**
      * @var JsonMigration[]
      */
@@ -46,9 +52,11 @@ class MigrationManager
      * @param JsonMigration[] $migrations The migrations migrating a JSON object
      *                                    between individual versions.
      */
-    public function __construct(array $migrations)
+    public function __construct(JsonVersioner $versioner, array $migrations)
     {
         Assert::allIsInstanceOf($migrations, __NAMESPACE__.'\JsonMigration');
+
+        $this->versioner = $versioner;
 
         foreach ($migrations as $migration) {
             $this->migrationsBySourceVersion[$migration->getSourceVersion()] = $migration;
@@ -72,10 +80,12 @@ class MigrationManager
      */
     public function migrate(stdClass $data, $targetVersion)
     {
-        if (version_compare($targetVersion, $data->version, '>')) {
-            $this->up($data, $targetVersion);
-        } elseif (version_compare($targetVersion, $data->version, '<')) {
-            $this->down($data, $targetVersion);
+        $sourceVersion = $this->versioner->parseVersion($data);
+
+        if (version_compare($targetVersion, $sourceVersion, '>')) {
+            $this->up($data, $sourceVersion, $targetVersion);
+        } elseif (version_compare($targetVersion, $sourceVersion, '<')) {
+            $this->down($data, $sourceVersion, $targetVersion);
         }
     }
 
@@ -89,59 +99,63 @@ class MigrationManager
         return $this->knownVersions;
     }
 
-    private function up($data, $targetVersion)
+    private function up($data, $sourceVersion, $targetVersion)
     {
-        while (version_compare($data->version, $targetVersion, '<')) {
-            if (!isset($this->migrationsBySourceVersion[$data->version])) {
+        while (version_compare($sourceVersion, $targetVersion, '<')) {
+            if (!isset($this->migrationsBySourceVersion[$sourceVersion])) {
                 throw new MigrationFailedException(sprintf(
                     'No migration found to upgrade from version %s to %s.',
-                    $data->version,
+                    $sourceVersion,
                     $targetVersion
                 ));
             }
 
-            $migration = $this->migrationsBySourceVersion[$data->version];
+            $migration = $this->migrationsBySourceVersion[$sourceVersion];
 
             // Final version too high
             if (version_compare($migration->getTargetVersion(), $targetVersion, '>')) {
                 throw new MigrationFailedException(sprintf(
                     'No migration found to upgrade from version %s to %s.',
-                    $data->version,
+                    $sourceVersion,
                     $targetVersion
                 ));
             }
 
             $migration->up($data);
 
-            $data->version = $migration->getTargetVersion();
+            $this->versioner->updateVersion($data, $migration->getTargetVersion());
+
+            $sourceVersion = $migration->getTargetVersion();
         }
     }
 
-    private function down($data, $targetVersion)
+    private function down($data, $sourceVersion, $targetVersion)
     {
-        while (version_compare($data->version, $targetVersion, '>')) {
-            if (!isset($this->migrationsByTargetVersion[$data->version])) {
+        while (version_compare($sourceVersion, $targetVersion, '>')) {
+            if (!isset($this->migrationsByTargetVersion[$sourceVersion])) {
                 throw new MigrationFailedException(sprintf(
                     'No migration found to downgrade from version %s to %s.',
-                    $data->version,
+                    $sourceVersion,
                     $targetVersion
                 ));
             }
 
-            $migration = $this->migrationsByTargetVersion[$data->version];
+            $migration = $this->migrationsByTargetVersion[$sourceVersion];
 
             // Final version too low
             if (version_compare($migration->getSourceVersion(), $targetVersion, '<')) {
                 throw new MigrationFailedException(sprintf(
                     'No migration found to downgrade from version %s to %s.',
-                    $data->version,
+                    $sourceVersion,
                     $targetVersion
                 ));
             }
 
             $migration->down($data);
 
-            $data->version = $migration->getSourceVersion();
+            $this->versioner->updateVersion($data, $migration->getSourceVersion());
+
+            $sourceVersion = $migration->getSourceVersion();
         }
     }
 }
