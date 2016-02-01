@@ -369,7 +369,7 @@ $converter = new ValidatingConverter($converter, function ($jsonData) {
 });
 ~~~
 
-### Storing the Version
+### Using Custom Schema URIs
 
 By default, the version is stored in the `$schema` field of the JSON object:
 
@@ -379,8 +379,8 @@ By default, the version is stored in the `$schema` field of the JSON object:
 }
 ~~~
 
-By default, the version must be enclosed by slashes. Appending the version to
-the schema, for example, won't work:
+The version must be enclosed by slashes. Appending the version to the schema, 
+for example, won't work:
 
 ~~~json
 {
@@ -388,8 +388,8 @@ the schema, for example, won't work:
 }
 ~~~
 
-To support such a format, create a `SchemaUriVersioner` with a custom regular
-expression for matching the version and pass it to the `MigrationManager`:
+You can however customize the format of the schema URI by creating a 
+`SchemaUriVersioner` with a custom regular expression:
 
 ~~~php
 use Webmozart\Json\Versioning\SchemaUriVersioner;
@@ -402,6 +402,12 @@ $migrationManager = new MigrationManager(array(
 
 // ...
 ~~~
+
+The regular expression must match the version only. Make sure to wrap 
+characters before and after the version in look-around assertions (`(?<=...)`,
+`(?=...)`).
+
+### Storing the Version in a Field
 
 Instead of storing the version in the schema URI, you could also store it in
 a separate field. For example, the field "version":
