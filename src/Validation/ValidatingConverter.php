@@ -79,13 +79,17 @@ class ValidatingConverter implements JsonConverter
     /**
      * Creates the converter.
      *
-     * @param JsonConverter   $innerConverter The decorated converter.
-     * @param string|callable $schema         The path to the schema file or a
-     *                                        callable for calculating the path
-     *                                        dynamically for a given JSON data.
-     * @param JsonValidator   $jsonValidator  The JSON validator (optional).
+     * @param JsonConverter        $innerConverter The decorated converter.
+     * @param string|callable|null $schema         The path to the schema file
+     *                                             or a callable for calculating
+     *                                             the path dynamically for a
+     *                                             given JSON data. If `null`,
+     *                                             the schema is taken from the
+     *                                             `$schema` property of the
+     *                                             JSON data.
+     * @param JsonValidator        $jsonValidator  The JSON validator (optional).
      */
-    public function __construct(JsonConverter $innerConverter, $schema, JsonValidator $jsonValidator = null)
+    public function __construct(JsonConverter $innerConverter, $schema = null, JsonValidator $jsonValidator = null)
     {
         $this->innerConverter = $innerConverter;
         $this->schema = $schema;

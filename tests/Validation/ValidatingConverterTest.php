@@ -74,6 +74,32 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
         $this->assertSame($jsonData, $this->converter->toJson('DATA', $options));
     }
 
+    public function testToJsonWithoutSchema()
+    {
+        $options = array('option' => 'value');
+
+        $jsonData = (object) array(
+            'foo' => 'bar',
+        );
+
+        $this->converter = new ValidatingConverter(
+            $this->innerConverter,
+            null,
+            $this->jsonValidator
+        );
+
+        $this->innerConverter->expects($this->once())
+            ->method('toJson')
+            ->with('DATA', $options)
+            ->willReturn($jsonData);
+
+        $this->jsonValidator->expects($this->once())
+            ->method('validate')
+            ->with($jsonData, null);
+
+        $this->assertSame($jsonData, $this->converter->toJson('DATA', $options));
+    }
+
     public function testToJsonRunsSchemaCallable()
     {
         $options = array('option' => 'value');
@@ -115,6 +141,32 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
         $this->jsonValidator->expects($this->once())
             ->method('validate')
             ->with($jsonData, '/path/to/schema');
+
+        $this->innerConverter->expects($this->once())
+            ->method('fromJson')
+            ->with($jsonData, $options)
+            ->willReturn('DATA');
+
+        $this->assertSame('DATA', $this->converter->fromJson($jsonData, $options));
+    }
+
+    public function testFromJsonWithoutSchema()
+    {
+        $options = array('option' => 'value');
+
+        $jsonData = (object) array(
+            'foo' => 'bar',
+        );
+
+        $this->converter = new ValidatingConverter(
+            $this->innerConverter,
+            null,
+            $this->jsonValidator
+        );
+
+        $this->jsonValidator->expects($this->once())
+            ->method('validate')
+            ->with($jsonData, null);
 
         $this->innerConverter->expects($this->once())
             ->method('fromJson')
