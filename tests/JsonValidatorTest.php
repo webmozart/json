@@ -37,7 +37,7 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->validator = new JsonValidator();
-        $this->fixturesDir = __DIR__.'/Fixtures';
+        $this->fixturesDir = strtr(__DIR__.'/Fixtures', '\\', '/');
         $this->schemaFile = $this->fixturesDir.'/schema.json';
         $this->schemaObject = json_decode(file_get_contents($this->schemaFile));
     }
