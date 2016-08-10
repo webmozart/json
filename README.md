@@ -40,8 +40,9 @@ $string = $encoder->encode($data);
 $encoder->encodeFile($data, '/path/to/file.json');
 ~~~
 
-You can pass the path to a [JSON schema] in the last optional argument of
-both methods:
+By default, the [JSON schema] stored in the `$schema` property of the JSON
+document is used to validate the file. You can also pass the path to the schema 
+in the last optional argument of both methods:
 
 ~~~php
 use Webmozart\Json\ValidationFailedException;
@@ -110,6 +111,46 @@ if (count($errors) > 0) {
 }
 ~~~
 
+Note: This does not work if you use the `$schema` property to set the schema
+(see next section). If that property is set, the schema is always used for 
+validation during encoding and decoding.
+
+Schemas
+-------
+
+You are encouraged to store the schema of your JSON documents in the
+`$schema` property:
+
+~~~json
+{
+    "$schema": "http://example.org/schemas/1.0/schema"
+}
+~~~
+
+The utilities in this package will load the schema from the URL and use it for
+validating the document. Obviously, this has a hit on performance and depends on
+the availability of the server and an internet connection. Hence you are
+encouraged to ship the schema with your package. Use the [`LocalUriRetriever`]
+to map the URL to your local schema file:
+
+~~~php
+$uriRetriever = new UriRetriever();
+$uriRetriever->setUriRetriever(new LocalUriRetriever(
+    // base directory
+    __DIR__.'/../res/schemas',
+    // list of schema mappings
+    array(
+        'http://example.org/schemas/1.0/schema' => 'schema-1.0.json',
+    )
+));
+
+$validator = new JsonValidator(null, $uriRetriever);
+$encoder = new JsonEncoder($validator);
+$decoder = new JsonDecoder($validator);
+
+// ...
+~~~
+
 Conversion
 ----------
 
@@ -122,9 +163,12 @@ use Webmozart\Json\Conversion\JsonConverter;
 
 class ConfigFileJsonConverter implements JsonConverter
 {
+    const SCHEMA = 'http://example.org/schemas/1.0/schema';
+    
     public function toJson($configFile, array $options = array())
     {
         $jsonData = new stdClass();
+        $jsonData->{'$schema'} = self::SCHEMA;
          
         if (null !== $configFile->getApplicationName()) {
             $jsonData->application = $configFile->getApplicationName();
@@ -166,6 +210,15 @@ $encoder->encodeFile($jsonData, '/path/to/config.json');
 
 You can automate the schema validation of your `ConfigFile` by wrapping the
 converter in a `ValidatingConverter`:
+
+~~~php
+use Webmozart\Json\Validation\ValidatingConverter;
+
+$converter = new ValidatingConverter(new ConfigFileJsonConverter());
+~~~
+
+You can also validate against an explicit schema by passing the schema to the
+`ValidatingConverter`:
 
 ~~~php
 use Webmozart\Json\Validation\ValidatingConverter;
@@ -231,9 +284,12 @@ use Webmozart\Json\Conversion\JsonConverter;
 
 class ConfigFileJsonConverter implements JsonConverter
 {
+    const SCHEMA = 'http://example.org/schemas/3.0/schema';
+    
     public function toJson($configFile, array $options = array())
     {
         $jsonData = new stdClass();
+        $jsonData->{'$schema'} = self::SCHEMA;
          
         if (null !== $configFile->getApplicationName()) {
             $jsonData->application = new stdClass();
@@ -276,6 +332,10 @@ use Webmozart\Json\Migration\JsonMigration;
 
 class ConfigFileJson20To30Migration implements JsonMigration
 {
+    const SOURCE_SCHEMA = 'http://example.org/schemas/2.0/schema';
+    
+    const TARGET_SCHEMA = 'http://example.org/schemas/3.0/schema';
+    
     public function getSourceVersion()
     {
         return '2.0';
@@ -288,6 +348,8 @@ class ConfigFileJson20To30Migration implements JsonMigration
     
     public function up(stdClass $jsonData)
     {
+        $jsonData->{'$schema'} = self::TARGET_SCHEMA;
+        
         if (isset($jsonData->{'application.name'})) {
             $jsonData->application = new stdClass();
             $jsonData->application->name = $jsonData->{'application.name'};
@@ -298,6 +360,8 @@ class ConfigFileJson20To30Migration implements JsonMigration
     
     public function down(stdClass $jsonData)
     {
+        $jsonData->{'$schema'} = self::SOURCE_SCHEMA;
+        
         if (isset($jsonData->application->name)) {
             $jsonData->{'application.name'} = $jsonData->application->name;
             
@@ -357,21 +421,39 @@ to the corresponding schemas.
 // Written for version 3.0
 $converter = new ConfigFileJsonConverter();
 
-// Decorate to validate against a schema
+// Decorate to validate against the schema at version 3.0
+$converter = new ValidatingConverter($converter);
+
+// Decorate to support different versions
+$converter = new MigratingConverter($converter, $migrationManager);
+
+// Decorate to validate against the old schema
+$converter = new ValidatingConverter($converter);
+~~~
+
+If you store the version in a `version` field (see below) and want to use a
+custom schema depending on that version, you can pass schema paths or closures
+for resolving the schema paths:
+
+~~~php
+// Written for version 3.0
+$converter = new ConfigFileJsonConverter();
+
+// Decorate to validate against the schema at version 3.0
 $converter = new ValidatingConverter($converter, __DIR__.'/../res/schema/config-schema-3.0.json');
 
 // Decorate to support different versions
 $converter = new MigratingConverter($converter, $migrationManager);
 
-// Decorate to validate against older schemas
+// Decorate to validate against the old schema
 $converter = new ValidatingConverter($converter, function ($jsonData) {
     return __DIR__.'/../res/schema/config-schema-'.$jsonData->version.'.json'
 });
 ~~~
 
-### Using Custom Schema URIs
+### Using Custom Schema Versioning
 
-By default, the version is stored in the `$schema` field of the JSON object:
+By default, the version of the schema is stored in the schema name:
 
 ~~~json
 {
@@ -473,3 +555,4 @@ All contents of this package are licensed under the [MIT license].
 [`JsonValidator`]: src/JsonValidator.php
 [`JsonConverter`]: src/Conversion/JsonConverter.php
 [`JsonMigration`]: src/Migration/JsonMigration.php
+[`LocalUriRetriever`]: src/UriRetriever/LocalUriRetriever.php

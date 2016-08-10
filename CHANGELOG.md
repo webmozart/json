@@ -10,6 +10,7 @@ Changelog
    `SchemaUriVersioner`
  * added support for `$ref` to external schema
  * added support for validation against `$schema` property
+ * added `LocalUriRetriever`
 
 * 1.2.2 (2016-01-14)
 
