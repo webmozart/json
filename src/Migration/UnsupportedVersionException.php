@@ -27,12 +27,12 @@ class UnsupportedVersionException extends ConversionFailedException
      * Creates an exception for an unknown version.
      *
      * @param string         $version       The version that caused the
-     *                                      exception.
-     * @param string[]       $knownVersions The known versions.
+     *                                      exception
+     * @param string[]       $knownVersions The known versions
      * @param Exception|null $cause         The exception that caused this
-     *                                      exception.
+     *                                      exception
      *
-     * @return static The created exception.
+     * @return static The created exception
      */
     public static function forVersion($version, array $knownVersions, Exception $cause = null)
     {

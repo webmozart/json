@@ -119,14 +119,14 @@ class JsonEncoder
      *
      * You can adjust the decoding with the various setters in this class.
      *
-     * @param mixed         $data   The data to encode.
-     * @param string|object $schema The schema file or object.
+     * @param mixed         $data   The data to encode
+     * @param string|object $schema The schema file or object
      *
-     * @return string The JSON string.
+     * @return string The JSON string
      *
-     * @throws EncodingFailedException   If the data could not be encoded.
-     * @throws ValidationFailedException If the data fails schema validation.
-     * @throws InvalidSchemaException    If the schema is invalid.
+     * @throws EncodingFailedException   If the data could not be encoded
+     * @throws ValidationFailedException If the data fails schema validation
+     * @throws InvalidSchemaException    If the schema is invalid
      */
     public function encode($data, $schema = null)
     {
@@ -218,13 +218,13 @@ class JsonEncoder
     /**
      * Encodes data into a JSON file.
      *
-     * @param mixed         $data   The data to encode.
-     * @param string        $path   The path where the JSON file will be stored.
-     * @param string|object $schema The schema file or object.
+     * @param mixed         $data   The data to encode
+     * @param string        $path   The path where the JSON file will be stored
+     * @param string|object $schema The schema file or object
      *
-     * @throws EncodingFailedException   If the data could not be encoded.
-     * @throws ValidationFailedException If the data fails schema validation.
-     * @throws InvalidSchemaException    If the schema is invalid.
+     * @throws EncodingFailedException   If the data could not be encoded
+     * @throws ValidationFailedException If the data fails schema validation
+     * @throws InvalidSchemaException    If the schema is invalid
      *
      * @see encode
      */
@@ -292,7 +292,7 @@ class JsonEncoder
     /**
      * Returns the encoding of non-associative arrays.
      *
-     * @return int One of the constants {@link JSON_OBJECT} and {@link JSON_ARRAY}.
+     * @return int One of the constants {@link JSON_OBJECT} and {@link JSON_ARRAY}
      */
     public function getArrayEncoding()
     {
@@ -304,9 +304,9 @@ class JsonEncoder
      *
      * By default, non-associative arrays are decoded as JSON arrays.
      *
-     * @param int $encoding One of the constants {@link JSON_OBJECT} and {@link JSON_ARRAY}.
+     * @param int $encoding One of the constants {@link JSON_OBJECT} and {@link JSON_ARRAY}
      *
-     * @throws \InvalidArgumentException If the passed encoding is invalid.
+     * @throws \InvalidArgumentException If the passed encoding is invalid
      */
     public function setArrayEncoding($encoding)
     {
@@ -324,7 +324,7 @@ class JsonEncoder
     /**
      * Returns the encoding of numeric strings.
      *
-     * @return int One of the constants {@link JSON_STRING} and {@link JSON_NUMBER}.
+     * @return int One of the constants {@link JSON_STRING} and {@link JSON_NUMBER}
      */
     public function getNumericEncoding()
     {
@@ -336,9 +336,9 @@ class JsonEncoder
      *
      * By default, non-associative arrays are decoded as JSON strings.
      *
-     * @param int $encoding One of the constants {@link JSON_STRING} and {@link JSON_NUMBER}.
+     * @param int $encoding One of the constants {@link JSON_STRING} and {@link JSON_NUMBER}
      *
-     * @throws \InvalidArgumentException If the passed encoding is invalid.
+     * @throws \InvalidArgumentException If the passed encoding is invalid
      */
     public function setNumericEncoding($encoding)
     {
@@ -360,7 +360,7 @@ class JsonEncoder
      *
      * By default, ampersands are not escaped.
      *
-     * @return bool Whether ampersands are escaped.
+     * @return bool Whether ampersands are escaped
      */
     public function isAmpersandEscaped()
     {
@@ -374,7 +374,7 @@ class JsonEncoder
      *
      * By default, ampersands are not escaped.
      *
-     * @param bool $enabled Whether ampersands should be escaped.
+     * @param bool $enabled Whether ampersands should be escaped
      */
     public function setEscapeAmpersand($enabled)
     {
@@ -388,7 +388,7 @@ class JsonEncoder
      *
      * By default, double quotes are not escaped.
      *
-     * @return bool Whether double quotes are escaped.
+     * @return bool Whether double quotes are escaped
      */
     public function isDoubleQuoteEscaped()
     {
@@ -402,7 +402,7 @@ class JsonEncoder
      *
      * By default, double quotes are not escaped.
      *
-     * @param bool $enabled Whether double quotes should be escaped.
+     * @param bool $enabled Whether double quotes should be escaped
      */
     public function setEscapeDoubleQuote($enabled)
     {
@@ -416,7 +416,7 @@ class JsonEncoder
      *
      * By default, single quotes are not escaped.
      *
-     * @return bool Whether single quotes are escaped.
+     * @return bool Whether single quotes are escaped
      */
     public function isSingleQuoteEscaped()
     {
@@ -430,7 +430,7 @@ class JsonEncoder
      *
      * By default, single quotes are not escaped.
      *
-     * @param bool $enabled Whether single quotes should be escaped.
+     * @param bool $enabled Whether single quotes should be escaped
      */
     public function setEscapeSingleQuote($enabled)
     {
@@ -444,7 +444,7 @@ class JsonEncoder
      *
      * By default, forward slashes are not escaped.
      *
-     * @return bool Whether forward slashes are escaped.
+     * @return bool Whether forward slashes are escaped
      */
     public function isSlashEscaped()
     {
@@ -458,7 +458,7 @@ class JsonEncoder
      *
      * By default, forward slashes are not escaped.
      *
-     * @param bool $enabled Whether forward slashes should be escaped.
+     * @param bool $enabled Whether forward slashes should be escaped
      */
     public function setEscapeSlash($enabled)
     {
@@ -473,7 +473,7 @@ class JsonEncoder
      *
      * By default, greater than/less than symbols are not escaped.
      *
-     * @return bool Whether greater than/less than symbols are escaped.
+     * @return bool Whether greater than/less than symbols are escaped
      */
     public function isGtLtEscaped()
     {
@@ -488,7 +488,7 @@ class JsonEncoder
      *
      * By default, greater than/less than symbols are not escaped.
      *
-     * @param bool $enabled Whether greater than/less than should be escaped.
+     * @param bool $enabled Whether greater than/less than should be escaped
      */
     public function setEscapeGtLt($enabled)
     {
@@ -503,7 +503,7 @@ class JsonEncoder
      *
      * By default, unicode characters are escaped.
      *
-     * @return bool Whether unicode characters are escaped.
+     * @return bool Whether unicode characters are escaped
      */
     public function isUnicodeEscaped()
     {
@@ -518,7 +518,7 @@ class JsonEncoder
      *
      * By default, unicode characters are escaped.
      *
-     * @param bool $enabled Whether unicode characters should be escaped.
+     * @param bool $enabled Whether unicode characters should be escaped
      */
     public function setEscapeUnicode($enabled)
     {
@@ -533,7 +533,7 @@ class JsonEncoder
      *
      * By default, pretty printing is not enabled.
      *
-     * @return bool Whether JSON strings are formatted.
+     * @return bool Whether JSON strings are formatted
      */
     public function isPrettyPrinting()
     {
@@ -548,7 +548,7 @@ class JsonEncoder
      *
      * By default, pretty printing is not enabled.
      *
-     * @param bool $prettyPrinting Whether JSON strings should be formatted.
+     * @param bool $prettyPrinting Whether JSON strings should be formatted
      */
     public function setPrettyPrinting($prettyPrinting)
     {
@@ -560,7 +560,7 @@ class JsonEncoder
      *
      * By default, JSON strings are not terminated with a line feed.
      *
-     * @return bool Whether JSON strings are terminated with a line feed.
+     * @return bool Whether JSON strings are terminated with a line feed
      */
     public function isTerminatedWithLineFeed()
     {
@@ -573,7 +573,7 @@ class JsonEncoder
      * By default, JSON strings are not terminated with a line feed.
      *
      * @param bool $enabled Whether JSON strings should be terminated with a
-     *                      line feed.
+     *                      line feed
      */
     public function setTerminateWithLineFeed($enabled)
     {
@@ -586,7 +586,7 @@ class JsonEncoder
      * A depth of zero means that objects are not allowed. A depth of one means
      * only one level of objects or arrays is allowed.
      *
-     * @return int The maximum recursion depth.
+     * @return int The maximum recursion depth
      */
     public function getMaxDepth()
     {
@@ -602,10 +602,10 @@ class JsonEncoder
      * A depth of zero means that objects are not allowed. A depth of one means
      * only one level of objects or arrays is allowed.
      *
-     * @param int $maxDepth The maximum recursion depth.
+     * @param int $maxDepth The maximum recursion depth
      *
      * @throws \InvalidArgumentException If the depth is not an integer greater
-     *                                   than or equal to zero.
+     *                                   than or equal to zero
      */
     public function setMaxDepth($maxDepth)
     {

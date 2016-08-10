@@ -30,7 +30,7 @@ class VersionFieldVersioner implements JsonVersioner
     /**
      * Creates a new versioner.
      *
-     * @param string $fieldName The name of the version field.
+     * @param string $fieldName The name of the version field
      */
     public function __construct($fieldName = 'version')
     {

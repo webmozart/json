@@ -23,13 +23,13 @@ interface JsonConverter
     /**
      * Converts an implementation-specific data structure to JSON.
      *
-     * @param mixed $data    The data to convert.
-     * @param array $options Additional implementation-specific conversion options.
+     * @param mixed $data    The data to convert
+     * @param array $options Additional implementation-specific conversion options
      *
      * @return mixed The JSON data. Pass this data to a {@link JsonEncoder} to
-     *               generate a JSON string.
+     *               generate a JSON string
      *
-     * @throws ConversionFailedException If the conversion fails.
+     * @throws ConversionFailedException If the conversion fails
      */
     public function toJson($data, array $options = array());
 
@@ -37,12 +37,12 @@ interface JsonConverter
      * Converts JSON to an implementation-specific data structure.
      *
      * @param mixed $jsonData The JSON data. Use a {@link JsonDecoder} to
-     *                        convert a JSON string to this data structure.
-     * @param array $options  Additional implementation-specific conversion options.
+     *                        convert a JSON string to this data structure
+     * @param array $options  Additional implementation-specific conversion options
      *
-     * @return mixed The converted data.
+     * @return mixed The converted data
      *
-     * @throws ConversionFailedException If the conversion fails.
+     * @throws ConversionFailedException If the conversion fails
      */
     public function fromJson($jsonData, array $options = array());
 }

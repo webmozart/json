@@ -96,10 +96,10 @@ class MigratingConverter implements JsonConverter
     /**
      * Creates the converter.
      *
-     * @param JsonConverter    $innerConverter   The decorated converter.
+     * @param JsonConverter    $innerConverter   The decorated converter
      * @param string           $currentVersion   The version that the decorated
-     *                                           converter is compatible with.
-     * @param MigrationManager $migrationManager The manager for migrating JSON data.
+     *                                           converter is compatible with
+     * @param MigrationManager $migrationManager The manager for migrating JSON data
      */
     public function __construct(JsonConverter $innerConverter, $currentVersion, MigrationManager $migrationManager)
     {
