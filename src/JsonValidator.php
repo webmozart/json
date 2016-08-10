@@ -66,10 +66,10 @@ class JsonValidator
      * JsonValidator constructor.
      *
      * @param Validator|null            $validator    JsonSchema\Validator
-     *                                                instance to use.
+     *                                                instance to use
      * @param UriRetriever|null         $uriRetriever The retriever for fetching
-     *                                                JSON schemas.
-     * @param UriResolverInterface|null $uriResolver  The resolver for URIs.
+     *                                                JSON schemas
+     * @param UriResolverInterface|null $uriResolver  The resolver for URIs
      */
     public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null, UriResolverInterface $uriResolver = null)
     {
