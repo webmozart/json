@@ -55,7 +55,7 @@ class JsonValidator
     /**
      * JsonValidator constructor.
      *
-     * @param Validator|null $validator JsonSchema\Validator instance to use.
+     * @param Validator|null $validator JsonSchema\Validator instance to use
      */
     public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null)
     {
@@ -69,15 +69,15 @@ class JsonValidator
      * The schema may be passed as file path or as object returned from
      * `json_decode($schemaFile)`.
      *
-     * @param mixed              $data   The decoded JSON data.
+     * @param mixed              $data   The decoded JSON data
      * @param string|object|null $schema The schema file or object. If `null`,
      *                                   the validator will look for a `$schema`
-     *                                   property.
+     *                                   property
      *
      * @return string[] The errors found during validation. Returns an empty
-     *                  array if no errors were found.
+     *                  array if no errors were found
      *
-     * @throws InvalidSchemaException If the schema is invalid.
+     * @throws InvalidSchemaException If the schema is invalid
      */
     public function validate($data, $schema = null)
     {

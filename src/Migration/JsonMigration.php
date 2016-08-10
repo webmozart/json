@@ -27,28 +27,28 @@ interface JsonMigration
     /**
      * Returns the version of the JSON object that this migration expects.
      *
-     * @return string The version string.
+     * @return string The version string
      */
     public function getSourceVersion();
 
     /**
      * Returns the version of the JSON object that this migration upgrades to.
      *
-     * @return string The version string.
+     * @return string The version string
      */
     public function getTargetVersion();
 
     /**
      * Upgrades a JSON object from the source to the target version.
      *
-     * @param stdClass $data The JSON object of the package file.
+     * @param stdClass $data The JSON object of the package file
      */
     public function up(stdClass $data);
 
     /**
      * Reverts a JSON object from the target to the source version.
      *
-     * @param stdClass $data The JSON object of the package file.
+     * @param stdClass $data The JSON object of the package file
      */
     public function down(stdClass $data);
 }

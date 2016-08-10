@@ -51,8 +51,8 @@ class MigrationManager
      * Creates a new migration manager.
      *
      * @param JsonMigration[]    $migrations The migrations migrating a JSON
-     *                                       object between individual versions.
-     * @param JsonVersioner|null $versioner  The versioner that should be used.
+     *                                       object between individual versions
+     * @param JsonVersioner|null $versioner  The versioner that should be used
      */
     public function __construct(array $migrations, JsonVersioner $versioner = null)
     {
@@ -77,8 +77,8 @@ class MigrationManager
     /**
      * Migrates a JSON object to the given version.
      *
-     * @param stdClass $data          The JSON object.
-     * @param string   $targetVersion The version string.
+     * @param stdClass $data          The JSON object
+     * @param string   $targetVersion The version string
      */
     public function migrate(stdClass $data, $targetVersion)
     {
@@ -94,7 +94,7 @@ class MigrationManager
     /**
      * Returns all versions known to the manager.
      *
-     * @return string[] The known version strings.
+     * @return string[] The known version strings
      */
     public function getKnownVersions()
     {

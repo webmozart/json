@@ -25,21 +25,21 @@ interface JsonVersioner
     /**
      * Parses and returns the version of a JSON object.
      *
-     * @param stdClass $jsonData The JSON object.
+     * @param stdClass $jsonData The JSON object
      *
-     * @return string The version.
+     * @return string The version
      *
-     * @throws CannotParseVersionException If the version cannot be parsed.
+     * @throws CannotParseVersionException If the version cannot be parsed
      */
     public function parseVersion(stdClass $jsonData);
 
     /**
      * Updates the version of a JSON object.
      *
-     * @param stdClass $jsonData The JSON object.
-     * @param string   $version  The version to set.
+     * @param stdClass $jsonData The JSON object
+     * @param string   $version  The version to set
      *
-     * @throws CannotUpdateVersionException If the version cannot be updated.
+     * @throws CannotUpdateVersionException If the version cannot be updated
      */
     public function updateVersion(stdClass $jsonData, $version);
 }

@@ -21,7 +21,7 @@ class JsonError
     /**
      * User-land implementation of `json_last_error_msg()` for PHP < 5.5.
      *
-     * @return string The last JSON error message.
+     * @return string The last JSON error message
      */
     public static function getLastErrorMessage()
     {
@@ -31,9 +31,9 @@ class JsonError
     /**
      * Returns the error message of a JSON error code.
      *
-     * @param int $error The error code.
+     * @param int $error The error code
      *
-     * @return string The error message.
+     * @return string The error message
      */
     public static function getErrorMessage($error)
     {
