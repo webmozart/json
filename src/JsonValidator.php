@@ -14,7 +14,10 @@ namespace Webmozart\Json;
 use JsonSchema\Exception\InvalidArgumentException;
 use JsonSchema\Exception\ResourceNotFoundException;
 use JsonSchema\RefResolver;
+use JsonSchema\Uri\Retrievers\UriRetrieverInterface;
+use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
+use JsonSchema\UriResolverInterface;
 use JsonSchema\Validator;
 use Webmozart\PathUtil\Path;
 
@@ -48,19 +51,31 @@ class JsonValidator
     /**
      * URI retriever for fetching JSON schemas.
      *
-     * @var UriRetriever
+     * @var UriRetrieverInterface
      */
     private $uriRetriever;
 
     /**
+     * URI resolver for JSON schemas.
+     *
+     * @var UriResolverInterface
+     */
+    private $uriResolver;
+
+    /**
      * JsonValidator constructor.
      *
-     * @param Validator|null $validator JsonSchema\Validator instance to use
+     * @param Validator|null            $validator    JsonSchema\Validator
+     *                                                instance to use.
+     * @param UriRetriever|null         $uriRetriever The retriever for fetching
+     *                                                JSON schemas.
+     * @param UriResolverInterface|null $uriResolver  The resolver for URIs.
      */
-    public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null)
+    public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null, UriResolverInterface $uriResolver = null)
     {
         $this->validator = $validator ?: new Validator();
         $this->uriRetriever = $uriRetriever ?: new UriRetriever();
+        $this->uriResolver = $uriResolver ?: new UriResolver();
     }
 
     /**
@@ -154,18 +169,17 @@ class JsonValidator
             $file = 'file://'.$file;
         }
 
+        // Resolve references to other schemas
+        $resolver = new RefResolver($this->uriRetriever, $this->uriResolver);
+
         try {
-            $schema = $this->uriRetriever->retrieve($file);
+            $schema = $resolver->resolve($file);
         } catch (ResourceNotFoundException $e) {
             throw new InvalidSchemaException(sprintf(
                 'The schema %s does not exist.',
                 $file
             ), 0, $e);
         }
-
-        // Resolve references to other schemas
-        $resolver = new RefResolver($this->uriRetriever);
-        $resolver->resolve($schema, $file);
 
         try {
             $this->assertSchemaValid($schema);

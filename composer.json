@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": "^5.3.3|^7.0",
-        "justinrainbow/json-schema": "^1.6",
+        "justinrainbow/json-schema": "^2.0",
         "seld/jsonlint": "^1.0",
         "webmozart/assert": "^1.0",
         "webmozart/path-util": "^2.3"
