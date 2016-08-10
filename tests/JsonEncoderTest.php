@@ -151,6 +151,52 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
         $this->encoder->encode(self::BINARY_INPUT);
     }
 
+    public function testEncodeEmptyArrayKey()
+    {
+        $data = array('' => 'Bernhard');
+
+        $this->assertSame('{"":"Bernhard"}', $this->encoder->encode($data));
+    }
+
+    public function testEncodeEmptyProperty()
+    {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('PHP >= 7.1.0 only');
+
+            return;
+        }
+
+        $data = (object) array('' => 'Bernhard');
+
+        $this->assertSame('{"":"Bernhard"}', $this->encoder->encode($data));
+    }
+
+    public function testEncodeMagicEmptyPropertyAfter71()
+    {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('PHP >= 7.1.0 only');
+
+            return;
+        }
+
+        $data = (object) array('_empty_' => 'Bernhard');
+
+        $this->assertSame('{"_empty_":"Bernhard"}', $this->encoder->encode($data));
+    }
+
+    public function testEncodeMagicEmptyPropertyBefore71()
+    {
+        if (version_compare(PHP_VERSION, '7.1.0', '>=')) {
+            $this->markTestSkipped('PHP < 7.1.0 only');
+
+            return;
+        }
+
+        $data = (object) array('a' => 'b', '_empty_' => 'Bernhard', 'c' => 'd');
+
+        $this->assertSame('{"a":"b","":"Bernhard","c":"d"}', $this->encoder->encode($data));
+    }
+
     public function testEncodeArrayAsArray()
     {
         $data = array('one', 'two');

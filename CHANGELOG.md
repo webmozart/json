@@ -11,6 +11,7 @@ Changelog
  * added support for `$ref` to external schema
  * added support for validation against `$schema` property
  * added `LocalUriRetriever`
+ * added support for empty properties before PHP 7.1
 
 * 1.2.2 (2016-01-14)
 

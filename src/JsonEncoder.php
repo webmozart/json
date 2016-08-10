@@ -178,6 +178,21 @@ class JsonEncoder
             }
         }
 
+        if (PHP_VERSION_ID < 71000) {
+            // PHP before 7.1 decodes empty properties as "_empty_". Make
+            // sure the encoding of these properties works again.
+            if (is_object($data) && isset($data->{'_empty_'})) {
+                $data = (array) $data;
+            }
+
+            if (is_array($data) && isset($data['_empty_'])) {
+                // Maintain key order
+                $keys = array_keys($data);
+                $keys[array_search('_empty_', $keys, true)] = '';
+                $data = array_combine($keys, $data);
+            }
+        }
+
         if (PHP_VERSION_ID >= 50500) {
             $maxDepth = $this->maxDepth;
 
