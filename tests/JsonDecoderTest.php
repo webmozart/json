@@ -148,6 +148,54 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('name' => 'Bernhard'), $decoded);
     }
 
+    public function testDecodeEmptyArrayKey()
+    {
+        $data = array('' => 'Bernhard');
+
+        $this->decoder->setObjectDecoding(JsonDecoder::ASSOC_ARRAY);
+
+        $this->assertEquals($data, $this->decoder->decode('{"":"Bernhard"}'));
+    }
+
+    public function testDecodeEmptyProperty()
+    {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('PHP >= 7.1.0 only');
+
+            return;
+        }
+
+        $data = (object) array('' => 'Bernhard');
+
+        $this->assertEquals($data, $this->decoder->decode('{"":"Bernhard"}'));
+    }
+
+    public function testDecodeMagicEmptyPropertyAfter71()
+    {
+        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
+            $this->markTestSkipped('PHP >= 7.1.0 only');
+
+            return;
+        }
+
+        $data = (object) array('_empty_' => 'Bernhard');
+
+        $this->assertEquals($data, $this->decoder->decode('{"_empty_":"Bernhard"}'));
+    }
+
+    public function testDecodeMagicEmptyPropertyBefore71()
+    {
+        if (version_compare(PHP_VERSION, '7.1.0', '>=')) {
+            $this->markTestSkipped('PHP < 7.1.0 only');
+
+            return;
+        }
+
+        $data = (object) array('a' => 'b', '_empty_' => 'Bernhard', 'c' => 'd');
+
+        $this->assertEquals($data, $this->decoder->decode('{"a":"b","":"Bernhard","c":"d"}'));
+    }
+
     public function provideInvalidObjectDecoding()
     {
         return array(
