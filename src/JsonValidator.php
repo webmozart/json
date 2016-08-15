@@ -14,7 +14,6 @@ namespace Webmozart\Json;
 use JsonSchema\Exception\InvalidArgumentException;
 use JsonSchema\Exception\ResourceNotFoundException;
 use JsonSchema\RefResolver;
-use JsonSchema\Uri\Retrievers\UriRetrieverInterface;
 use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
 use JsonSchema\UriResolverInterface;
@@ -49,18 +48,11 @@ class JsonValidator
     private $validator;
 
     /**
-     * URI retriever for fetching JSON schemas.
+     * Reference resolver.
      *
-     * @var UriRetrieverInterface
+     * @var RefResolver
      */
-    private $uriRetriever;
-
-    /**
-     * URI resolver for JSON schemas.
-     *
-     * @var UriResolverInterface
-     */
-    private $uriResolver;
+    private $resolver;
 
     /**
      * JsonValidator constructor.
@@ -74,8 +66,7 @@ class JsonValidator
     public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null, UriResolverInterface $uriResolver = null)
     {
         $this->validator = $validator ?: new Validator();
-        $this->uriRetriever = $uriRetriever ?: new UriRetriever();
-        $this->uriResolver = $uriResolver ?: new UriResolver();
+        $this->resolver = new RefResolver($uriRetriever ?: new UriRetriever(), $uriResolver ?: new UriResolver());
     }
 
     /**
@@ -170,10 +161,8 @@ class JsonValidator
         }
 
         // Resolve references to other schemas
-        $resolver = new RefResolver($this->uriRetriever, $this->uriResolver);
-
         try {
-            $schema = $resolver->resolve($file);
+            $schema = $this->resolver->resolve($file);
         } catch (ResourceNotFoundException $e) {
             throw new InvalidSchemaException(sprintf(
                 'The schema %s does not exist.',
