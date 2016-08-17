@@ -20,6 +20,12 @@
         "sebastian/version": "^1.0.1",
         "symfony/filesystem": "^2.5"
     },
+    "require-dev": {
+      "symfony/serializer": "~2.2|~3.0.0"
+    },
+    "suggest": {
+      "symfony/serializer": "To integrate with the Symfony Serializer."
+    },
     "autoload": {
         "psr-4": {
             "Webmozart\\Json\\": "src/"
