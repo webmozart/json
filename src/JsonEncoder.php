@@ -285,7 +285,7 @@ class JsonEncoder
             $errorCode = $errno;
         });
 
-        file_put_contents($path, $content);
+        file_put_contents($path, $content, LOCK_EX);
 
         restore_error_handler();
 
