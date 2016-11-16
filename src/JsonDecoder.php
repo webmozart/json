@@ -106,17 +106,21 @@ class JsonDecoder
             );
         }
 
-        $decoded = $this->decodeJson($json);
+        $data = $this->decodeJson($json);
+
+        if (null === $schema && isset($data->{'$schema'})) {
+            $schema = $data->{'$schema'};
+        }
 
         if (null !== $schema) {
-            $errors = $this->validator->validate($decoded, $schema);
+            $errors = $this->validator->validate($data, $schema);
 
             if (count($errors) > 0) {
                 throw ValidationFailedException::fromErrors($errors);
             }
         }
 
-        return $decoded;
+        return $data;
     }
 
     /**

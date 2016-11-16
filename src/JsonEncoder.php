@@ -130,6 +130,10 @@ class JsonEncoder
      */
     public function encode($data, $schema = null)
     {
+        if (null === $schema && isset($data->{'$schema'})) {
+            $schema = $data->{'$schema'};
+        }
+
         if (null !== $schema) {
             $errors = $this->validator->validate($data, $schema);
 
