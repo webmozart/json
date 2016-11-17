@@ -11,12 +11,12 @@
 
 namespace Webmozart\Json;
 
+use JsonSchema\Constraints\Factory;
 use JsonSchema\Exception\InvalidArgumentException;
 use JsonSchema\Exception\ResourceNotFoundException;
 use JsonSchema\RefResolver;
 use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
-use JsonSchema\UriResolverInterface;
 use JsonSchema\Validator;
 use Webmozart\PathUtil\Path;
 
@@ -48,25 +48,55 @@ class JsonValidator
     private $validator;
 
     /**
-     * Reference resolver.
+     * Validator instance used for internal validation.
      *
-     * @var RefResolver
+     * @var Validator|null
      */
-    private $resolver;
+    private $internalValidator;
+
+    /**
+     * Validator instance used for internal validation.
+     *
+     * @var Validator|null
+     */
+    private $internalFactory;
+
+    /**
+     * Version of the justinrainbow/json-schema library.
+     *
+     * @var int
+     */
+    private $jsonSchemaVersion;
 
     /**
      * JsonValidator constructor.
      *
-     * @param Validator|null            $validator    JsonSchema\Validator
-     *                                                instance to use
-     * @param UriRetriever|null         $uriRetriever The retriever for fetching
-     *                                                JSON schemas
-     * @param UriResolverInterface|null $uriResolver  The resolver for URIs
+     * @param Validator|null    $validator    JsonSchema\Validator instance
+     *                                        to use
+     * @param UriRetriever|null $uriRetriever The retriever for fetching
+     *                                        JSON schemas
      */
-    public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null, UriResolverInterface $uriResolver = null)
+    public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null)
     {
-        $this->validator = $validator ?: new Validator();
-        $this->resolver = new RefResolver($uriRetriever ?: new UriRetriever(), $uriResolver ?: new UriResolver());
+        if (method_exists('JsonSchema\Validator', 'getUriRetriever')) {
+            if (!method_exists('JsonSchema\Validator', 'getSchemaStorage')) {
+                $this->jsonSchemaVersion = 2;
+            } else {
+                $this->jsonSchemaVersion = 3;
+            }
+            $this->validator = $validator ?: new Validator();
+            if ($uriRetriever) {
+                $this->validator->setUriRetriever($uriRetriever);
+            }
+            if (2 === $this->jsonSchemaVersion) {
+                $this->resolver = new RefResolver($uriRetriever ?: new UriRetriever(), new UriResolver());
+            }
+        } else {
+            $this->jsonSchemaVersion = 4;
+            $this->internalFactory = new Factory(null, $uriRetriever);
+            $this->validator = $validator ?: new Validator($this->internalFactory);
+            $this->internalValidator = new Validator($this->internalFactory);
+        }
     }
 
     /**
@@ -107,6 +137,8 @@ class JsonValidator
 
         try {
             $this->validator->check($data, $schema);
+        } catch (ResourceNotFoundException $e) {
+            throw new InvalidSchemaException($e->getMessage(), $e->getCode(), $e);
         } catch (InvalidArgumentException $e) {
             throw new InvalidSchemaException(sprintf(
                 'The schema is invalid: %s',
@@ -134,6 +166,15 @@ class JsonValidator
             // The meta schema is obviously not validated. If we
             // validate it against itself, we have an endless recursion
             $this->metaSchema = json_decode(file_get_contents(__DIR__.'/../res/meta-schema.json'));
+
+            switch ($this->jsonSchemaVersion) {
+                case 3:
+                    $this->validator->getSchemaStorage()->addSchema('http://json-schema.org/draft-04/schema', $this->metaSchema);
+                    break;
+                case 4:
+                    $this->internalFactory->getSchemaStorage()->addSchema('http://json-schema.org/draft-04/schema', $this->metaSchema);
+                    break;
+            }
         }
 
         if ($schema === $this->metaSchema) {
@@ -148,6 +189,10 @@ class JsonValidator
                 implode("\n", $errors)
             ));
         }
+
+        if (3 === $this->jsonSchemaVersion && !isset($schema->{'$ref'})) {
+            $this->validator->getSchemaStorage()->addSchema($schema->id, $schema);
+        }
     }
 
     private function loadSchema($file)
@@ -160,14 +205,18 @@ class JsonValidator
             $file = 'file://'.$file;
         }
 
-        // Resolve references to other schemas
-        try {
-            $schema = $this->resolver->resolve($file);
-        } catch (ResourceNotFoundException $e) {
-            throw new InvalidSchemaException(sprintf(
-                'The schema %s does not exist.',
-                $file
-            ), 0, $e);
+        if (2 === $this->jsonSchemaVersion) {
+            // Resolve references to other schemas
+            try {
+                $schema = $this->resolver->resolve($file);
+            } catch (ResourceNotFoundException $e) {
+                throw new InvalidSchemaException(sprintf(
+                    'The schema %s does not exist.',
+                    $file
+                ), 0, $e);
+            }
+        } else {
+            $schema = (object) array('$ref' => $file);
         }
 
         try {
