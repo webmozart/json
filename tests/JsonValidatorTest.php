@@ -183,28 +183,6 @@ class JsonValidatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \Webmozart\Json\InvalidSchemaException
      */
-    public function testValidateFailsIfSchemaFileContainsNoObject()
-    {
-        $this->validator->validate(
-            (object) array('name' => 'Bernhard'),
-            $this->fixturesDir.'/schema-no-object.json'
-        );
-    }
-
-    /**
-     * @expectedException \Webmozart\Json\InvalidSchemaException
-     */
-    public function testValidateFailsIfSchemaFileInvalid()
-    {
-        $this->validator->validate(
-            (object) array('name' => 'Bernhard'),
-            $this->fixturesDir.'/schema-invalid.json'
-        );
-    }
-
-    /**
-     * @expectedException \Webmozart\Json\InvalidSchemaException
-     */
     public function testValidateFailsIfSchemaObjectInvalid()
     {
         $this->validator->validate(
