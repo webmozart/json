@@ -102,7 +102,7 @@ class JsonDecoder
             throw new \InvalidArgumentException(
                 'Schema validation is not supported when objects are decoded '.
                 'as associative arrays. Call '.
-                'JsonDecoder::setObjectDecoding(JsonDecoder::JSON_OBJECT) to fix.'
+                'JsonDecoder::setObjectDecoding(JsonDecoder::OBJECT) to fix.'
             );
         }
 
@@ -245,7 +245,7 @@ class JsonDecoder
     /**
      * Returns the decoding of JSON objects.
      *
-     * @return int One of the constants {@link JSON_OBJECT} and {@link ASSOC_ARRAY}
+     * @return int One of the constants {@link OBJECT} and {@link ASSOC_ARRAY}
      */
     public function getObjectDecoding()
     {
@@ -257,7 +257,7 @@ class JsonDecoder
      *
      * By default, JSON objects are decoded as instances of {@link \stdClass}.
      *
-     * @param int $decoding One of the constants {@link JSON_OBJECT} and {@link ASSOC_ARRAY}
+     * @param int $decoding One of the constants {@link OBJECT} and {@link ASSOC_ARRAY}
      *
      * @throws \InvalidArgumentException If the passed decoding is invalid
      */
@@ -265,7 +265,7 @@ class JsonDecoder
     {
         if (self::OBJECT !== $decoding && self::ASSOC_ARRAY !== $decoding) {
             throw new \InvalidArgumentException(sprintf(
-                'Expected JsonDecoder::JSON_OBJECT or JsonDecoder::ASSOC_ARRAY. '.
+                'Expected JsonDecoder::OBJECT or JsonDecoder::ASSOC_ARRAY. '.
                 'Got: %s',
                 $decoding
             ));
