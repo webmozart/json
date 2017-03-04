@@ -16,6 +16,7 @@ use JsonSchema\Exception\ResourceNotFoundException;
 use JsonSchema\RefResolver;
 use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
+use JsonSchema\UriRetrieverInterface;
 use JsonSchema\UriResolverInterface;
 use JsonSchema\Validator;
 use Webmozart\PathUtil\Path;
@@ -57,13 +58,13 @@ class JsonValidator
     /**
      * JsonValidator constructor.
      *
-     * @param Validator|null            $validator    JsonSchema\Validator
-     *                                                instance to use
-     * @param UriRetriever|null         $uriRetriever The retriever for fetching
-     *                                                JSON schemas
-     * @param UriResolverInterface|null $uriResolver  The resolver for URIs
+     * @param Validator|null             $validator    JsonSchema\Validator
+     *                                                 instance to use
+     * @param UriRetrieverInterface|null $uriRetriever The retriever for fetching
+     *                                                 JSON schemas
+     * @param UriResolverInterface|null  $uriResolver  The resolver for URIs
      */
-    public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null, UriResolverInterface $uriResolver = null)
+    public function __construct(Validator $validator = null, UriRetrieverInterface $uriRetriever = null, UriResolverInterface $uriResolver = null)
     {
         $this->validator = $validator ?: new Validator();
         $this->resolver = new RefResolver($uriRetriever ?: new UriRetriever(), $uriResolver ?: new UriResolver());
