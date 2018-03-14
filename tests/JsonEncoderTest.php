@@ -19,7 +19,7 @@ use Webmozart\Json\JsonEncoder;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class JsonEncoderTest extends \PHPUnit_Framework_TestCase
+class JsonEncoderTest extends \PHPUnit\Framework\TestCase
 {
     const BINARY_INPUT = "\xff\xf0";
 

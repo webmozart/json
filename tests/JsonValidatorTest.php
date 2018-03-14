@@ -20,7 +20,7 @@ use Webmozart\Json\JsonValidator;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class JsonValidatorTest extends \PHPUnit_Framework_TestCase
+class JsonValidatorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var JsonValidator

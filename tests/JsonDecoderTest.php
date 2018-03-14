@@ -18,7 +18,7 @@ use Webmozart\Json\JsonDecoder;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class JsonDecoderTest extends \PHPUnit_Framework_TestCase
+class JsonDecoderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var JsonDecoder

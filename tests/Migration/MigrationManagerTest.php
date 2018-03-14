@@ -11,9 +11,8 @@
 
 namespace Webmozart\Json\Tests\Migration;
 
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 use stdClass;
 use Webmozart\Json\Migration\JsonMigration;
 use Webmozart\Json\Migration\MigrationManager;
@@ -24,7 +23,7 @@ use Webmozart\Json\Versioning\JsonVersioner;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class MigrationManagerTest extends PHPUnit_Framework_TestCase
+class MigrationManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|JsonMigration
@@ -56,7 +55,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
         $this->migration1 = $this->createMigrationMock('0.8', '0.10');
         $this->migration2 = $this->createMigrationMock('0.10', '1.0');
         $this->migration3 = $this->createMigrationMock('1.0', '2.0');
-        $this->versioner = $this->getMock('Webmozart\Json\Versioning\JsonVersioner');
+        $this->versioner = $this->createMock('Webmozart\Json\Versioning\JsonVersioner');
         $this->manager = new MigrationManager(array(
             $this->migration1,
             $this->migration2,
@@ -85,21 +84,21 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
             ->method('up')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
         $this->migration2->expects($this->once())
             ->method('up')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(1, $data->calls);
+                Assert::assertSame(1, $data->calls);
                 ++$data->calls;
             });
         $this->migration3->expects($this->once())
             ->method('up')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(2, $data->calls);
+                Assert::assertSame(2, $data->calls);
                 ++$data->calls;
             });
 
@@ -127,7 +126,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
             ->method('up')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
         $this->migration3->expects($this->never())
@@ -186,7 +185,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
         $this->migration2->expects($this->once())
             ->method('up')
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
         $this->migration3->expects($this->never())
@@ -216,21 +215,21 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
             ->method('down')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
         $this->migration2->expects($this->once())
             ->method('down')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(1, $data->calls);
+                Assert::assertSame(1, $data->calls);
                 ++$data->calls;
             });
         $this->migration1->expects($this->once())
             ->method('down')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(2, $data->calls);
+                Assert::assertSame(2, $data->calls);
                 ++$data->calls;
             });
 
@@ -258,7 +257,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
             ->method('down')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
         $this->migration1->expects($this->never())
@@ -317,7 +316,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
         $this->migration2->expects($this->once())
             ->method('down')
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
         $this->migration1->expects($this->never())
@@ -374,7 +373,7 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
      */
     private function createMigrationMock($sourceVersion, $targetVersion)
     {
-        $mock = $this->getMock('Webmozart\Json\Migration\JsonMigration');
+        $mock = $this->createMock('Webmozart\Json\Migration\JsonMigration');
 
         $mock->expects($this->any())
             ->method('getSourceVersion')

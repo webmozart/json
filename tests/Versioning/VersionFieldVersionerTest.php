@@ -11,7 +11,7 @@
 
 namespace Webmozart\Json\Tests\Versioning;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Webmozart\Json\Versioning\VersionFieldVersioner;
 
 /**
@@ -19,7 +19,7 @@ use Webmozart\Json\Versioning\VersionFieldVersioner;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class VersionFieldVersionerTest extends PHPUnit_Framework_TestCase
+class VersionFieldVersionerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var VersionFieldVersioner

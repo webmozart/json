@@ -11,9 +11,8 @@
 
 namespace Webmozart\Json\Tests\Migration;
 
-use PHPUnit_Framework_Assert;
+use PHPUnit\Framework\Assert;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
 use stdClass;
 use Webmozart\Json\Conversion\JsonConverter;
 use Webmozart\Json\Migration\MigratingConverter;
@@ -24,7 +23,7 @@ use Webmozart\Json\Migration\MigrationManager;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class MigratingConverterTest extends PHPUnit_Framework_TestCase
+class MigratingConverterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|JsonConverter
@@ -49,7 +48,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
         $this->migrationManager->expects($this->any())
             ->method('getKnownVersions')
             ->willReturn(array('0.9', '1.0'));
-        $this->innerConverter = $this->getMock('Webmozart\Json\Conversion\JsonConverter');
+        $this->innerConverter = $this->createMock('Webmozart\Json\Conversion\JsonConverter');
         $this->converter = new MigratingConverter($this->innerConverter, '1.0', $this->migrationManager);
     }
 
@@ -79,7 +78,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
             ->willReturnCallback(function (stdClass $jsonData, $targetVersion) use ($beforeMigration) {
                 // with() in combination with argument cloning doesn't work,
                 // since we *want* to modify the original data (not the clone) below
-                PHPUnit_Framework_Assert::assertEquals($beforeMigration, $jsonData);
+                Assert::assertEquals($beforeMigration, $jsonData);
 
                 $jsonData->version = $targetVersion;
                 $jsonData->downgraded = true;
@@ -178,7 +177,7 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
         $this->migrationManager->expects($this->once())
             ->method('migrate')
             ->willReturnCallback(function (stdClass $jsonData, $targetVersion) use ($beforeMigration) {
-                PHPUnit_Framework_Assert::assertEquals($beforeMigration, $jsonData);
+                Assert::assertEquals($beforeMigration, $jsonData);
 
                 $jsonData->version = $targetVersion;
                 $jsonData->upgraded = true;
