@@ -12,13 +12,14 @@
 namespace Webmozart\Json\Tests;
 
 use Webmozart\Json\JsonDecoder;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @since  1.0
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class JsonDecoderTest extends \PHPUnit\Framework\TestCase
+class JsonDecoderTest extends TestCase
 {
     /**
      * @var JsonDecoder
@@ -339,7 +340,7 @@ class JsonDecoderTest extends \PHPUnit\Framework\TestCase
         chmod($tempFile, 0000);
 
         // Test that the file name is present in the output.
-        $this->setExpectedException(
+        $this->expectException(
             '\Webmozart\Json\IOException',
             $tempFile
         );

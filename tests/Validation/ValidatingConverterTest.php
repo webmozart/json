@@ -12,6 +12,7 @@
 namespace Webmozart\Json\Tests\Validation;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use Webmozart\Json\Conversion\JsonConverter;
 use Webmozart\Json\InvalidSchemaException;
@@ -23,7 +24,7 @@ use Webmozart\Json\Validation\ValidatingConverter;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class ValidatingConverterTest extends \PHPUnit\Framework\TestCase
+class ValidatingConverterTest extends TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|JsonConverter

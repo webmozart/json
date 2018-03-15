@@ -11,6 +11,7 @@
 
 namespace Webmozart\Json\Tests\Versioning;
 
+use PHPUnit\Framework\TestCase;
 use Webmozart\Json\Versioning\SchemaUriVersioner;
 
 /**
@@ -18,7 +19,7 @@ use Webmozart\Json\Versioning\SchemaUriVersioner;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class SchemaUriVersionerTest extends \PHPUnit\Framework\TestCase
+class SchemaUriVersionerTest extends TestCase
 {
     /**
      * @var SchemaUriVersioner

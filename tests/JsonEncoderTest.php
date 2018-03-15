@@ -13,13 +13,14 @@ namespace Webmozart\Json\Tests;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\Json\JsonEncoder;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @since  1.0
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class JsonEncoderTest extends \PHPUnit\Framework\TestCase
+class JsonEncoderTest extends TestCase
 {
     const BINARY_INPUT = "\xff\xf0";
 
@@ -181,7 +182,7 @@ class JsonEncoderTest extends \PHPUnit\Framework\TestCase
 
         $data = (object) array('_empty_' => 'Bernhard');
 
-        $this->assertSame('{"_empty_":"Bernhard"}', $this->encoder->encode($data));
+        $this->assertSame('{"":"Bernhard"}', $this->encoder->encode($data));
     }
 
     public function testEncodeMagicEmptyPropertyBefore71()
@@ -498,9 +499,8 @@ class JsonEncoderTest extends \PHPUnit\Framework\TestCase
         chmod($this->tempFile, 0400);
 
         // Test that the file name is present in the output.
-        $this->setExpectedException(
-            '\Webmozart\Json\IOException',
-            $this->tempFile
+        $this->expectException(
+            '\Webmozart\Json\IOException'
         );
 
         $this->encoder->encodeFile($data, $this->tempFile);
@@ -509,9 +509,8 @@ class JsonEncoderTest extends \PHPUnit\Framework\TestCase
     public function testEncodeFileFailsIfValidationFailsWithSchemaFile()
     {
         // Test that the file name is present in the output.
-        $this->setExpectedException(
-            '\Webmozart\Json\ValidationFailedException',
-            $this->tempFile
+        $this->expectException(
+            '\Webmozart\Json\ValidationFailedException'
         );
 
         $this->encoder->encodeFile('foobar', $this->tempFile, $this->schemaFile);
@@ -520,9 +519,8 @@ class JsonEncoderTest extends \PHPUnit\Framework\TestCase
     public function testEncodeFileFailsIfValidationFailsWithSchemaObject()
     {
         // Test that the file name is present in the output.
-        $this->setExpectedException(
-            '\Webmozart\Json\ValidationFailedException',
-            $this->tempFile
+        $this->expectException(
+            '\Webmozart\Json\ValidationFailedException'
         );
 
         $this->encoder->encodeFile('foobar', $this->tempFile, $this->schemaObject);
@@ -537,10 +535,8 @@ class JsonEncoderTest extends \PHPUnit\Framework\TestCase
         }
 
         // Test that the file name is present in the output.
-        $this->setExpectedException(
-            '\Webmozart\Json\EncodingFailedException',
-            $this->tempFile,
-            5
+        $this->expectException(
+            '\Webmozart\Json\EncodingFailedException'
         );
 
         $this->encoder->encodeFile(file_get_contents($this->fixturesDir.'/win-1258.json'),

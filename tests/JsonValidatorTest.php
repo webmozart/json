@@ -14,13 +14,14 @@ namespace Webmozart\Json\Tests;
 use JsonSchema\Uri\Retrievers\PredefinedArray;
 use JsonSchema\Uri\UriRetriever;
 use Webmozart\Json\JsonValidator;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @since  1.0
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class JsonValidatorTest extends \PHPUnit\Framework\TestCase
+class JsonValidatorTest extends TestCase
 {
     /**
      * @var JsonValidator

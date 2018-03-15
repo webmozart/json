@@ -12,6 +12,7 @@
 namespace Webmozart\Json\Tests\Migration;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use stdClass;
 use Webmozart\Json\Conversion\JsonConverter;
@@ -23,7 +24,7 @@ use Webmozart\Json\Migration\MigrationManager;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class MigratingConverterTest extends \PHPUnit\Framework\TestCase
+class MigratingConverterTest extends TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|JsonConverter

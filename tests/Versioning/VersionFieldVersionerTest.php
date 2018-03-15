@@ -19,7 +19,7 @@ use Webmozart\Json\Versioning\VersionFieldVersioner;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class VersionFieldVersionerTest extends \PHPUnit\Framework\TestCase
+class VersionFieldVersionerTest extends TestCase
 {
     /**
      * @var VersionFieldVersioner
