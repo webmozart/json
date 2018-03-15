@@ -48,13 +48,6 @@ class JsonValidator
     private $validator;
 
     /**
-     * Reference resolver.
-     *
-     * @var RefResolver
-     */
-    private $resolver;
-
-    /**
      * JsonValidator constructor.
      *
      * @param Validator|null            $validator    JsonSchema\Validator
@@ -66,7 +59,6 @@ class JsonValidator
     public function __construct(Validator $validator = null, UriRetriever $uriRetriever = null, UriResolverInterface $uriResolver = null)
     {
         $this->validator = $validator ?: new Validator();
-        $this->resolver = new RefResolver($uriRetriever ?: new UriRetriever(), $uriResolver ?: new UriResolver());
     }
 
     /**
@@ -107,7 +99,7 @@ class JsonValidator
 
         try {
             $this->validator->check($data, $schema);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException | ResourceNotFoundException $e) {
             throw new InvalidSchemaException(sprintf(
                 'The schema is invalid: %s',
                 $e->getMessage()
@@ -160,15 +152,7 @@ class JsonValidator
             $file = 'file://'.$file;
         }
 
-        // Resolve references to other schemas
-        try {
-            $schema = $this->resolver->resolve($file);
-        } catch (ResourceNotFoundException $e) {
-            throw new InvalidSchemaException(sprintf(
-                'The schema %s does not exist.',
-                $file
-            ), 0, $e);
-        }
+        $schema = (object) ['$ref' => $file];
 
         try {
             $this->assertSchemaValid($schema);

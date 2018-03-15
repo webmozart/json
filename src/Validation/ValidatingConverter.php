@@ -136,7 +136,7 @@ class ValidatingConverter implements JsonConverter
             ), 0, $e);
         }
 
-        if (count($errors) > 0) {
+        if (null !== $errors && count($errors) > 0) {
             throw new ConversionFailedException(sprintf(
                 "The passed JSON did not match the schema:\n%s",
                 implode("\n", $errors)
