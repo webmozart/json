@@ -11,10 +11,9 @@
 
 namespace Webmozart\Json\Validation;
 
+use JsonSchema\Validator;
 use Webmozart\Json\Conversion\ConversionFailedException;
 use Webmozart\Json\Conversion\JsonConverter;
-use Webmozart\Json\InvalidSchemaException;
-use Webmozart\Json\JsonValidator;
 
 /**
  * A decorator for a {@link JsonCoverter} that validates the JSON data.
@@ -72,9 +71,9 @@ class ValidatingConverter implements JsonConverter
     private $schema;
 
     /**
-     * @var JsonValidator
+     * @var Validator
      */
-    private $jsonValidator;
+    private $validator;
 
     /**
      * Creates the converter.
@@ -87,13 +86,13 @@ class ValidatingConverter implements JsonConverter
      *                                             the schema is taken from the
      *                                             `$schema` property of the
      *                                             JSON data
-     * @param JsonValidator        $jsonValidator  The JSON validator (optional)
+     * @param null|Validator        $validator     The validator (optional)
      */
-    public function __construct(JsonConverter $innerConverter, $schema = null, JsonValidator $jsonValidator = null)
+    public function __construct(JsonConverter $innerConverter, $schema = null, Validator $validator = null)
     {
         $this->innerConverter = $innerConverter;
         $this->schema = $schema;
-        $this->jsonValidator = $jsonValidator ?: new JsonValidator();
+        $this->validator = $validator ?? new Validator();
     }
 
     /**
@@ -126,17 +125,24 @@ class ValidatingConverter implements JsonConverter
             $schema = $schema($jsonData);
         }
 
-        try {
-            $errors = $this->jsonValidator->validate($jsonData, $schema);
-        } catch (InvalidSchemaException $e) {
-            throw new ConversionFailedException(sprintf(
-                'An error occurred while loading the JSON schema (%s): %s',
-                is_string($schema) ? '"'.$schema.'"' : gettype($schema),
-                $e->getMessage()
-            ), 0, $e);
+        $this->validator->validate($jsonData, $schema);
+
+        $errors = $this->validator->getErrors();
+
+        if (null === $errors) {
+            return;
         }
 
         if (count($errors) > 0) {
+            foreach ($errors as &$error) {
+                if (!is_array($error)) {
+                    continue;
+                }
+
+                $error = implode("\n", $error);
+            }
+            unset($error);
+
             throw new ConversionFailedException(sprintf(
                 "The passed JSON did not match the schema:\n%s",
                 implode("\n", $errors)

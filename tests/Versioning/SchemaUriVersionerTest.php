@@ -11,7 +11,9 @@
 
 namespace Webmozart\Json\Tests\Versioning;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
+use Webmozart\Json\Versioning\CannotParseVersionException;
+use Webmozart\Json\Versioning\CannotUpdateVersionException;
 use Webmozart\Json\Versioning\SchemaUriVersioner;
 
 /**
@@ -19,93 +21,89 @@ use Webmozart\Json\Versioning\SchemaUriVersioner;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class SchemaUriVersionerTest extends PHPUnit_Framework_TestCase
+class SchemaUriVersionerTest extends TestCase
 {
     /**
      * @var SchemaUriVersioner
      */
     private $versioner;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->versioner = new SchemaUriVersioner();
     }
 
-    public function testParseVersion()
+    public function testParseVersion(): void
     {
         $data = (object) array('$schema' => 'http://example.com/schemas/1.0/schema');
 
-        $this->assertSame('1.0', $this->versioner->parseVersion($data));
+        self::assertSame('1.0', $this->versioner->parseVersion($data));
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Versioning\CannotParseVersionException
-     */
-    public function testParseVersionFailsIfNotFound()
+    public function testParseVersionFailsIfNotFound(): void
     {
+        $this->expectException(CannotParseVersionException::class);
+
         $data = (object) array('$schema' => 'http://example.com/schemas/1.0-schema');
 
         $this->versioner->parseVersion($data);
     }
 
-    public function testParseVersionWithCustomPattern()
+    public function testParseVersionWithCustomPattern(): void
     {
         $this->versioner = new SchemaUriVersioner('~(?<=/)\d+\.\d+(?=-)~');
 
         $data = (object) array('$schema' => 'http://example.com/schemas/1.0-schema');
 
-        $this->assertSame('1.0', $this->versioner->parseVersion($data));
+        self::assertSame('1.0', $this->versioner->parseVersion($data));
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Versioning\CannotParseVersionException
-     */
-    public function testParseVersionFailsIfNoSchemaField()
+    public function testParseVersionFailsIfNoSchemaField(): void
     {
+        $this->expectException(CannotParseVersionException::class);
+
         $data = (object) array('foo' => 'bar');
 
         $this->versioner->parseVersion($data);
     }
 
-    public function testUpdateVersion()
+    public function testUpdateVersion(): void
     {
         $data = (object) array('$schema' => 'http://example.com/schemas/1.0/schema');
 
         $this->versioner->updateVersion($data, '2.0');
 
-        $this->assertSame('http://example.com/schemas/2.0/schema', $data->{'$schema'});
+        self::assertSame('http://example.com/schemas/2.0/schema', $data->{'$schema'});
     }
 
-    public function testUpdateVersionIgnoresCurrentVersion()
+    public function testUpdateVersionIgnoresCurrentVersion(): void
     {
         $data = (object) array('$schema' => 'http://example.com/schemas/1.0/schema');
 
         $this->versioner->updateVersion($data, '1.0');
 
-        $this->assertSame('http://example.com/schemas/1.0/schema', $data->{'$schema'});
+        self::assertSame('http://example.com/schemas/1.0/schema', $data->{'$schema'});
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Versioning\CannotUpdateVersionException
-     */
-    public function testUpdateVersionFailsIfNotFound()
+    public function testUpdateVersionFailsIfNotFound(): void
     {
+        $this->expectException(CannotUpdateVersionException::class);
+
         $data = (object) array('$schema' => 'http://example.com/schemas/1.0-schema');
 
         $this->versioner->updateVersion($data, '2.0');
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Versioning\CannotUpdateVersionException
-     */
-    public function testUpdateVersionFailsIfFoundMultipleTimes()
+    public function testUpdateVersionFailsIfFoundMultipleTimes(): void
     {
+        $this->expectException(CannotUpdateVersionException::class);
+
         $data = (object) array('$schema' => 'http://example.com/1.0/schemas/1.0/schema');
 
         $this->versioner->updateVersion($data, '2.0');
     }
 
-    public function testUpdateVersionCustomPattern()
+    public function testUpdateVersionCustomPattern(): void
     {
         $this->versioner = new SchemaUriVersioner('~(?<=/)\d+\.\d+(?=-)~');
 
@@ -113,14 +111,13 @@ class SchemaUriVersionerTest extends PHPUnit_Framework_TestCase
 
         $this->versioner->updateVersion($data, '2.0');
 
-        $this->assertSame('http://example.com/schemas/2.0-schema', $data->{'$schema'});
+        self::assertSame('http://example.com/schemas/2.0-schema', $data->{'$schema'});
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Versioning\CannotUpdateVersionException
-     */
-    public function testUpdateVersionFailsIfNoSchemaField()
+    public function testUpdateVersionFailsIfNoSchemaField(): void
     {
+        $this->expectException(CannotUpdateVersionException::class);
+
         $data = (object) array('foo' => 'bar');
 
         $this->versioner->updateVersion($data, '2.0');

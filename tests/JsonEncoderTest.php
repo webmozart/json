@@ -11,17 +11,22 @@
 
 namespace Webmozart\Json\Tests;
 
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\Json\EncodingFailedException;
+use Webmozart\Json\IOException;
 use Webmozart\Json\JsonEncoder;
+use Webmozart\Json\ValidationFailedException;
 
 /**
  * @since  1.0
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class JsonEncoderTest extends \PHPUnit_Framework_TestCase
+class JsonEncoderTest extends TestCase
 {
-    const BINARY_INPUT = "\xff\xf0";
+    private const BINARY_INPUT = "\xff\xf0";
 
     /**
      * @var JsonEncoder
@@ -38,7 +43,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     private $tempFile;
 
-    public function provideValues()
+    public function provideValues(): array
     {
         return array(
             array(0, '0'),
@@ -57,9 +62,9 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        while (false === @mkdir($this->tempDir = sys_get_temp_dir().'/webmozart-JsonEncoderTest'.rand(10000, 99999), 0777, true)) {
+        while (false === @mkdir($this->tempDir = sys_get_temp_dir().'/webmozart-JsonEncoderTest'.random_int(10000, 99999), 0777, true)) {
         }
 
         $this->encoder = new JsonEncoder();
@@ -69,7 +74,7 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
         $this->tempFile = $this->tempDir.'/data.json';
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $filesystem = new Filesystem();
 
@@ -81,141 +86,101 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideValues
      */
-    public function testEncode($value, $json)
+    public function testEncode($value, $json): void
     {
-        $this->assertSame($json, $this->encoder->encode($value));
+        self::assertSame($json, $this->encoder->encode($value));
     }
 
-    public function testEncodeWithSchemaFile()
+    public function testEncodeWithSchemaFile(): void
     {
         $data = (object) array('name' => 'Bernhard');
 
-        $this->assertSame('{"name":"Bernhard"}', $this->encoder->encode($data, $this->schemaFile));
+        self::assertSame('{"name":"Bernhard"}', $this->encoder->encode($data, $this->schemaFile));
     }
 
-    public function testEncodeWithSchemaObject()
+    public function testEncodeWithSchemaObject(): void
     {
         $data = (object) array('name' => 'Bernhard');
 
-        $this->assertSame('{"name":"Bernhard"}', $this->encoder->encode($data, $this->schemaObject));
+        self::assertSame('{"name":"Bernhard"}', $this->encoder->encode($data, $this->schemaObject));
     }
 
-    /**
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     */
-    public function testEncodeFailsIfValidationFailsWithSchemaFile()
+    public function testEncodeFailsIfValidationFailsWithSchemaObject(): void
     {
-        $this->encoder->encode('foobar', $this->schemaFile);
-    }
+        $this->expectException(ValidationFailedException::class);
 
-    /**
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     */
-    public function testEncodeFailsIfValidationFailsWithSchemaObject()
-    {
         $this->encoder->encode('foobar', $this->schemaObject);
     }
 
-    public function testEncodeUtf8()
+    public function testEncodeUtf8(): void
     {
         $data = (object) array('name' => 'Bérnhard');
 
-        $this->assertSame('{"name":"B\u00e9rnhard"}', $this->encoder->encode($data));
+        self::assertSame('{"name":"B\u00e9rnhard"}', $this->encoder->encode($data));
     }
 
     /**
      * JSON_ERROR_UTF8.
-     *
-     * @expectedException \Webmozart\Json\EncodingFailedException
-     * @expectedExceptionCode 5
      */
-    public function testEncodeFailsIfNonUtf8()
+    public function testEncodeFailsIfNonUtf8(): void
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('PHP >= 5.5.0 only');
-
-            return;
-        }
+        $this->expectException(EncodingFailedException::class);
+        $this->expectExceptionCode(5);
 
         $this->encoder->encode(file_get_contents($this->fixturesDir.'/win-1258.json'));
     }
 
     /**
      * JSON_ERROR_UTF8.
-     *
-     * @expectedException \Webmozart\Json\EncodingFailedException
-     * @expectedExceptionCode 5
      */
-    public function testEncodeFailsForBinaryValue()
+    public function testEncodeFailsForBinaryValue(): void
     {
+        $this->expectException(EncodingFailedException::class);
+        $this->expectExceptionCode(5);
+
         $this->encoder->encode(self::BINARY_INPUT);
     }
 
-    public function testEncodeEmptyArrayKey()
+    public function testEncodeEmptyArrayKey(): void
     {
         $data = array('' => 'Bernhard');
 
-        $this->assertSame('{"":"Bernhard"}', $this->encoder->encode($data));
+        self::assertSame('{"":"Bernhard"}', $this->encoder->encode($data));
     }
 
-    public function testEncodeEmptyProperty()
+    public function testEncodeEmptyProperty(): void
     {
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('PHP >= 7.1.0 only');
-
-            return;
-        }
-
         $data = (object) array('' => 'Bernhard');
 
-        $this->assertSame('{"":"Bernhard"}', $this->encoder->encode($data));
+        self::assertSame('{"":"Bernhard"}', $this->encoder->encode($data));
     }
 
-    public function testEncodeMagicEmptyPropertyAfter71()
+    public function testEncodeMagicEmptyPropertyAfter71(): void
     {
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('PHP >= 7.1.0 only');
-
-            return;
-        }
-
         $data = (object) array('_empty_' => 'Bernhard');
 
-        $this->assertSame('{"_empty_":"Bernhard"}', $this->encoder->encode($data));
+        self::assertSame('{"_empty_":"Bernhard"}', $this->encoder->encode($data));
     }
 
-    public function testEncodeMagicEmptyPropertyBefore71()
-    {
-        if (version_compare(PHP_VERSION, '7.1.0', '>=')) {
-            $this->markTestSkipped('PHP < 7.1.0 only');
-
-            return;
-        }
-
-        $data = (object) array('a' => 'b', '_empty_' => 'Bernhard', 'c' => 'd');
-
-        $this->assertSame('{"a":"b","":"Bernhard","c":"d"}', $this->encoder->encode($data));
-    }
-
-    public function testEncodeArrayAsArray()
+    public function testEncodeArrayAsArray(): void
     {
         $data = array('one', 'two');
 
         $this->encoder->setArrayEncoding(JsonEncoder::JSON_ARRAY);
 
-        $this->assertSame('["one","two"]', $this->encoder->encode($data));
+        self::assertSame('["one","two"]', $this->encoder->encode($data));
     }
 
-    public function testEncodeArrayAsObject()
+    public function testEncodeArrayAsObject(): void
     {
         $data = array('one', 'two');
 
         $this->encoder->setArrayEncoding(JsonEncoder::JSON_OBJECT);
 
-        $this->assertSame('{"0":"one","1":"two"}', $this->encoder->encode($data));
+        self::assertSame('{"0":"one","1":"two"}', $this->encoder->encode($data));
     }
 
-    public function provideInvalidArrayEncoding()
+    public function provideInvalidArrayEncoding(): array
     {
         return array(
             array(JsonEncoder::JSON_NUMBER),
@@ -226,41 +191,42 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideInvalidArrayEncoding
-     * @expectedException \InvalidArgumentException
      */
-    public function testFailIfInvalidArrayEncoding($invalidEncoding)
+    public function testFailIfInvalidArrayEncoding($invalidEncoding): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->encoder->setArrayEncoding($invalidEncoding);
     }
 
-    public function testEncodeNumericAsString()
+    public function testEncodeNumericAsString(): void
     {
         $data = '12345';
 
         $this->encoder->setNumericEncoding(JsonEncoder::JSON_STRING);
 
-        $this->assertSame('"12345"', $this->encoder->encode($data));
+        self::assertSame('"12345"', $this->encoder->encode($data));
     }
 
-    public function testEncodeIntegerStringAsInteger()
+    public function testEncodeIntegerStringAsInteger(): void
     {
         $data = '12345';
 
         $this->encoder->setNumericEncoding(JsonEncoder::JSON_NUMBER);
 
-        $this->assertSame('12345', $this->encoder->encode($data));
+        self::assertSame('12345', $this->encoder->encode($data));
     }
 
-    public function testEncodeIntegerFloatAsFloat()
+    public function testEncodeIntegerFloatAsFloat(): void
     {
         $data = '123.45';
 
         $this->encoder->setNumericEncoding(JsonEncoder::JSON_NUMBER);
 
-        $this->assertSame('123.45', $this->encoder->encode($data));
+        self::assertSame('123.45', $this->encoder->encode($data));
     }
 
-    public function provideInvalidNumericEncoding()
+    public function provideInvalidNumericEncoding(): array
     {
         return array(
             array(JsonEncoder::JSON_ARRAY),
@@ -271,226 +237,206 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideInvalidNumericEncoding
-     * @expectedException \InvalidArgumentException
      */
-    public function testFailIfInvalidNumericEncoding($invalidEncoding)
+    public function testFailIfInvalidNumericEncoding($invalidEncoding): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->encoder->setNumericEncoding($invalidEncoding);
     }
 
-    public function testGtLtEscaoed()
+    public function testGtLtEscaped(): void
     {
         $this->encoder->setEscapeGtLt(true);
 
-        $this->assertSame('"\u003C\u003E"', $this->encoder->encode('<>'));
+        self::assertSame('"\u003C\u003E"', $this->encoder->encode('<>'));
     }
 
-    public function testGtLtNotEscaoed()
+    public function testGtLtNotEscaped(): void
     {
         $this->encoder->setEscapeGtLt(false);
 
-        $this->assertSame('"<>"', $this->encoder->encode('<>'));
+        self::assertSame('"<>"', $this->encoder->encode('<>'));
     }
 
-    public function testAmpersandEscaped()
+    public function testAmpersandEscaped(): void
     {
         $this->encoder->setEscapeAmpersand(true);
 
-        $this->assertSame('"\u0026"', $this->encoder->encode('&'));
+        self::assertSame('"\u0026"', $this->encoder->encode('&'));
     }
 
-    public function testAmpersandNotEscaped()
+    public function testAmpersandNotEscaped(): void
     {
         $this->encoder->setEscapeAmpersand(false);
 
-        $this->assertSame('"&"', $this->encoder->encode('&'));
+        self::assertSame('"&"', $this->encoder->encode('&'));
     }
 
-    public function testSingleQuoteEscaped()
+    public function testSingleQuoteEscaped(): void
     {
         $this->encoder->setEscapeSingleQuote(true);
 
-        $this->assertSame('"\u0027"', $this->encoder->encode("'"));
+        self::assertSame('"\u0027"', $this->encoder->encode("'"));
     }
 
-    public function testSingleQuoteNotEscaped()
+    public function testSingleQuoteNotEscaped(): void
     {
         $this->encoder->setEscapeSingleQuote(false);
 
-        $this->assertSame('"\'"', $this->encoder->encode("'"));
+        self::assertSame('"\'"', $this->encoder->encode("'"));
     }
 
-    public function testDoubleQuoteEscaped()
+    public function testDoubleQuoteEscaped(): void
     {
         $this->encoder->setEscapeDoubleQuote(true);
 
-        $this->assertSame('"\u0022"', $this->encoder->encode('"'));
+        self::assertSame('"\u0022"', $this->encoder->encode('"'));
     }
 
-    public function testDoubleQuoteNotEscaped()
+    public function testDoubleQuoteNotEscaped(): void
     {
         $this->encoder->setEscapeDoubleQuote(false);
 
-        $this->assertSame('"\""', $this->encoder->encode('"'));
+        self::assertSame('"\""', $this->encoder->encode('"'));
     }
 
-    public function testSlashEscaped()
+    public function testSlashEscaped(): void
     {
         $this->encoder->setEscapeSlash(true);
 
-        $this->assertSame('"\\/"', $this->encoder->encode('/'));
+        self::assertSame('"\\/"', $this->encoder->encode('/'));
     }
 
-    public function testSlashNotEscaped()
+    public function testSlashNotEscaped(): void
     {
         $this->encoder->setEscapeSlash(false);
 
-        $this->assertSame('"/"', $this->encoder->encode('/'));
+        self::assertSame('"/"', $this->encoder->encode('/'));
     }
 
-    public function testUnicodeEscaped()
+    public function testUnicodeEscaped(): void
     {
         $this->encoder->setEscapeUnicode(true);
 
-        $this->assertSame('"\u00fc"', $this->encoder->encode('ü'));
+        self::assertSame('"\u00fc"', $this->encoder->encode('ü'));
     }
 
-    public function testUnicodeNotEscaped()
+    public function testUnicodeNotEscaped(): void
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
-            $this->markTestSkipped('PHP >= 5.4.0 only');
-
-            return;
-        }
-
         $this->encoder->setEscapeUnicode(false);
 
-        $this->assertSame('"ü"', $this->encoder->encode('ü'));
+        self::assertSame('"ü"', $this->encoder->encode('ü'));
     }
 
     /**
      * JSON_ERROR_DEPTH.
-     *
-     * @expectedException \Webmozart\Json\EncodingFailedException
-     * @expectedExceptionCode 1
      */
-    public function testMaxDepth1Exceeded()
+    public function testMaxDepth1Exceeded(): void
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('PHP >= 5.5.0 only');
-
-            return;
-        }
+        $this->expectException(EncodingFailedException::class);
+        $this->expectExceptionCode(1);
 
         $this->encoder->setMaxDepth(1);
 
         $this->encoder->encode((object) array('name' => 'Bernhard'));
     }
 
-    public function testMaxDepth1NotExceeded()
+    public function testMaxDepth1NotExceeded(): void
     {
         $this->encoder->setMaxDepth(1);
 
-        $this->assertSame('"Bernhard"', $this->encoder->encode('Bernhard'));
+        self::assertSame('"Bernhard"', $this->encoder->encode('Bernhard'));
     }
 
     /**
      * JSON_ERROR_DEPTH.
-     *
-     * @expectedException \Webmozart\Json\EncodingFailedException
-     * @expectedExceptionCode 1
      */
-    public function testMaxDepth2Exceeded()
+    public function testMaxDepth2Exceeded(): void
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('PHP >= 5.5.0 only');
-
-            return;
-        }
+        $this->expectException(EncodingFailedException::class);
+        $this->expectExceptionCode(1);
 
         $this->encoder->setMaxDepth(2);
 
         $this->encoder->encode((object) array('key' => (object) array('name' => 'Bernhard')));
     }
 
-    public function testMaxDepth2NotExceeded()
+    public function testMaxDepth2NotExceeded(): void
     {
         $this->encoder->setMaxDepth(2);
 
-        $this->assertSame('{"name":"Bernhard"}', $this->encoder->encode((object) array('name' => 'Bernhard')));
+        self::assertSame('{"name":"Bernhard"}', $this->encoder->encode((object) array('name' => 'Bernhard')));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testMaxDepthMustBeInteger()
+    public function testMaxDepthMustBeInteger(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->encoder->setMaxDepth('foo');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testMaxDepthMustBeOneOrGreater()
+    public function testMaxDepthMustBeOneOrGreater(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->encoder->setMaxDepth(0);
     }
 
-    public function testPrettyPrinting()
+    public function testPrettyPrinting(): void
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
-            $this->markTestSkipped('PHP >= 5.4.0 only');
-
-            return;
-        }
-
         $this->encoder->setPrettyPrinting(true);
 
-        $this->assertSame("{\n    \"name\": \"Bernhard\"\n}", $this->encoder->encode((object) array('name' => 'Bernhard')));
+        self::assertSame("{\n    \"name\": \"Bernhard\"\n}", $this->encoder->encode((object) array('name' => 'Bernhard')));
     }
 
-    public function testNoPrettyPrinting()
+    public function testNoPrettyPrinting(): void
     {
         $this->encoder->setPrettyPrinting(false);
 
-        $this->assertSame('{"name":"Bernhard"}', $this->encoder->encode((object) array('name' => 'Bernhard')));
+        self::assertSame('{"name":"Bernhard"}', $this->encoder->encode((object) array('name' => 'Bernhard')));
     }
 
-    public function testTerminateWithLineFeed()
+    public function testTerminateWithLineFeed(): void
     {
         $this->encoder->setTerminateWithLineFeed(true);
 
-        $this->assertSame('{"name":"Bernhard"}'."\n", $this->encoder->encode((object) array('name' => 'Bernhard')));
+        self::assertSame('{"name":"Bernhard"}'."\n", $this->encoder->encode((object) array('name' => 'Bernhard')));
     }
 
-    public function testDoNotTerminateWithLineFeed()
+    public function testDoNotTerminateWithLineFeed(): void
     {
         $this->encoder->setTerminateWithLineFeed(false);
 
-        $this->assertSame('{"name":"Bernhard"}', $this->encoder->encode((object) array('name' => 'Bernhard')));
+        self::assertSame('{"name":"Bernhard"}', $this->encoder->encode((object) array('name' => 'Bernhard')));
     }
 
-    public function testEncodeFile()
+    public function testEncodeFile(): void
     {
         $data = (object) array('name' => 'Bernhard');
 
         $this->encoder->encodeFile($data, $this->tempFile);
 
-        $this->assertFileExists($this->tempFile);
-        $this->assertSame('{"name":"Bernhard"}', file_get_contents($this->tempFile));
+        self::assertFileExists($this->tempFile);
+        self::assertSame('{"name":"Bernhard"}', file_get_contents($this->tempFile));
     }
 
-    public function testEncodeFileCreatesMissingDirectories()
+    public function testEncodeFileCreatesMissingDirectories(): void
     {
         $data = (object) array('name' => 'Bernhard');
 
         $this->encoder->encodeFile($data, $this->tempDir.'/sub/data.json');
 
-        $this->assertFileExists($this->tempDir.'/sub/data.json');
-        $this->assertSame('{"name":"Bernhard"}', file_get_contents($this->tempDir.'/sub/data.json'));
+        self::assertFileExists($this->tempDir.'/sub/data.json');
+        self::assertSame('{"name":"Bernhard"}', file_get_contents($this->tempDir.'/sub/data.json'));
     }
 
-    public function testEncodeFileFailsIfNotWritable()
+    /**
+     * This test fails on my docker php:7.3-cli docker container
+     * The chmod sets 0000 on the file but `file_get_contents` still reads the content.
+     * However this test is successful on Travis.
+     */
+    public function testEncodeFileFailsIfNotWritable(): void
     {
         $data = (object) array('name' => 'Bernhard');
 
@@ -498,50 +444,27 @@ class JsonEncoderTest extends \PHPUnit_Framework_TestCase
         chmod($this->tempFile, 0400);
 
         // Test that the file name is present in the output.
-        $this->setExpectedException(
-            '\Webmozart\Json\IOException',
-            $this->tempFile
-        );
+        $this->expectException(IOException::class);
+        $this->expectExceptionMessage($this->tempFile);
 
         $this->encoder->encodeFile($data, $this->tempFile);
     }
 
-    public function testEncodeFileFailsIfValidationFailsWithSchemaFile()
+    public function testEncodeFileFailsIfValidationFailsWithSchemaObject(): void
     {
         // Test that the file name is present in the output.
-        $this->setExpectedException(
-            '\Webmozart\Json\ValidationFailedException',
-            $this->tempFile
-        );
-
-        $this->encoder->encodeFile('foobar', $this->tempFile, $this->schemaFile);
-    }
-
-    public function testEncodeFileFailsIfValidationFailsWithSchemaObject()
-    {
-        // Test that the file name is present in the output.
-        $this->setExpectedException(
-            '\Webmozart\Json\ValidationFailedException',
-            $this->tempFile
-        );
+        $this->expectException(ValidationFailedException::class);
+        $this->expectExceptionMessage($this->tempFile);
 
         $this->encoder->encodeFile('foobar', $this->tempFile, $this->schemaObject);
     }
 
-    public function testEncodeFileFailsIfNonUtf8()
+    public function testEncodeFileFailsIfNonUtf8(): void
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('PHP >= 5.5.0 only');
-
-            return;
-        }
-
         // Test that the file name is present in the output.
-        $this->setExpectedException(
-            '\Webmozart\Json\EncodingFailedException',
-            $this->tempFile,
-            5
-        );
+        $this->expectException(EncodingFailedException::class);
+        $this->expectExceptionMessage($this->tempFile);
+        $this->expectExceptionCode(5);
 
         $this->encoder->encodeFile(file_get_contents($this->fixturesDir.'/win-1258.json'),
             $this->tempFile);

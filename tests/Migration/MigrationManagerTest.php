@@ -11,11 +11,12 @@
 
 namespace Webmozart\Json\Tests\Migration;
 
-use PHPUnit_Framework_Assert;
-use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use Webmozart\Json\Migration\JsonMigration;
+use Webmozart\Json\Migration\MigrationFailedException;
 use Webmozart\Json\Migration\MigrationManager;
 use Webmozart\Json\Versioning\JsonVersioner;
 
@@ -24,25 +25,25 @@ use Webmozart\Json\Versioning\JsonVersioner;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class MigrationManagerTest extends PHPUnit_Framework_TestCase
+class MigrationManagerTest extends TestCase
 {
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|JsonMigration
+     * @var MockObject|JsonMigration
      */
     private $migration1;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|JsonMigration
+     * @var MockObject|JsonMigration
      */
     private $migration2;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|JsonMigration
+     * @var MockObject|JsonMigration
      */
     private $migration3;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|JsonVersioner
+     * @var MockObject|JsonVersioner
      */
     private $versioner;
 
@@ -51,12 +52,12 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
      */
     private $manager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->migration1 = $this->createMigrationMock('0.8', '0.10');
         $this->migration2 = $this->createMigrationMock('0.10', '1.0');
         $this->migration3 = $this->createMigrationMock('1.0', '2.0');
-        $this->versioner = $this->getMock('Webmozart\Json\Versioning\JsonVersioner');
+        $this->versioner = $this->createMock(JsonVersioner::class);
         $this->manager = new MigrationManager(array(
             $this->migration1,
             $this->migration2,
@@ -64,16 +65,16 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
         ), $this->versioner);
     }
 
-    public function testMigrateUp()
+    public function testMigrateUp(): void
     {
         $data = (object) array('calls' => 0);
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('parseVersion')
             ->with($data)
             ->willReturn('0.8');
 
-        $this->versioner->expects($this->exactly(3))
+        $this->versioner->expects(self::exactly(3))
             ->method('updateVersion')
             ->withConsecutive(
                 array($data, '0.10'),
@@ -81,130 +82,128 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
                 array($data, '2.0')
             );
 
-        $this->migration1->expects($this->once())
+        $this->migration1->expects(self::once())
             ->method('up')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
-        $this->migration2->expects($this->once())
+        $this->migration2->expects(self::once())
             ->method('up')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(1, $data->calls);
+                Assert::assertSame(1, $data->calls);
                 ++$data->calls;
             });
-        $this->migration3->expects($this->once())
+        $this->migration3->expects(self::once())
             ->method('up')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(2, $data->calls);
+                Assert::assertSame(2, $data->calls);
                 ++$data->calls;
             });
 
         $this->manager->migrate($data, '2.0');
 
-        $this->assertSame(3, $data->calls);
+        self::assertSame(3, $data->calls);
     }
 
-    public function testMigrateUpPartial()
+    public function testMigrateUpPartial(): void
     {
         $data = (object) array('calls' => 0);
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('parseVersion')
             ->with($data)
             ->willReturn('0.10');
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('updateVersion')
             ->with($data, '1.0');
 
-        $this->migration1->expects($this->never())
+        $this->migration1->expects(self::never())
             ->method('up');
-        $this->migration2->expects($this->once())
+        $this->migration2->expects(self::once())
             ->method('up')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
-        $this->migration3->expects($this->never())
+        $this->migration3->expects(self::never())
             ->method('up');
 
         $this->manager->migrate($data, '1.0');
 
-        $this->assertSame(1, $data->calls);
+        self::assertSame(1, $data->calls);
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Migration\MigrationFailedException
-     * @expectedExceptionMessage 0.5
-     */
-    public function testMigrateUpFailsIfNoMigrationForSourceVersion()
+    public function testMigrateUpFailsIfNoMigrationForSourceVersion(): void
     {
+        $this->expectException(MigrationFailedException::class);
+        $this->expectExceptionMessage('0.5');
+
         $data = (object) array();
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('parseVersion')
             ->with($data)
             ->willReturn('0.5');
 
-        $this->versioner->expects($this->never())
+        $this->versioner->expects(self::never())
             ->method('updateVersion');
 
-        $this->migration1->expects($this->never())
+        $this->migration1->expects(self::never())
             ->method('up');
-        $this->migration2->expects($this->never())
+        $this->migration2->expects(self::never())
             ->method('up');
-        $this->migration3->expects($this->never())
+        $this->migration3->expects(self::never())
             ->method('up');
 
         $this->manager->migrate($data, '0.10');
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Migration\MigrationFailedException
-     * @expectedExceptionMessage 1.2
-     */
-    public function testMigrateUpFailsIfNoMigrationForTargetVersion()
+    public function testMigrateUpFailsIfNoMigrationForTargetVersion(): void
     {
+        $this->expectException(MigrationFailedException::class);
+        $this->expectExceptionMessage('1.2');
+
         $data = (object) array('calls' => 0);
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('parseVersion')
             ->with($data)
             ->willReturn('0.10');
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('updateVersion')
             ->with($data, '1.0');
 
-        $this->migration1->expects($this->never())
+        $this->migration1->expects(self::never())
             ->method('up');
-        $this->migration2->expects($this->once())
+        $this->migration2->expects(self::once())
             ->method('up')
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
-        $this->migration3->expects($this->never())
+        $this->migration3->expects(self::never())
             ->method('up');
 
         $this->manager->migrate($data, '1.2');
     }
 
-    public function testMigrateDown()
+    public function testMigrateDown(): void
     {
         $data = (object) array('calls' => 0);
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('parseVersion')
             ->with($data)
             ->willReturn('2.0');
 
-        $this->versioner->expects($this->exactly(3))
+        $this->versioner->expects(self::exactly(3))
             ->method('updateVersion')
             ->withConsecutive(
                 array($data, '1.0'),
@@ -212,175 +211,173 @@ class MigrationManagerTest extends PHPUnit_Framework_TestCase
                 array($data, '0.8')
             );
 
-        $this->migration3->expects($this->once())
+        $this->migration3->expects(self::once())
             ->method('down')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
-        $this->migration2->expects($this->once())
+        $this->migration2->expects(self::once())
             ->method('down')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(1, $data->calls);
+                Assert::assertSame(1, $data->calls);
                 ++$data->calls;
             });
-        $this->migration1->expects($this->once())
+        $this->migration1->expects(self::once())
             ->method('down')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(2, $data->calls);
+                Assert::assertSame(2, $data->calls);
                 ++$data->calls;
             });
 
         $this->manager->migrate($data, '0.8');
 
-        $this->assertSame(3, $data->calls);
+        self::assertSame(3, $data->calls);
     }
 
-    public function testMigrateDownPartial()
+    public function testMigrateDownPartial(): void
     {
         $data = (object) array('calls' => 0);
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('parseVersion')
             ->with($data)
             ->willReturn('1.0');
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('updateVersion')
             ->with($data, '0.10');
 
-        $this->migration3->expects($this->never())
+        $this->migration3->expects(self::never())
             ->method('down');
-        $this->migration2->expects($this->once())
+        $this->migration2->expects(self::once())
             ->method('down')
             ->with($data)
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
-        $this->migration1->expects($this->never())
+        $this->migration1->expects(self::never())
             ->method('down');
 
         $this->manager->migrate($data, '0.10');
 
-        $this->assertSame(1, $data->calls);
+        self::assertSame(1, $data->calls);
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Migration\MigrationFailedException
-     * @expectedExceptionMessage 1.2
-     */
-    public function testMigrateDownFailsIfNoMigrationForSourceVersion()
+    public function testMigrateDownFailsIfNoMigrationForSourceVersion(): void
     {
+        $this->expectException(MigrationFailedException::class);
+        $this->expectExceptionMessage('1.2');
+
         $data = (object) array();
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('parseVersion')
             ->with($data)
             ->willReturn('1.2');
 
-        $this->versioner->expects($this->never())
+        $this->versioner->expects(self::never())
             ->method('updateVersion');
 
-        $this->migration3->expects($this->never())
+        $this->migration3->expects(self::never())
             ->method('down');
-        $this->migration2->expects($this->never())
+        $this->migration2->expects(self::never())
             ->method('down');
-        $this->migration1->expects($this->never())
+        $this->migration1->expects(self::never())
             ->method('down');
 
         $this->manager->migrate($data, '1.0');
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Migration\MigrationFailedException
-     * @expectedExceptionMessage 0.9
-     */
-    public function testMigrateDownFailsIfNoMigrationForTargetVersion()
+    public function testMigrateDownFailsIfNoMigrationForTargetVersion(): void
     {
+        $this->expectException(MigrationFailedException::class);
+        $this->expectExceptionMessage('0.9');
+
         $data = (object) array('calls' => 0);
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('parseVersion')
             ->with($data)
             ->willReturn('1.0');
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('updateVersion')
             ->with($data, '0.10');
 
-        $this->migration3->expects($this->never())
+        $this->migration3->expects(self::never())
             ->method('down');
-        $this->migration2->expects($this->once())
+        $this->migration2->expects(self::once())
             ->method('down')
             ->willReturnCallback(function (stdClass $data) {
-                PHPUnit_Framework_Assert::assertSame(0, $data->calls);
+                Assert::assertSame(0, $data->calls);
                 ++$data->calls;
             });
-        $this->migration1->expects($this->never())
+        $this->migration1->expects(self::never())
             ->method('down');
 
         $this->manager->migrate($data, '0.9');
     }
 
-    public function testMigrateDoesNothingIfAlreadyCorrectVersion()
+    public function testMigrateDoesNothingIfAlreadyCorrectVersion(): void
     {
         $data = (object) array();
 
-        $this->versioner->expects($this->once())
+        $this->versioner->expects(self::once())
             ->method('parseVersion')
             ->with($data)
             ->willReturn('0.10');
 
-        $this->versioner->expects($this->never())
+        $this->versioner->expects(self::never())
             ->method('updateVersion');
 
-        $this->migration1->expects($this->never())
+        $this->migration1->expects(self::never())
             ->method('up');
-        $this->migration2->expects($this->never())
+        $this->migration2->expects(self::never())
             ->method('up');
-        $this->migration3->expects($this->never())
+        $this->migration3->expects(self::never())
             ->method('up');
-        $this->migration1->expects($this->never())
+        $this->migration1->expects(self::never())
             ->method('down');
-        $this->migration2->expects($this->never())
+        $this->migration2->expects(self::never())
             ->method('down');
-        $this->migration3->expects($this->never())
+        $this->migration3->expects(self::never())
             ->method('down');
 
         $this->manager->migrate($data, '0.10');
     }
 
-    public function testGetKnownVersions()
+    public function testGetKnownVersions(): void
     {
-        $this->assertSame(array('0.8', '0.10', '1.0', '2.0'), $this->manager->getKnownVersions());
+        self::assertSame(array('0.8', '0.10', '1.0', '2.0'), $this->manager->getKnownVersions());
     }
 
-    public function testGetKnownVersionsWithoutMigrations()
+    public function testGetKnownVersionsWithoutMigrations(): void
     {
         $this->manager = new MigrationManager(array(), $this->versioner);
 
-        $this->assertSame(array(), $this->manager->getKnownVersions());
+        self::assertSame(array(), $this->manager->getKnownVersions());
     }
 
     /**
      * @param string $sourceVersion
      * @param string $targetVersion
      *
-     * @return PHPUnit_Framework_MockObject_MockObject|JsonMigration
+     * @return MockObject|JsonMigration
      */
-    private function createMigrationMock($sourceVersion, $targetVersion)
+    private function createMigrationMock($sourceVersion, $targetVersion): MockObject
     {
-        $mock = $this->getMock('Webmozart\Json\Migration\JsonMigration');
+        $mock = $this->createMock(JsonMigration::class);
 
-        $mock->expects($this->any())
+        $mock->expects(self::any())
             ->method('getSourceVersion')
             ->willReturn($sourceVersion);
 
-        $mock->expects($this->any())
+        $mock->expects(self::any())
             ->method('getTargetVersion')
             ->willReturn($targetVersion);
 

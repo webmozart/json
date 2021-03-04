@@ -11,6 +11,7 @@
 
 namespace Webmozart\Json;
 
+use JsonSchema\Validator;
 use Seld\JsonLint\JsonParser;
 use Seld\JsonLint\ParsingException;
 
@@ -44,7 +45,7 @@ class JsonDecoder
     const STRING = 3;
 
     /**
-     * @var JsonValidator
+     * @var Validator
      */
     private $validator;
 
@@ -66,11 +67,11 @@ class JsonDecoder
     /**
      * Creates a new decoder.
      *
-     * @param null|JsonValidator $validator
+     * @param null|Validator $validator
      */
-    public function __construct(JsonValidator $validator = null)
+    public function __construct(Validator $validator = null)
     {
-        $this->validator = $validator ?: new JsonValidator();
+        $this->validator = $validator ?? new Validator();
     }
 
     /**
@@ -94,7 +95,6 @@ class JsonDecoder
      * @throws DecodingFailedException   If the JSON string could not be decoded
      * @throws ValidationFailedException If the decoded string fails schema
      *                                   validation
-     * @throws InvalidSchemaException    If the schema is invalid
      */
     public function decode($json, $schema = null)
     {
@@ -109,7 +109,8 @@ class JsonDecoder
         $decoded = $this->decodeJson($json);
 
         if (null !== $schema) {
-            $errors = $this->validator->validate($decoded, $schema);
+            $this->validator->validate($decoded, $schema);
+            $errors = $this->validator->getErrors();
 
             if (count($errors) > 0) {
                 throw ValidationFailedException::fromErrors($errors);
@@ -131,7 +132,6 @@ class JsonDecoder
      * @throws DecodingFailedException   If the file could not be decoded
      * @throws ValidationFailedException If the decoded file fails schema
      *                                   validation
-     * @throws InvalidSchemaException    If the schema is invalid
      *
      * @see decode
      */
@@ -170,6 +170,10 @@ class JsonDecoder
             ), $errorCode);
         }
 
+        if (false === $content) {
+            throw new IOException(sprintf('Could not read %s', $path));
+        }
+
         try {
             return $this->decode($content, $schema);
         } catch (DecodingFailedException $e) {
@@ -186,13 +190,6 @@ class JsonDecoder
                 $path,
                 $e->getErrorsAsString()
             ), $e->getErrors(), $e->getCode(), $e);
-        } catch (InvalidSchemaException $e) {
-            // Add the file name to the exception
-            throw new InvalidSchemaException(sprintf(
-                'An error happened while decoding %s: %s',
-                $path,
-                $e->getMessage()
-            ), $e->getCode(), $e);
         }
     }
 

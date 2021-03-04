@@ -11,12 +11,13 @@
 
 namespace Webmozart\Json\Tests\Validation;
 
-use PHPUnit_Framework_Assert;
-use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
+use JsonSchema\Exception\InvalidSchemaException;
+use JsonSchema\Validator;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Webmozart\Json\Conversion\ConversionFailedException;
 use Webmozart\Json\Conversion\JsonConverter;
-use Webmozart\Json\InvalidSchemaException;
-use Webmozart\Json\JsonValidator;
 use Webmozart\Json\Validation\ValidatingConverter;
 
 /**
@@ -24,15 +25,15 @@ use Webmozart\Json\Validation\ValidatingConverter;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class ValidatingConverterTest extends PHPUnit_Framework_TestCase
+class ValidatingConverterTest extends TestCase
 {
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|JsonConverter
+     * @var MockObject|JsonConverter
      */
     private $innerConverter;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|JsonValidator
+     * @var MockObject|Validator
      */
     private $jsonValidator;
 
@@ -41,10 +42,10 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
      */
     private $converter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->innerConverter = $this->getMock('Webmozart\Json\Conversion\JsonConverter');
-        $this->jsonValidator = $this->getMockBuilder('Webmozart\Json\JsonValidator')
+        $this->innerConverter = $this->createMock(JsonConverter::class);
+        $this->jsonValidator = $this->getMockBuilder(Validator::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->converter = new ValidatingConverter(
@@ -54,7 +55,7 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testToJson()
+    public function testToJson(): void
     {
         $options = array('option' => 'value');
 
@@ -62,19 +63,19 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
             'foo' => 'bar',
         );
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('toJson')
             ->with('DATA', $options)
             ->willReturn($jsonData);
 
-        $this->jsonValidator->expects($this->once())
+        $this->jsonValidator->expects(self::once())
             ->method('validate')
             ->with($jsonData, '/path/to/schema');
 
-        $this->assertSame($jsonData, $this->converter->toJson('DATA', $options));
+        self::assertSame($jsonData, $this->converter->toJson('DATA', $options));
     }
 
-    public function testToJsonWithoutSchema()
+    public function testToJsonWithoutSchema(): void
     {
         $options = array('option' => 'value');
 
@@ -88,19 +89,19 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
             $this->jsonValidator
         );
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('toJson')
             ->with('DATA', $options)
             ->willReturn($jsonData);
 
-        $this->jsonValidator->expects($this->once())
+        $this->jsonValidator->expects(self::once())
             ->method('validate')
             ->with($jsonData, null);
 
-        $this->assertSame($jsonData, $this->converter->toJson('DATA', $options));
+        self::assertSame($jsonData, $this->converter->toJson('DATA', $options));
     }
 
-    public function testToJsonRunsSchemaCallable()
+    public function testToJsonRunsSchemaCallable(): void
     {
         $options = array('option' => 'value');
 
@@ -108,29 +109,29 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
             'foo' => 'bar',
         );
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('toJson')
             ->with('DATA', $options)
             ->willReturn($jsonData);
 
-        $this->jsonValidator->expects($this->once())
+        $this->jsonValidator->expects(self::once())
             ->method('validate')
             ->with($jsonData, '/dynamic/schema');
 
         $this->converter = new ValidatingConverter(
             $this->innerConverter,
             function ($data) use ($jsonData) {
-                PHPUnit_Framework_Assert::assertSame($jsonData, $data);
+                Assert::assertSame($jsonData, $data);
 
                 return '/dynamic/schema';
             },
             $this->jsonValidator
         );
 
-        $this->assertSame($jsonData, $this->converter->toJson('DATA', $options));
+        self::assertSame($jsonData, $this->converter->toJson('DATA', $options));
     }
 
-    public function testFromJson()
+    public function testFromJson(): void
     {
         $options = array('option' => 'value');
 
@@ -138,19 +139,19 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
             'foo' => 'bar',
         );
 
-        $this->jsonValidator->expects($this->once())
+        $this->jsonValidator->expects(self::once())
             ->method('validate')
             ->with($jsonData, '/path/to/schema');
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('fromJson')
             ->with($jsonData, $options)
             ->willReturn('DATA');
 
-        $this->assertSame('DATA', $this->converter->fromJson($jsonData, $options));
+        self::assertSame('DATA', $this->converter->fromJson($jsonData, $options));
     }
 
-    public function testFromJsonWithoutSchema()
+    public function testFromJsonWithoutSchema(): void
     {
         $options = array('option' => 'value');
 
@@ -164,19 +165,19 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
             $this->jsonValidator
         );
 
-        $this->jsonValidator->expects($this->once())
+        $this->jsonValidator->expects(self::once())
             ->method('validate')
             ->with($jsonData, null);
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('fromJson')
             ->with($jsonData, $options)
             ->willReturn('DATA');
 
-        $this->assertSame('DATA', $this->converter->fromJson($jsonData, $options));
+        self::assertSame('DATA', $this->converter->fromJson($jsonData, $options));
     }
 
-    public function testFromJsonRunsSchemaCallable()
+    public function testFromJsonRunsSchemaCallable(): void
     {
         $options = array('option' => 'value');
 
@@ -184,11 +185,11 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
             'foo' => 'bar',
         );
 
-        $this->jsonValidator->expects($this->once())
+        $this->jsonValidator->expects(self::once())
             ->method('validate')
             ->with($jsonData, '/dynamic/schema');
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('fromJson')
             ->with($jsonData, $options)
             ->willReturn('DATA');
@@ -196,60 +197,38 @@ class ValidatingConverterTest extends PHPUnit_Framework_TestCase
         $this->converter = new ValidatingConverter(
             $this->innerConverter,
             function ($data) use ($jsonData) {
-                PHPUnit_Framework_Assert::assertSame($jsonData, $data);
+                Assert::assertSame($jsonData, $data);
 
                 return '/dynamic/schema';
             },
             $this->jsonValidator
         );
 
-        $this->assertSame('DATA', $this->converter->fromJson($jsonData, $options));
+        self::assertSame('DATA', $this->converter->fromJson($jsonData, $options));
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
-     */
-    public function testConvertSchemaExceptionToConversionException()
+    public function testConvertValidationErrorsToConversionException(): void
     {
+        $this->expectException(ConversionFailedException::class);
+
         $options = array('option' => 'value');
 
         $jsonData = (object) array(
             'foo' => 'bar',
         );
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('toJson')
             ->with('DATA', $options)
             ->willReturn($jsonData);
 
-        $this->jsonValidator->expects($this->once())
-            ->method('validate')
-            ->willThrowException(new InvalidSchemaException());
+        $this->jsonValidator->expects(self::once())
+            ->method('validate');
 
-        $this->converter->toJson('DATA', $options);
-    }
-
-    /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
-     */
-    public function testConvertValidationErrorsToConversionException()
-    {
-        $options = array('option' => 'value');
-
-        $jsonData = (object) array(
-            'foo' => 'bar',
-        );
-
-        $this->innerConverter->expects($this->once())
-            ->method('toJson')
-            ->with('DATA', $options)
-            ->willReturn($jsonData);
-
-        $this->jsonValidator->expects($this->once())
-            ->method('validate')
-            ->willReturn(array(
+        $this->jsonValidator->expects(self::once())
+            ->method('getErrors')->willReturn(array(
                 'First error',
-                'Second error',
+                ['Second error'],
             ));
 
         $this->converter->toJson('DATA', $options);

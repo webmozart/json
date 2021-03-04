@@ -24,6 +24,15 @@ class ValidationFailedException extends \Exception
 
     public static function fromErrors(array $errors = array(), $code = 0, \Exception $previous = null)
     {
+        foreach ($errors as &$error) {
+            if (!is_array($error)) {
+                continue;
+            }
+
+            $error = implode("\n", $error);
+        }
+        unset($error);
+
         return new static(sprintf(
             "Validation of the JSON data failed:\n%s",
             implode("\n", $errors)
