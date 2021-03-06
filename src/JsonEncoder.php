@@ -11,6 +11,8 @@
 
 namespace Webmozart\Json;
 
+use JsonSchema\Validator;
+
 /**
  * Encodes data as JSON.
  *
@@ -41,7 +43,7 @@ class JsonEncoder
     const JSON_NUMBER = 4;
 
     /**
-     * @var JsonValidator
+     * @var Validator
      */
     private $validator;
 
@@ -103,11 +105,11 @@ class JsonEncoder
     /**
      * Creates a new encoder.
      *
-     * @param null|JsonValidator $validator
+     * @param null|Validator $validator
      */
-    public function __construct(JsonValidator $validator = null)
+    public function __construct(Validator $validator = null)
     {
-        $this->validator = $validator ?: new JsonValidator();
+        $this->validator = $validator ?? new Validator();
     }
 
     /**
@@ -126,12 +128,12 @@ class JsonEncoder
      *
      * @throws EncodingFailedException   If the data could not be encoded
      * @throws ValidationFailedException If the data fails schema validation
-     * @throws InvalidSchemaException    If the schema is invalid
      */
     public function encode($data, $schema = null)
     {
         if (null !== $schema) {
-            $errors = $this->validator->validate($data, $schema);
+            $this->validator->validate($data, $schema);
+            $errors = $this->validator->getErrors();
 
             if (count($errors) > 0) {
                 throw ValidationFailedException::fromErrors($errors);
@@ -178,21 +180,6 @@ class JsonEncoder
             }
         }
 
-        if (PHP_VERSION_ID < 71000) {
-            // PHP before 7.1 decodes empty properties as "_empty_". Make
-            // sure the encoding of these properties works again.
-            if (is_object($data) && isset($data->{'_empty_'})) {
-                $data = (array) $data;
-            }
-
-            if (is_array($data) && isset($data['_empty_'])) {
-                // Maintain key order
-                $keys = array_keys($data);
-                $keys[array_search('_empty_', $keys, true)] = '';
-                $data = array_combine($keys, $data);
-            }
-        }
-
         if (PHP_VERSION_ID >= 50500) {
             $maxDepth = $this->maxDepth;
 
@@ -208,12 +195,6 @@ class JsonEncoder
             $encoded = json_encode($data, $options, $maxDepth);
         } else {
             $encoded = json_encode($data, $options);
-        }
-
-        if (PHP_VERSION_ID < 50400 && !$this->slashEscaped) {
-            // PHP below 5.4 does not allow to turn off slash escaping. Let's
-            // unescape slashes manually.
-            $encoded = str_replace('\\/', '/', $encoded);
         }
 
         if (JSON_ERROR_NONE !== json_last_error()) {
@@ -239,7 +220,6 @@ class JsonEncoder
      *
      * @throws EncodingFailedException   If the data could not be encoded
      * @throws ValidationFailedException If the data fails schema validation
-     * @throws InvalidSchemaException    If the schema is invalid
      *
      * @see encode
      */
@@ -268,13 +248,6 @@ class JsonEncoder
                 $path,
                 $e->getErrorsAsString()
             ), $e->getErrors(), $e->getCode(), $e);
-        } catch (InvalidSchemaException $e) {
-            // Add the file name to the exception
-            throw new InvalidSchemaException(sprintf(
-                'An error happened while encoding %s: %s',
-                $path,
-                $e->getMessage()
-            ), $e->getCode(), $e);
         }
 
         $errorMessage = null;

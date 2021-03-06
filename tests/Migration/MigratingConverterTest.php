@@ -11,28 +11,30 @@
 
 namespace Webmozart\Json\Tests\Migration;
 
-use PHPUnit_Framework_Assert;
-use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use stdClass;
+use Webmozart\Json\Conversion\ConversionFailedException;
 use Webmozart\Json\Conversion\JsonConverter;
 use Webmozart\Json\Migration\MigratingConverter;
 use Webmozart\Json\Migration\MigrationManager;
+use Webmozart\Json\Migration\UnsupportedVersionException;
 
 /**
  * @since  1.3
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class MigratingConverterTest extends PHPUnit_Framework_TestCase
+class MigratingConverterTest extends TestCase
 {
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|JsonConverter
+     * @var MockObject|JsonConverter
      */
     private $innerConverter;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject|MigrationManager
+     * @var MockObject|MigrationManager
      */
     private $migrationManager;
 
@@ -41,19 +43,19 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
      */
     private $converter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->migrationManager = $this->getMockBuilder('Webmozart\Json\Migration\MigrationManager')
+        $this->migrationManager = $this->getMockBuilder(MigrationManager::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->migrationManager->expects($this->any())
+        $this->migrationManager->expects(self::any())
             ->method('getKnownVersions')
             ->willReturn(array('0.9', '1.0'));
-        $this->innerConverter = $this->getMock('Webmozart\Json\Conversion\JsonConverter');
+        $this->innerConverter = $this->createMock(JsonConverter::class);
         $this->converter = new MigratingConverter($this->innerConverter, '1.0', $this->migrationManager);
     }
 
-    public function testToJsonDowngradesIfLowerVersion()
+    public function testToJsonDowngradesIfLowerVersion(): void
     {
         $options = array(
             'inner_option' => 'value',
@@ -69,26 +71,26 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
             'downgraded' => true,
         );
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('toJson')
             ->with('DATA', $options)
             ->willReturn($beforeMigration);
 
-        $this->migrationManager->expects($this->once())
+        $this->migrationManager->expects(self::once())
             ->method('migrate')
             ->willReturnCallback(function (stdClass $jsonData, $targetVersion) use ($beforeMigration) {
                 // with() in combination with argument cloning doesn't work,
                 // since we *want* to modify the original data (not the clone) below
-                PHPUnit_Framework_Assert::assertEquals($beforeMigration, $jsonData);
+                Assert::assertEquals($beforeMigration, $jsonData);
 
                 $jsonData->version = $targetVersion;
                 $jsonData->downgraded = true;
             });
 
-        $this->assertEquals($afterMigration, $this->converter->toJson('DATA', $options));
+        self::assertEquals($afterMigration, $this->converter->toJson('DATA', $options));
     }
 
-    public function testToJsonDoesNotMigrateCurrentVersion()
+    public function testToJsonDoesNotMigrateCurrentVersion(): void
     {
         $options = array(
             'inner_option' => 'value',
@@ -99,18 +101,18 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
             'version' => '1.0',
         );
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('toJson')
             ->with('DATA', $options)
             ->willReturn($jsonData);
 
-        $this->migrationManager->expects($this->never())
+        $this->migrationManager->expects(self::never())
             ->method('migrate');
 
-        $this->assertEquals($jsonData, $this->converter->toJson('DATA', $options));
+        self::assertEquals($jsonData, $this->converter->toJson('DATA', $options));
     }
 
-    public function testToJsonDoesNotMigrateIfNoTargetVersion()
+    public function testToJsonDoesNotMigrateIfNoTargetVersion(): void
     {
         $options = array(
             'inner_option' => 'value',
@@ -120,47 +122,45 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
             'version' => '1.0',
         );
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('toJson')
             ->with('DATA', $options)
             ->willReturn($jsonData);
 
-        $this->migrationManager->expects($this->never())
+        $this->migrationManager->expects(self::never())
             ->method('migrate');
 
-        $this->assertEquals($jsonData, $this->converter->toJson('DATA', $options));
+        self::assertEquals($jsonData, $this->converter->toJson('DATA', $options));
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Migration\UnsupportedVersionException
-     */
-    public function testToJsonFailsIfTargetVersionTooHigh()
+    public function testToJsonFailsIfTargetVersionTooHigh(): void
     {
+        $this->expectException(UnsupportedVersionException::class);
+
         $this->converter->toJson('DATA', array('targetVersion' => '1.1'));
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
-     */
-    public function testToJsonFailsIfNotAnObject()
+    public function testToJsonFailsIfNotAnObject(): void
     {
+        $this->expectException(ConversionFailedException::class);
+
         $options = array(
             'inner_option' => 'value',
             'targetVersion' => '1.0',
         );
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('toJson')
             ->with('DATA', $options)
             ->willReturn('foobar');
 
-        $this->migrationManager->expects($this->never())
+        $this->migrationManager->expects(self::never())
             ->method('migrate');
 
         $this->converter->toJson('DATA', $options);
     }
 
-    public function testFromJsonUpgradesIfVersionTooLow()
+    public function testFromJsonUpgradesIfVersionTooLow(): void
     {
         $options = array(
             'inner_option' => 'value',
@@ -175,26 +175,26 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
             'upgraded' => true,
         );
 
-        $this->migrationManager->expects($this->once())
+        $this->migrationManager->expects(self::once())
             ->method('migrate')
             ->willReturnCallback(function (stdClass $jsonData, $targetVersion) use ($beforeMigration) {
-                PHPUnit_Framework_Assert::assertEquals($beforeMigration, $jsonData);
+                Assert::assertEquals($beforeMigration, $jsonData);
 
                 $jsonData->version = $targetVersion;
                 $jsonData->upgraded = true;
             });
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('fromJson')
             ->with($afterMigration, $options)
             ->willReturn('DATA');
 
         $result = $this->converter->fromJson(clone $beforeMigration, $options);
 
-        $this->assertSame('DATA', $result);
+        self::assertSame('DATA', $result);
     }
 
-    public function testFromJsonDoesNotMigrateCurrentVersion()
+    public function testFromJsonDoesNotMigrateCurrentVersion(): void
     {
         $options = array(
             'inner_option' => 'value',
@@ -204,24 +204,23 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
             'version' => '1.0',
         );
 
-        $this->migrationManager->expects($this->never())
+        $this->migrationManager->expects(self::never())
             ->method('migrate');
 
-        $this->innerConverter->expects($this->once())
+        $this->innerConverter->expects(self::once())
             ->method('fromJson')
             ->with($jsonData, $options)
             ->willReturn('DATA');
 
         $result = $this->converter->fromJson(clone $jsonData, $options);
 
-        $this->assertSame('DATA', $result);
+        self::assertSame('DATA', $result);
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Migration\UnsupportedVersionException
-     */
-    public function testFromJsonFailsIfSourceVersionTooHigh()
+    public function testFromJsonFailsIfSourceVersionTooHigh(): void
     {
+        $this->expectException(UnsupportedVersionException::class);
+
         $jsonData = (object) array(
             'version' => '1.1',
         );
@@ -229,29 +228,27 @@ class MigratingConverterTest extends PHPUnit_Framework_TestCase
         $this->converter->fromJson($jsonData);
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
-     */
-    public function testFromJsonFailsIfNotAnObject()
+    public function testFromJsonFailsIfNotAnObject(): void
     {
-        $this->migrationManager->expects($this->never())
+        $this->expectException(ConversionFailedException::class);
+
+        $this->migrationManager->expects(self::never())
             ->method('migrate');
 
-        $this->innerConverter->expects($this->never())
+        $this->innerConverter->expects(self::never())
             ->method('fromJson');
 
         $this->converter->fromJson('foobar');
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Conversion\ConversionFailedException
-     */
-    public function testFromJsonFailsIfVersionIsMissing()
+    public function testFromJsonFailsIfVersionIsMissing(): void
     {
-        $this->migrationManager->expects($this->never())
+        $this->expectException(ConversionFailedException::class);
+
+        $this->migrationManager->expects(self::never())
             ->method('migrate');
 
-        $this->innerConverter->expects($this->never())
+        $this->innerConverter->expects(self::never())
             ->method('fromJson');
 
         $this->converter->fromJson((object) array());

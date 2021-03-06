@@ -11,7 +11,8 @@
 
 namespace Webmozart\Json\Tests\Versioning;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
+use Webmozart\Json\Versioning\CannotParseVersionException;
 use Webmozart\Json\Versioning\VersionFieldVersioner;
 
 /**
@@ -19,54 +20,53 @@ use Webmozart\Json\Versioning\VersionFieldVersioner;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class VersionFieldVersionerTest extends PHPUnit_Framework_TestCase
+class VersionFieldVersionerTest extends TestCase
 {
     /**
      * @var VersionFieldVersioner
      */
     private $versioner;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->versioner = new VersionFieldVersioner();
     }
 
-    public function testParseVersion()
+    public function testParseVersion(): void
     {
         $data = (object) array('version' => '1.0');
 
-        $this->assertSame('1.0', $this->versioner->parseVersion($data));
+        self::assertSame('1.0', $this->versioner->parseVersion($data));
     }
 
-    public function testParseVersionCustomFieldName()
+    public function testParseVersionCustomFieldName(): void
     {
         $this->versioner = new VersionFieldVersioner('foo');
 
         $data = (object) array('foo' => '1.0');
 
-        $this->assertSame('1.0', $this->versioner->parseVersion($data));
+        self::assertSame('1.0', $this->versioner->parseVersion($data));
     }
 
-    /**
-     * @expectedException \Webmozart\Json\Versioning\CannotParseVersionException
-     */
-    public function testParseVersionFailsIfNotFound()
+    public function testParseVersionFailsIfNotFound(): void
     {
+        $this->expectException(CannotParseVersionException::class);
+
         $data = (object) array('foo' => 'bar');
 
         $this->versioner->parseVersion($data);
     }
 
-    public function testUpdateVersion()
+    public function testUpdateVersion(): void
     {
         $data = (object) array('version' => '1.0');
 
         $this->versioner->updateVersion($data, '2.0');
 
-        $this->assertSame('2.0', $data->version);
+        self::assertSame('2.0', $data->version);
     }
 
-    public function testUpdateVersionCustomFieldName()
+    public function testUpdateVersionCustomFieldName(): void
     {
         $this->versioner = new VersionFieldVersioner('foo');
 
@@ -74,15 +74,15 @@ class VersionFieldVersionerTest extends PHPUnit_Framework_TestCase
 
         $this->versioner->updateVersion($data, '2.0');
 
-        $this->assertSame('2.0', $data->foo);
+        self::assertSame('2.0', $data->foo);
     }
 
-    public function testUpdateVersionCreatesFieldIfNotFound()
+    public function testUpdateVersionCreatesFieldIfNotFound(): void
     {
         $data = (object) array('foo' => 'bar');
 
         $this->versioner->updateVersion($data, '2.0');
 
-        $this->assertSame('2.0', $data->version);
+        self::assertSame('2.0', $data->version);
     }
 }

@@ -11,14 +11,21 @@
 
 namespace Webmozart\Json\Tests;
 
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+use Webmozart\Json\DecodingFailedException;
+use Webmozart\Json\FileNotFoundException;
+use Webmozart\Json\IOException;
 use Webmozart\Json\JsonDecoder;
+use Webmozart\Json\ValidationFailedException;
 
 /**
  * @since  1.0
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class JsonDecoderTest extends \PHPUnit_Framework_TestCase
+class JsonDecoderTest extends TestCase
 {
     /**
      * @var JsonDecoder
@@ -31,7 +38,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
 
     private $schemaObject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->decoder = new JsonDecoder();
         $this->fixturesDir = __DIR__.'/Fixtures';
@@ -39,164 +46,130 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
         $this->schemaObject = json_decode(file_get_contents($this->schemaFile));
     }
 
-    public function testDecode()
+    public function testDecode(): void
     {
         $data = $this->decoder->decode('{ "name": "Bernhard" }');
 
-        $this->assertInstanceOf('\stdClass', $data);
-        $this->assertObjectHasAttribute('name', $data);
-        $this->assertSame('Bernhard', $data->name);
+        self::assertInstanceOf(stdClass::class, $data);
+        self::assertObjectHasAttribute('name', $data);
+        self::assertSame('Bernhard', $data->name);
     }
 
-    public function testDecodeEmptyObject()
+    public function testDecodeEmptyObject(): void
     {
         $data = $this->decoder->decode('{}');
 
-        $this->assertEquals((object) array(), $data);
-        $this->assertInstanceOf('\stdClass', $data);
+        self::assertEquals((object) array(), $data);
+        self::assertInstanceOf(stdClass::class, $data);
     }
 
-    public function testDecodeNull()
+    public function testDecodeNull(): void
     {
         $data = $this->decoder->decode('null');
 
-        $this->assertNull($data);
+        self::assertNull($data);
     }
 
-    public function testDecodeNestedEmptyObject()
+    public function testDecodeNestedEmptyObject(): void
     {
         $data = $this->decoder->decode('{ "empty": {} }');
 
-        $this->assertEquals((object) array('empty' => (object) array()), $data);
-        $this->assertInstanceOf('\stdClass', $data);
-        $this->assertInstanceOf('\stdClass', $data->empty);
+        self::assertEquals((object) array('empty' => (object) array()), $data);
+        self::assertInstanceOf(stdClass::class, $data);
+        self::assertInstanceOf(stdClass::class, $data->empty);
     }
 
-    public function testDecodeWithSchemaFile()
+    public function testDecodeWithSchemaFile(): void
     {
         $data = $this->decoder->decode('{ "name": "Bernhard" }', $this->schemaFile);
 
-        $this->assertInstanceOf('\stdClass', $data);
-        $this->assertObjectHasAttribute('name', $data);
-        $this->assertSame('Bernhard', $data->name);
+        self::assertInstanceOf(stdClass::class, $data);
+        self::assertObjectHasAttribute('name', $data);
+        self::assertSame('Bernhard', $data->name);
     }
 
-    public function testDecodeWithSchemaObject()
+    public function testDecodeWithSchemaObject(): void
     {
         $data = $this->decoder->decode('{ "name": "Bernhard" }', $this->schemaObject);
 
-        $this->assertInstanceOf('\stdClass', $data);
-        $this->assertObjectHasAttribute('name', $data);
-        $this->assertSame('Bernhard', $data->name);
+        self::assertInstanceOf(stdClass::class, $data);
+        self::assertObjectHasAttribute('name', $data);
+        self::assertSame('Bernhard', $data->name);
     }
 
-    /**
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     */
-    public function testDecodeFailsIfValidationFailsWithSchemaFile()
+    public function testDecodeFailsIfValidationFailsWithSchemaObject(): void
     {
-        $this->decoder->decode('"foobar"', $this->schemaFile);
-    }
+        $this->expectException(ValidationFailedException::class);
 
-    /**
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     */
-    public function testDecodeFailsIfValidationFailsWithSchemaObject()
-    {
         $this->decoder->decode('"foobar"', $this->schemaObject);
     }
 
-    public function testDecodeUtf8()
+    public function testDecodeUtf8(): void
     {
         $data = $this->decoder->decode('{"name":"B\u00e9rnhard"}');
 
-        $this->assertEquals((object) array('name' => 'Bérnhard'), $data);
+        self::assertEquals((object) array('name' => 'Bérnhard'), $data);
     }
 
     /**
      * JSON_ERROR_UTF8.
-     *
-     * @expectedException \Webmozart\Json\DecodingFailedException
-     * @expectedExceptionCode 5
      */
-    public function testDecodeFailsIfNotUtf8()
+    public function testDecodeFailsIfNotUtf8(): void
     {
         if (defined('JSON_C_VERSION')) {
-            $this->markTestSkipped('This error is not reported when using JSONC.');
+            self::markTestSkipped('This error is not reported when using JSONC.');
         }
+
+        $this->expectException(DecodingFailedException::class);
+        $this->expectExceptionCode(5);
 
         $win1258 = file_get_contents($this->fixturesDir.'/win-1258.json');
 
         $this->decoder->decode($win1258);
     }
 
-    public function testDecodeObjectAsObject()
+    public function testDecodeObjectAsObject(): void
     {
         $this->decoder->setObjectDecoding(JsonDecoder::OBJECT);
 
         $decoded = $this->decoder->decode('{ "name": "Bernhard" }');
 
-        $this->assertEquals((object) array('name' => 'Bernhard'), $decoded);
+        self::assertEquals((object) array('name' => 'Bernhard'), $decoded);
     }
 
-    public function testDecodeObjectAsArray()
+    public function testDecodeObjectAsArray(): void
     {
         $this->decoder->setObjectDecoding(JsonDecoder::ASSOC_ARRAY);
 
         $decoded = $this->decoder->decode('{ "name": "Bernhard" }');
 
-        $this->assertEquals(array('name' => 'Bernhard'), $decoded);
+        self::assertEquals(array('name' => 'Bernhard'), $decoded);
     }
 
-    public function testDecodeEmptyArrayKey()
+    public function testDecodeEmptyArrayKey(): void
     {
         $data = array('' => 'Bernhard');
 
         $this->decoder->setObjectDecoding(JsonDecoder::ASSOC_ARRAY);
 
-        $this->assertEquals($data, $this->decoder->decode('{"":"Bernhard"}'));
+        self::assertEquals($data, $this->decoder->decode('{"":"Bernhard"}'));
     }
 
-    public function testDecodeEmptyProperty()
+    public function testDecodeEmptyProperty(): void
     {
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('PHP >= 7.1.0 only');
-
-            return;
-        }
-
         $data = (object) array('' => 'Bernhard');
 
-        $this->assertEquals($data, $this->decoder->decode('{"":"Bernhard"}'));
+        self::assertEquals($data, $this->decoder->decode('{"":"Bernhard"}'));
     }
 
-    public function testDecodeMagicEmptyPropertyAfter71()
+    public function testDecodeMagicEmptyPropertyAfter71(): void
     {
-        if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-            $this->markTestSkipped('PHP >= 7.1.0 only');
-
-            return;
-        }
-
         $data = (object) array('_empty_' => 'Bernhard');
 
-        $this->assertEquals($data, $this->decoder->decode('{"_empty_":"Bernhard"}'));
+        self::assertEquals($data, $this->decoder->decode('{"_empty_":"Bernhard"}'));
     }
 
-    public function testDecodeMagicEmptyPropertyBefore71()
-    {
-        if (version_compare(PHP_VERSION, '7.1.0', '>=')) {
-            $this->markTestSkipped('PHP < 7.1.0 only');
-
-            return;
-        }
-
-        $data = (object) array('a' => 'b', '_empty_' => 'Bernhard', 'c' => 'd');
-
-        $this->assertEquals($data, $this->decoder->decode('{"a":"b","":"Bernhard","c":"d"}'));
-    }
-
-    public function provideInvalidObjectDecoding()
+    public function provideInvalidObjectDecoding(): array
     {
         return array(
             array(JsonDecoder::STRING),
@@ -207,18 +180,18 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideInvalidObjectDecoding
-     * @expectedException \InvalidArgumentException
      */
-    public function testFailIfInvalidObjectDecoding($invalidDecoding)
+    public function testFailIfInvalidObjectDecoding($invalidDecoding): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->decoder->setObjectDecoding($invalidDecoding);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testSchemaNotSupportedForArrays()
+    public function testSchemaNotSupportedForArrays(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->decoder->setObjectDecoding(JsonDecoder::ASSOC_ARRAY);
 
         $this->decoder->decode('{ "name": "Bernhard" }', $this->schemaObject);
@@ -226,81 +199,79 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * JSON_ERROR_DEPTH.
-     *
-     * @expectedException \Webmozart\Json\DecodingFailedException
-     * @expectedExceptionCode 1
      */
-    public function testMaxDepth1Exceeded()
+    public function testMaxDepth1Exceeded(): void
     {
+        $this->expectException(DecodingFailedException::class);
+        $this->expectExceptionCode(1);
+
         $this->decoder->setMaxDepth(1);
 
         $this->decoder->decode('{ "name": "Bernhard" }');
     }
 
-    public function testMaxDepth1NotExceeded()
+    public function testMaxDepth1NotExceeded(): void
     {
         $this->decoder->setMaxDepth(1);
 
-        $this->assertSame('Bernhard', $this->decoder->decode('"Bernhard"'));
+        self::assertSame('Bernhard', $this->decoder->decode('"Bernhard"'));
     }
 
     /**
      * JSON_ERROR_DEPTH.
-     *
-     * @expectedException \Webmozart\Json\DecodingFailedException
-     * @expectedExceptionCode 1
      */
-    public function testMaxDepth2Exceeded()
+    public function testMaxDepth2Exceeded(): void
     {
+        $this->expectException(DecodingFailedException::class);
+        $this->expectExceptionCode(1);
+
         $this->decoder->setMaxDepth(2);
 
         $this->decoder->decode('{ "key": { "name": "Bernhard" } }');
     }
 
-    public function testMaxDepth2NotExceeded()
+    public function testMaxDepth2NotExceeded(): void
     {
         $this->decoder->setMaxDepth(2);
 
         $decoded = $this->decoder->decode('{ "name": "Bernhard" }');
 
-        $this->assertEquals((object) array('name' => 'Bernhard'), $decoded);
+        self::assertEquals((object) array('name' => 'Bernhard'), $decoded);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testMaxDepthMustBeInteger()
+    public function testMaxDepthMustBeInteger(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->decoder->setMaxDepth('foo');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testMaxDepthMustBeOneOrGreater()
+    public function testMaxDepthMustBeOneOrGreater(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->decoder->setMaxDepth(0);
     }
 
-    public function testDecodeBigIntAsFloat()
+    public function testDecodeBigIntAsFloat(): void
     {
         $this->decoder->setBigIntDecoding(JsonDecoder::FLOAT);
 
         $decoded = $this->decoder->decode('12312512423531123');
 
-        $this->assertEquals(12312512423531123.0, $decoded);
+        self::assertEquals(12312512423531123.0, $decoded);
     }
 
-    public function testDecodeBigIntAsString()
+    public function testDecodeBigIntAsString(): void
     {
         $this->decoder->setBigIntDecoding(JsonDecoder::STRING);
 
         $decoded = $this->decoder->decode('12312512423531123');
 
-        $this->assertEquals('12312512423531123', $decoded);
+        self::assertEquals('12312512423531123', $decoded);
     }
 
-    public function provideInvalidBigIntDecoding()
+    public function provideInvalidBigIntDecoding(): array
     {
         return array(
             array(JsonDecoder::OBJECT),
@@ -311,26 +282,32 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider provideInvalidBigIntDecoding
-     * @expectedException \InvalidArgumentException
      */
-    public function testFailIfInvalidBigIntDecoding($invalidDecoding)
+    public function testFailIfInvalidBigIntDecoding($invalidDecoding): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->decoder->setBigIntDecoding($invalidDecoding);
     }
 
-    public function testDecodeFile()
+    public function testDecodeFile(): void
     {
         $data = $this->decoder->decodeFile($this->fixturesDir.'/valid.json');
 
-        $this->assertInstanceOf('\stdClass', $data);
-        $this->assertObjectHasAttribute('name', $data);
-        $this->assertSame('Bernhard', $data->name);
+        self::assertInstanceOf(stdClass::class, $data);
+        self::assertObjectHasAttribute('name', $data);
+        self::assertSame('Bernhard', $data->name);
     }
 
-    public function testDecodeFileFailsIfNotReadable()
+    /**
+     * This test fails on my docker php:7.3-cli docker container
+     * The chmod sets 0000 on the file but `file_get_contents` still reads the content.
+     * However this test is successful on Travis.
+     */
+    public function testDecodeFileFailsIfNotReadable(): void
     {
         if ('\\' === DIRECTORY_SEPARATOR) {
-            $this->markTestSkipped('Cannot deny read access on Windows.');
+            self::markTestSkipped('Cannot deny read access on Windows.');
         }
 
         $tempFile = tempnam(sys_get_temp_dir(), 'JsonDecoderTest');
@@ -339,71 +316,47 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
         chmod($tempFile, 0000);
 
         // Test that the file name is present in the output.
-        $this->setExpectedException(
-            '\Webmozart\Json\IOException',
-            $tempFile
-        );
+        $this->expectException(IOException::class);
+        $this->expectExceptionMessage($tempFile);
 
         $this->decoder->decodeFile($tempFile);
     }
 
     /**
      * Test that the file name is present in the output.
-     *
-     * @expectedException \Webmozart\Json\FileNotFoundException
-     * @expectedExceptionMessage bogus.json
      */
-    public function testDecodeFileFailsIfNotFound()
+    public function testDecodeFileFailsIfNotFound(): void
     {
+        $this->expectException(FileNotFoundException::class);
+        $this->expectExceptionMessage('bogus.json');
+
         $this->decoder->decodeFile($this->fixturesDir.'/bogus.json');
     }
 
     /**
      * Test that the file name is present in the output.
-     *
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     * @expectedExceptionMessage invalid.json
      */
-    public function testDecodeFileFailsIfValidationFailsWithSchemaFile()
+    public function testDecodeFileFailsIfValidationFailsWithSchemaObject(): void
     {
-        $this->decoder->decodeFile($this->fixturesDir.'/invalid.json', $this->schemaFile);
-    }
+        $this->expectException(ValidationFailedException::class);
+        $this->expectExceptionMessage('invalid.json');
 
-    /**
-     * Test that the file name is present in the output.
-     *
-     * @expectedException \Webmozart\Json\ValidationFailedException
-     * @expectedExceptionMessage invalid.json
-     */
-    public function testDecodeFileFailsIfValidationFailsWithSchemaObject()
-    {
         $this->decoder->decodeFile($this->fixturesDir.'/invalid.json', $this->schemaObject);
     }
 
     /**
      * Test that the file name is present in the output.
-     *
-     * @expectedException \Webmozart\Json\DecodingFailedException
-     * @expectedExceptionMessage win-1258.json
-     * @expectedExceptionCode 5
      */
-    public function testDecodeFileFailsIfNotUtf8()
+    public function testDecodeFileFailsIfNotUtf8(): void
     {
         if (defined('JSON_C_VERSION')) {
-            $this->markTestSkipped('This error is not reported when using JSONC.');
+            self::markTestSkipped('This error is not reported when using JSONC.');
         }
 
-        $this->decoder->decodeFile($this->fixturesDir.'/win-1258.json');
-    }
+        $this->expectException(DecodingFailedException::class);
+        $this->expectExceptionMessage('win-1258.json');
+        $this->expectExceptionCode(5);
 
-    /**
-     * Test that the file name is present in the output.
-     *
-     * @expectedException \Webmozart\Json\InvalidSchemaException
-     * @expectedExceptionMessage valid.json
-     */
-    public function testDecodeFileFailsIfSchemaInvalid()
-    {
-        $this->decoder->decodeFile($this->fixturesDir.'/valid.json', 'bogus.json');
+        $this->decoder->decodeFile($this->fixturesDir.'/win-1258.json');
     }
 }

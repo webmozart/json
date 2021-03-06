@@ -1,6 +1,15 @@
 Changelog
 =========
 
+* 2.0.0 (@release_date@)
+
+ * dropped support for PHP ^5.2
+ * dropped support for PHP 7.0
+ * dropped support for PHP 7.1
+ * dropped support for PHP 7.2
+ * upgraded dependencies
+ * added PHP 8 compatibility
+
 * 1.3.0 (@release_date@)
 
  * added `JsonConverter` and `ConversionException`
